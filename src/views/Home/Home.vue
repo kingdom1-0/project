@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="indC1_ulBl">
                                     <div class="indC1_InBl">
-                                    <div class="indC_liBl" v-for="st in store" :key="st.id" :data="{'marginTop':moNum}">
+                                    <div class="indC_liBl" v-for="st in store" :key="st.id">
                                             <div class="indC_InBlock">
                                                 <a href="/business/merchant?on=2" class="indC_top" v-for="s in st" :key="s.id">
                                                     <div class="indC_bg" :style="{backgroundImage:'url('+s.bgImg+')'}"></div>
@@ -254,7 +254,6 @@
             },
             touMove:function(e){
                 this.moNum = e.clientY - window.outerHeight;
-                console.log(this.moNum)                
             }
         },
         created () {
@@ -284,14 +283,7 @@
             $("body").on("click",function(){
                 //alert(0)
             })
-
-            this.axios
-            .get('../../data/home.json')
-            .then(response => (this.info = response.data))
-            .catch(function (error) { // 请求失败处理
-                console.log(error);
-            });            
-           
+                        
         }
     }
 </script>

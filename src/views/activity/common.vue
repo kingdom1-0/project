@@ -8,10 +8,10 @@
         <div class="com_conBlock">              
             <div class="bus_ul">                
                 <router-link to="/activity" class="bus_li">活动资讯</router-link>
-                <router-link to="/activity/review" class="bus_li">活动回顾</router-link>
+                <router-link to="/activity/review" class="bus_li"><span @click="initCh">活动回顾</span></router-link>
                 <div class="clear"></div>
             </div>
-            <router-view @showDa="showDa"></router-view>            
+            <router-view @showDa="showDa" ref="child"></router-view>            
         </div>
         {{shNum}}
         <Alert :show="shNum"></Alert>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import Alert from "../Shared/alert.vue"
+    import Alert from "../Shared/news.vue"
     export default {
         data () {
             return {
@@ -34,9 +34,10 @@
             },
             showDa:function(val){
                 this.shNum = val;     
-                console.log(this.shNum)
+            },
+            initCh:function(){
+                this.$refs.child.bo = false //通过ref操作子组件
             }
-
         },
         components: {
             Alert

@@ -9,7 +9,7 @@
             <div class="bus_ul">                
                 <router-link to="/business" class="bus_li">楼层导视</router-link>
                 <router-link to="/business/brand" class="bus_li">品牌展示</router-link>
-                <!-- <a class="bus_li" @click="toBrand">品牌展示</a> -->
+                 <!-- <a class="bus_li" @click="toBrand">品牌展示</a> -->
                 <router-link to="/business/merchant" class="bus_li">商家介绍</router-link>
                 <div class="clear"></div>
             </div>
@@ -36,7 +36,6 @@
             },
             showDa:function(val){
                 this.shNum = val;     
-                console.log(this.shNum)
             }
 
         },

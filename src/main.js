@@ -11,6 +11,7 @@ import vueSwiper from "vue-awesome-swiper"
 import 'swiper/css/swiper.css' //npm i swiper@^5.2.0 -s   
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import 'jquery'
 
 
 Vue.use(vueSwiper);

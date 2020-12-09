@@ -97,7 +97,7 @@
                 time:0
             }
         },
-        props: {
+        props: {//父组件传值 
             da:{
                 type:Boolean,
                 default:false

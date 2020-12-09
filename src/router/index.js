@@ -52,18 +52,28 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => { //导航守卫
-  var href = to.path;
-  var business = new RegExp("business");
+  var href = to.path;  
   var brand = new RegExp("business/brand");
   var merchant = new RegExp("business/merchant");
+  var business = new RegExp("business");
+  var activity = new RegExp("activity");
+  var _libl = document.getElementsByClassName("he_liBl")
+  for (var i = 0; i < _libl.length; i++){
+    _libl[i].classList.remove("current");
+  }
   if (merchant.test(href)) {
     document.title = "星河-商家介绍 ";    
   }else if (brand.test(href)) {
     document.title = "星河-品牌展示 ";
   }else if (business.test(href)) {
-    document.title = "星河-楼层导视 ";
+    document.title = "星河-楼层导视 ";    
+    //document.getElementsByClassName("he_liBl")[1].classList.add("current");
+  } else if (activity.test(href)) {
+    document.title = "星河-活动资讯 ";
+    //document.getElementsByClassName("he_liBl")[2].classList.add("current");
   } else {
     document.title = "星河-COCO City ";
+    //document.getElementsByClassName("he_liBl")[0].classList.add("current");
   }  
   document.getElementsByTagName("html")[0].classList.remove("ind_body");//给html删除类名(该类名只在首页需要)
   window.scrollTo(0, 0);  //切换路由，默认返回顶部

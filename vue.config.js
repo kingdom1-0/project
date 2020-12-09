@@ -15,9 +15,9 @@ module.exports = {
         // 提取出来的通用 chunk 和 vendor chunk。
         chunks: ['chunk-vendors', 'chunk-common', 'index']
       }
-    },
-    devServer: {
-        port: 3350,
+  },
+  devServer: {
+      port: 3350,
       open: true,
       proxy: {
         "/api": {

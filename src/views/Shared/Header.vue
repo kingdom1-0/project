@@ -4,24 +4,24 @@
             <a href="/" class="he_logo"><img src="../../images/2.png"/></a>
             <div class="he_ulBl">
                 <div class="he_liBl">
-                    <router-link to="/" class="he_a"><span>首页</span></router-link>  
+                    <router-link to="./" class="he_a" active-class="current" exact><span>首页</span></router-link>  
                 </div>                              
                 <div class="he_liBl" @mouseenter="showNav(0)" @mouseleave="hideNav(0)">
-                    <router-link to="/business" class="he_a"><span>时尚购物</span></router-link>
+                    <router-link to="/business" class="he_a" active-class="current" exact><span>时尚购物</span></router-link>
                     <transition name="fade">
                         <div class="heN_ul" v-show="navAr[0]">
-                            <router-link to="/business" class="heN_li">楼层导视</router-link>
-                            <router-link to="/business/brand" class="heN_li">品牌展示</router-link>
-                            <router-link to="/business/merchant" class="heN_li">商家介绍</router-link>                    
+                            <router-link to="/business" class="heN_li" exact>楼层导视</router-link>
+                            <router-link to="/business/brand" class="heN_li" exact>品牌展示</router-link>
+                            <router-link to="/business/merchant" class="heN_li" exact>商家介绍</router-link>                    
                         </div>       
                     </transition>                         
                 </div>  
                 <div class="he_liBl" @mouseenter="showNav(1)" @mouseleave="hideNav(1)">                    
-                    <router-link to="/activity" class="he_a"><span>活动精选</span></router-link>
+                    <router-link to="/activity" class="he_a"  active-class="current" exact><span>活动精选</span></router-link>
                     <transition name="fade">
                         <div class="heN_ul" v-show="navAr[1]">
-                            <router-link to="/activity" class="heN_li">活动安排</router-link>
-                            <router-link to="/activity/review" class="heN_li">活动回顾</router-link>
+                            <router-link to="/activity" class="heN_li" exact>活动安排</router-link>
+                            <router-link to="/activity/review" class="heN_li" exact>活动回顾</router-link>
                         </div>       
                     </transition> 
                 </div>

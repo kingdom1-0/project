@@ -2,7 +2,9 @@
   <div id="app">
     <Header></Header>
     <div class="ind_content" :style="{height:windHeight+'px'}">
-      <router-view @footerDa="footerFun" :clDa="foBl"></router-view> <!-- da 向子组件传值 -->
+      <transition name="fad">
+        <router-view @footerDa="footerFun" :clDa="foBl"></router-view> <!-- da 向子组件传值 -->
+      </transition>      
     </div>
     <Footer :da="foBl" @closeDa="closeFooter"></Footer>
   </div>
