@@ -1,83 +1,72 @@
-import Vue from 'vue'   //引入vue
-import VueRouter from 'vue-router'  //引入router
- 
-Vue.use(VueRouter)  //挂载router
+import Vue from 'vue' //引入vue
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)  //挂载vueRouter插件
 
-  const routes = [
-    {
-      path: '/',
-      component: () => import("../views/Home/Home.vue"), //路由懒加载
-      beforeEnter: (to, from, next) => {  //导航守卫
-        document.getElementsByTagName("html")[0].className = "ind_body";//给html加类名     
-        next();
-      }
-    },
-    {
-      path: '/business',
-      component: () => import("../views/business/business.vue"),
-      children: [ //嵌套路由
-        {
-          path: '',
-          component: () => import("../views/business/index.vue")
-        },
-        {
-          path: 'brand', //path: 'brand/:on',
-          name:"brand",
-          component: () => import("../views/business/brand.vue")          
-        },
-        {
-          path: 'merchant', //动态路由 (带参调用：/business/merchant/2)
-          component: () => import("../views/business/merchant.vue")         
-        }
-      ]
-    },
-    {
-      path: '/activity',
-      component: () => import("../views/activity/common.vue"),
-      children: [ //嵌套路由
-        {
-          path: '',
-          component: () => import("../views/activity/index.vue")
-        },
-        {
-          path: 'review', //path: 'brand/:on',
-          component: () => import("../views/activity/review.vue")          
-        }       
-      ]
-    }
+const routes = [
+  {
+    path: '/', component: () => import("../views/Home/Home.vue"),
+    beforeEnter: (to, from, next) => {  //导航守卫
+    document.getElementsByTagName("html")[0].className = "ind_body";
+    next();
+  } },
+  { path: '/activity', component: () => import("../views/activity/common.vue"),
+    children: [//嵌套路由
+      { path: '/', component: () => import("../views/activity/index.vue") },
+      { path: 'review', component: () => import("../views/activity/review.vue") }
+    ]
+  },
+  { path: '/business', component: () => import("../views/business/business.vue"),
+    children: [
+      { path: '/', component: () => import("../views/business/index.vue") },
+      { path: 'brand', component: () => import("../views/business/brand.vue") },
+      { path: 'business', component: () => import("../views/business/business.vue") },
+      { path: 'merchant', component: ()=> import("../views/business/merchant.vue") }
+    ]
+  },
+  { path: '/member', component: () => import("../views/member/common.vue"),
+    children: [
+      { path: '/', component: () => import("../views/member/index.vue") },
+      { path: 'join', component: () => import("../views/member/join.vue") },
+      { path: 'notice', component: () => import("../views/member/notice.vue") },
+      { path: 'conversion', component: () => import("../views/member/conversion.vue") },
+      { path: 'message', component: ()=> import("../views/member/message.vue") }
+    ]
+  },
+  { path: '/contentUs', component: () => import("../views/contentUs/common.vue"),
+    children: [
+      { path: '/', component: () => import("../views/contentUs/index.vue") },
+      { path: 'traffic', component: () => import("../views/contentUs/traffic.vue") },
+      { path: 'attract', component: () => import("../views/contentUs/attract.vue") },
+      { path: 'site', component: () => import("../views/contentUs/site.vue") },
+      { path: 'contactUs', component: ()=> import("../views/contentUs/contactUs.vue") }
+    ]
+  }
 ]
 
 const router = new VueRouter({
-  routes
+  linkActiveClass:"active",
+   routes
 })
 
-router.beforeEach((to, from, next) => { //导航守卫
-  var href = to.path;  
-  var brand = new RegExp("business/brand");
-  var merchant = new RegExp("business/merchant");
-  var business = new RegExp("business");
-  var activity = new RegExp("activity");
-  var _libl = document.getElementsByClassName("he_liBl")
-  for (var i = 0; i < _libl.length; i++){
-    _libl[i].classList.remove("current");
-  }
-  if (merchant.test(href)) {
+router.beforeEach((to, from, next) => {  
+  /* 页标题 */
+  let href = to.path;
+  if (href.search("business/merchant") > 0) {
     document.title = "星河-商家介绍 ";    
-  }else if (brand.test(href)) {
+  }else if (href.search("business/brand") > 0) {
     document.title = "星河-品牌展示 ";
-  }else if (business.test(href)) {
-    document.title = "星河-楼层导视 ";    
-    //document.getElementsByClassName("he_liBl")[1].classList.add("current");
-  } else if (activity.test(href)) {
-    document.title = "星河-活动资讯 ";
-    //document.getElementsByClassName("he_liBl")[2].classList.add("current");
+  }else if (href.search("business") > 0) {
+    document.title = "星河-楼层导视 ";     
+  }else if (href.search("activity") > 0) {
+    document.title = "星河-活动资讯 "; 
+  }else if (href.search("member") > 0) {
+    document.title = "星河-会员天地 "; 
   } else {
     document.title = "星河-COCO City ";
-    //document.getElementsByClassName("he_liBl")[0].classList.add("current");
-  }  
+  }
   document.getElementsByTagName("html")[0].classList.remove("ind_body");//给html删除类名(该类名只在首页需要)
   window.scrollTo(0, 0);  //切换路由，默认返回顶部
-  next()      
+  next();
 })
 
 export default router

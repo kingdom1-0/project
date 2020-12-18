@@ -73,14 +73,14 @@
                                 </div>
                                 <div class="indC1_ulBl">
                                     <div class="indC1_InBl">
-                                    <div class="indC_liBl" v-for="st in store" :key="st.id">
-                                            <div class="indC_InBlock">
+                                    <div class="indC_liBl" v-for="(st,n) in store" :key="st.id">
+                                            <div class="indC_InBlock" :style="{top:oddBack(n)+'px'}">
                                                 <a href="/business/merchant?on=2" class="indC_top" v-for="s in st" :key="s.id">
                                                     <div class="indC_bg" :style="{backgroundImage:'url('+s.bgImg+')'}"></div>
                                                     <div class="indC_InBl">
                                                         <div class="indC_logo"><img :src="s.logo" /></div>
                                                         <div class="indC1_teBl">
-                                                            <div class="indC1_name">{{s.ti+moNum}}</div>
+                                                            <div class="indC1_name">{{s.ti}}</div>
                                                             <div class="indC1_num">店铺号：{{s.num}} </div>
                                                         </div>
                                                         <div class="clear"></div>
@@ -144,8 +144,7 @@
                 info:null,
                 banner:[//banner图
                     require("../../images/1.jpg"),
-                    require("../../images/1.jpg"),
-                    require("../../images/1.jpg"),
+                    require("../../images/05.jpg")
                 ],
                 brand:[
                     {bgImg:require("../../images/2_1.png"),ti:"时尚购物",eTi:"shopping",more:"更多购物",moHref:"/business",
@@ -247,13 +246,18 @@
                         this.foBo = true;                        
                     }else{
                         this.foBo = false;
-                    }               
-                   
+                    }                                  
                     this.$emit("footerDa",this.foBo); //页尾显示参数
                 }     
             },
             touMove:function(e){
-                this.moNum = e.clientY - window.outerHeight;
+                console.log(e.clientY)
+                this.moNum = -e.clientY * 1.1;
+            },
+            oddBack:function(n){
+                if(n % 2 == 0){
+                    return this.moNum
+                }
             }
         },
         created () {

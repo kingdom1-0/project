@@ -1,18 +1,19 @@
 import Vue from 'vue'
 import App from './App.vue'
-import "./style/common.css"
-import "./font/iconfont.css"
-import "./style/animate.min.css"
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import router from './router'
+import router from './router' 
 import store from './store'
-import vueSwiper from "vue-awesome-swiper"
-import 'swiper/css/swiper.css' //npm i swiper@^5.2.0 -s   
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import 'jquery'
 
+import "./style/common.css"  //全局样式
+import "./font/iconfont.css"  //阿里图标库
+import "./style/animate.min.css"  //预设css3库
+
+import ElementUI from 'element-ui';   //elementUi组件库
+import 'element-ui/lib/theme-chalk/index.css';
+
+import vueSwiper from "vue-awesome-swiper"//swiper组件库
+import 'swiper/css/swiper.css' //npm i swiper@^5.2.0 -s   
 
 Vue.use(vueSwiper);
 Vue.use(ElementUI);

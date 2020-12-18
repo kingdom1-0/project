@@ -13,7 +13,9 @@
                 <router-link to="/business/merchant" class="bus_li">商家介绍</router-link>
                 <div class="clear"></div>
             </div>
-            <router-view @showDa="showDa"></router-view>            
+            <transition name="fad">
+                <router-view @showDa="showDa"></router-view>    
+            </transition>        
         </div>
         {{shNum}}
         <Alert :show="shNum"></Alert>

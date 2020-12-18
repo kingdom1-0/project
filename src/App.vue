@@ -9,7 +9,6 @@
     <Footer :da="foBl" @closeDa="closeFooter"></Footer>
   </div>
 </template>
-
 <style>
 </style>
 <script>

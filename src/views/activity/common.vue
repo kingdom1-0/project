@@ -11,7 +11,9 @@
                 <router-link to="/activity/review" class="bus_li"><span @click="initCh">活动回顾</span></router-link>
                 <div class="clear"></div>
             </div>
-            <router-view @showDa="showDa" ref="child"></router-view>            
+            <transition name="fad">
+                <router-view @showDa="showDa" ref="child"></router-view>
+            </transition>               
         </div>
         {{shNum}}
         <Alert :show="shNum"></Alert>
