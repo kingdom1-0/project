@@ -2294,3 +2294,24 @@ a.he_li.li_6:hover .he_seek {
     display: block;
 }
 a.he_li.li_6 .he_seek { white-space: nowrap; background: #fff; border: 1px solid #999; left: 60px; padding: 7px 16px; color: #666; }
+
+html.manage {}
+
+html.manage .he_body {
+    display: none;
+}
+
+html.manage .ind_content {
+    padding-left: 0px;
+}
+
+html.manage div#Footer {
+    display: none;
+}
+.bus_block {
+    cursor: pointer;
+}
+.act_img {
+    position: relative;
+    max-width: 323px;
+}

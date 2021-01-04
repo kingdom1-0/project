@@ -43,30 +43,9 @@
                 sort:0,
                 fl:0,
                 enDa:["全部","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
-                sortDa:["全部分类","主力店","运动-休闲","休闲轻食"],
-                flDa:["全部楼层","B1","L1","L2","L3","L4"],
-                store:[                  
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯1",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯2",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯3",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯4",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯5",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯1",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯2",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯3",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯4",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯5",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯1",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯2",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯3",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯4",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯5",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯1",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯2",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯3",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯4",lo:"B1c-001",href:"/business?on=2"},
-                    {logo:require("../../images/4_4.jpg"),name:"阿迪达斯5",lo:"B1c-001",href:"/business?on=2"}
-                ]
+                sortDa:[],
+                flDa:[],
+                store:[]
             }
         },
         methods: {
@@ -80,6 +59,16 @@
             showBlock() {
                 this.$store.commit('showBlock')
             }
+        },
+        mounted () {
+            let _this = this;
+            this.axios.get("ajax/brand.json").then(function(re){
+                _this.sortDa =  re.data.sortDa;
+                _this.flDa = re.data.flDa;
+                _this.store = re.data.store;
+            }).catch(function(err){
+                console.log(err)
+            })
         }
     }
 </script>

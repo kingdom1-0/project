@@ -94,8 +94,14 @@
         },
         mounted:function(){
             bus.$emit("mag",val =>{                
-                alert(val)
+                //alert(val)
+                console.log(val)
             })
+        },
+        watch:{
+            "$route":function(){   //切换路由操作
+                //alert(0)
+            }
         }
     }
 </script>

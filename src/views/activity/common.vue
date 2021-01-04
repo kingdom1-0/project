@@ -31,8 +31,7 @@
         methods: {
             toBrand:function(){
                 //this.$router.push({ path: '/business/brand',query:{on:"2"}})  //编程式导航
-                this.$router.push({ name: 'brand',params:{on:"2"}})     //编程式动态导 
-                
+                this.$router.push({ name: 'brand',params:{on:"2"}})     //编程式动态导                 
             },
             showDa:function(val){
                 this.shNum = val;     

@@ -35,19 +35,21 @@
               prevEl: '.join_leBu'
             }
           },
-          newList:[
-            {img:require("../../images/c2_9.png"),ti:"申办",te:"<p><span>COCO Club &nbsp;V卡：关注官方微信，注册并验证成功，即可成为COCO Club V卡会员；</span></p><p><span>COCO Club &nbsp;金卡：当日累计消费满3000元，或有效期内累计消费满2万元，可升级为金卡会员。（团购除外）</span></p><p><span>COCO Club &nbsp;黑钻卡：当日消费累计3万元或有效期内累计消费满8万元，可升级为黑钻卡会员。（团购除外）</span></p>"},
-            {img:require("../../images/c2_9.png"),ti:"申办",te:"<p><span>COCO Club &nbsp;V卡：关注官方微信，注册并验证成功，即可成为COCO Club V卡会员；</span></p><p><span>COCO Club &nbsp;金卡：当日累计消费满3000元，或有效期内累计消费满2万元，可升级为金卡会员。（团购除外）</span></p><p><span>COCO Club &nbsp;黑钻卡：当日消费累计3万元或有效期内累计消费满8万元，可升级为黑钻卡会员。（团购除外）</span></p>"},
-            {img:require("../../images/c2_9.png"),ti:"申办",te:"<p><span>COCO Club &nbsp;V卡：关注官方微信，注册并验证成功，即可成为COCO Club V卡会员；</span></p><p><span>COCO Club &nbsp;金卡：当日累计消费满3000元，或有效期内累计消费满2万元，可升级为金卡会员。（团购除外）</span></p><p><span>COCO Club &nbsp;黑钻卡：当日消费累计3万元或有效期内累计消费满8万元，可升级为黑钻卡会员。（团购除外）</span></p>"},
-            {img:require("../../images/c2_9.png"),ti:"申办",te:"<p><span>COCO Club &nbsp;V卡：关注官方微信，注册并验证成功，即可成为COCO Club V卡会员；</span></p><p><span>COCO Club &nbsp;金卡：当日累计消费满3000元，或有效期内累计消费满2万元，可升级为金卡会员。（团购除外）</span></p><p><span>COCO Club &nbsp;黑钻卡：当日消费累计3万元或有效期内累计消费满8万元，可升级为黑钻卡会员。（团购除外）</span></p>"},
-            {img:require("../../images/c2_9.png"),ti:"申办",te:"<p><span>COCO Club &nbsp;V卡：关注官方微信，注册并验证成功，即可成为COCO Club V卡会员；</span></p><p><span>COCO Club &nbsp;金卡：当日累计消费满3000元，或有效期内累计消费满2万元，可升级为金卡会员。（团购除外）</span></p><p><span>COCO Club &nbsp;黑钻卡：当日消费累计3万元或有效期内累计消费满8万元，可升级为黑钻卡会员。（团购除外）</span></p>"}
-          ]
+          newList:[]
         }
       },
       methods: {       
         showBlock() { //显示新闻组件
           this.$store.commit('showBlock')
         }
+      },
+      created () {
+        var _this = this;
+        this.axios.get("ajax/join.json").then(function(re){
+          _this.newList = re.data;
+        }).catch(function(err){
+          console.log(err);
+        })
       }
     }
   </script>

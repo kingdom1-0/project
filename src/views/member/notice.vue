@@ -35,19 +35,21 @@
               prevEl: '.join_leBu'
             }
           },
-          newList:[
-            {img:require("../../images/c2_9.png"),ti:"COCO CLUB  V卡专享",te:"<p>生日特权：生日当日享免费停车2小时</p><p>生日当日消费享2倍积分（如遇多倍积分活动，二选其一，不可叠加）</p><p>出行特权：（V卡每车每日每项目限享一次停车优惠）</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;积分可兑换停车券</p><p>积分特权：会员积分兑礼</p>"},
-            {img:require("../../images/c2_9.png"),ti:"COCO CLUB  V卡专享",te:"<p>生日特权：生日当日享免费停车2小时</p><p>生日当日消费享2倍积分（如遇多倍积分活动，二选其一，不可叠加）</p><p>出行特权：（V卡每车每日每项目限享一次停车优惠）</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;积分可兑换停车券</p><p>积分特权：会员积分兑礼</p>"},
-            {img:require("../../images/c2_9.png"),ti:"COCO CLUB  V卡专享",te:"<p>生日特权：生日当日享免费停车2小时</p><p>生日当日消费享2倍积分（如遇多倍积分活动，二选其一，不可叠加）</p><p>出行特权：（V卡每车每日每项目限享一次停车优惠）</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;积分可兑换停车券</p><p>积分特权：会员积分兑礼</p>"},
-            {img:require("../../images/c2_9.png"),ti:"COCO CLUB  V卡专享",te:"<p>生日特权：生日当日享免费停车2小时</p><p>生日当日消费享2倍积分（如遇多倍积分活动，二选其一，不可叠加）</p><p>出行特权：（V卡每车每日每项目限享一次停车优惠）</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;积分可兑换停车券</p><p>积分特权：会员积分兑礼</p>"},
-            {img:require("../../images/c2_9.png"),ti:"COCO CLUB  V卡专享",te:"<p>生日特权：生日当日享免费停车2小时</p><p>生日当日消费享2倍积分（如遇多倍积分活动，二选其一，不可叠加）</p><p>出行特权：（V卡每车每日每项目限享一次停车优惠）</p><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;积分可兑换停车券</p><p>积分特权：会员积分兑礼</p>"}
-          ]
+          newList:[]
         }
       },
       methods: {       
         showBlock() { //显示新闻组件
           this.$store.commit('showBlock')
         }
+      },
+      created () {
+        var _this = this;
+        this.axios.get("ajax/join.json").then(function(re){
+          _this.newList = re.data;
+        }).catch(function(err){
+          console.log(err);
+        })
       }
     }
   </script>

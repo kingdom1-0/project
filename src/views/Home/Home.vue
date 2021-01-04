@@ -40,7 +40,7 @@
                                    <div class="indB_block bgCol1">
                                        <div class="indB_tiBl">
                                            <div class="indB_ti">品牌索引</div>
-                                           <div class="indB_en">Brand index</div>
+                                           <div class="indB_en">Brand index</div>    
                                        </div>
                                         <div class="b2_5"><img class="layer" data-depth="3" src="../../images/c2_5.png" /></div>
                                         <div class="b2_51"><img class="layer" data-depth="1" src="../../images/c2_51.png" /></div>
@@ -251,7 +251,6 @@
                 }     
             },
             touMove:function(e){
-                console.log(e.clientY)
                 this.moNum = -e.clientY * 1.1;
             },
             oddBack:function(n){

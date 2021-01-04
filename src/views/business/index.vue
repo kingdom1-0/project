@@ -39,6 +39,7 @@
 
 <script>
     import  bus from "../event/index"
+
     export default {
         data () {
             return {
@@ -46,50 +47,7 @@
                 m:1,//楼层图与原图比例
                 sN:0,//触发块索引
                 bl:false, //店铺块显示           
-                magUl:[//地图信息
-                    {
-                        fl:"1L",//楼层
-                        img:require('../../images/061.jpg'),//楼层图
-                        ul:[//触发块信息(宽，高，x , y , 店铺图，店铺名，店铺号，店铺分类)
-                            {width:"48",height:"70",left:"373",top:"136",Img:require('../../images/4_4.jpg'),ti:"屈臣氏1",store:"1L11",sort:"美容/护理1"},
-                            {width:"48",height:"70",left:"507",top:"206",Img:require("../../images/4_41.jpg"),ti:"屈臣氏2",store:"1L12",sort:"美容/护理2"},
-                            {width:"48",height:"35",left:"382",top:"289",Img:require("../../images/4_4.jpg"),ti:"屈臣氏3",store:"1L13",sort:"美容/护理3"}
-                        ]
-                    },
-                    {
-                        fl:"2L",
-                        img:require('../../images/06.jpg'),
-                        ul:[
-                            {width:"48",height:"70",left:"507",top:"206",Img:require("../../images/4_41.jpg"),ti:"屈臣氏2",store:"1L12",sort:"美容/护理2"},
-                            {width:"48",height:"35",left:"382",top:"289",Img:require("../../images/4_4.jpg"),ti:"屈臣氏3",store:"1L13",sort:"美容/护理3"}
-                        ]
-                    },
-                    {
-                        fl:"3L",
-                        img:require('../../images/07.jpg'),
-                        ul:[
-                            {width:"48",height:"70",left:"373",top:"136",Img:require('../../images/4_4.jpg'),ti:"屈臣氏1",store:"1L11",sort:"美容/护理1"},
-                            {width:"48",height:"70",left:"507",top:"206",Img:require("../../images/4_41.jpg"),ti:"屈臣氏2",store:"1L12",sort:"美容/护理2"},
-                            {width:"48",height:"35",left:"382",top:"289",Img:require("../../images/4_4.jpg"),ti:"屈臣氏3",store:"1L13",sort:"美容/护理3"}
-                        ]
-                    },
-                    {
-                        fl:"4L",
-                        img:require('../../images/08.jpg'),
-                        ul:[
-                            {width:"48",height:"70",left:"373",top:"136",Img:require('../../images/4_4.jpg'),ti:"屈臣氏1",store:"1L11",sort:"美容/护理1"},
-                            {width:"48",height:"35",left:"382",top:"289",Img:require("../../images/4_4.jpg"),ti:"屈臣氏3",store:"1L13",sort:"美容/护理3"}
-                        ]
-                    },
-                    {
-                        fl:"5L",
-                        img:require('../../images/09.jpg'),
-                        ul:[
-                            {width:"48",height:"70",left:"373",top:"136",Img:require('../../images/4_4.jpg'),ti:"屈臣氏5",store:"1L11",sort:"美容/护理1"},
-                            {width:"48",height:"70",left:"507",top:"206",Img:require("../../images/4_41.jpg"),ti:"屈臣氏6",store:"1L12",sort:"美容/护理2"}
-                        ]
-                    }
-                ]                
+                magUl:[]                
             }
         },
         methods: {
@@ -113,6 +71,27 @@
                 //事件总线发送数据
                 bus.$emit("showDa",true)
             }
+        },
+        created () {
+            let _this = this;
+            // this.axios.get('ajax/business.json')  //axios
+            // .then(function (response) {
+            //     console.log(response.data)
+            //     _this.magUl = response.data
+            // })
+            // .catch(function (error) {
+            // console.log(error);
+            // });
+
+            this.axios.get('http://127.0.0.1:2101/business')  //node数据接口   （来自于db.js）
+            .then(function (response) {
+                console.log(response.data.data)
+                _this.magUl = response.data.data
+            })
+            .catch(function (error) {
+            console.log(error);
+            });
+            
         },
         mounted () {
             const _this = this;  //存储上下文

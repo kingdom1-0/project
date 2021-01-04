@@ -25,35 +25,13 @@
     data() {
       return {
         swiperOption: {
-          loop:true,
           slidesPerView: 4,
           navigation: {
             nextEl: '.sw_riBu',
             prevEl: '.sw_leBu'
           }
         },
-        store:[                  
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯1",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯2",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯3",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯4",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯5",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯1",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯2",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯3",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯4",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯5",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯1",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯2",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯3",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯4",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯5",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯1",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯2",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯3",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯4",lo:"B1c-001",href:"/business?on=2"},
-                {logo:require("../../images/4_4.jpg"),name:"阿迪达斯5",lo:"B1c-001",href:"/business?on=2"}
-        ]
+        store:[]
       }
     },
     methods: {
@@ -66,7 +44,12 @@
       }
     },
     created () {
-      
+      let _this = this;
+      this.axios.get("ajax/merchant.json").then(function(re){
+         _this.store = re.data;
+      }).catch(function(err){
+        console.log(err)
+      })
     }
   }
 </script>

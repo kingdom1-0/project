@@ -16,7 +16,9 @@ module.exports = {
         chunks: ['chunk-vendors', 'chunk-common', 'index']
       }
   },
-  devServer: {
+  publicPath: "./",  //定义相对路径(打出静态打开即可使用的包),
+  assetsDir: "style",//指定静态资源打包路径  
+  devServer: {//域名服务器
       port: 3350,
       open: true,
       proxy: {

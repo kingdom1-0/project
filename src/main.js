@@ -6,19 +6,20 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 import "./style/common.css"  //全局样式
-import "./font/iconfont.css"  //阿里图标库
 import "./style/animate.min.css"  //预设css3库
 
-import ElementUI from 'element-ui';   //elementUi组件库
+//elementUi组件库
+import ElementUI from 'element-ui';   
 import 'element-ui/lib/theme-chalk/index.css';
 
-import vueSwiper from "vue-awesome-swiper"//swiper组件库
+//swiper组件库
+import vueSwiper from "vue-awesome-swiper"
 import 'swiper/css/swiper.css' //npm i swiper@^5.2.0 -s   
-
 Vue.use(vueSwiper);
+
 Vue.use(ElementUI);
-Vue.use(VueAxios,axios);
-Vue.prototype.$axios = axios;
+Vue.use(VueAxios, axios)
+
 
 Vue.config.productionTip = false
 new Vue({

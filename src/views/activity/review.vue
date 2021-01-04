@@ -54,29 +54,19 @@
   </div>
 </template>
 <script>
+
   export default {
     data() {
       return {
         swiperOption: {
-            loop:true,
             slidesPerView: 4,
             navigation: {
               nextEl: '.sw_riBu',
               prevEl: '.sw_leBu'
             }
         },
-        newList:[
-          {ti:'睦邻社区悠乐计划',te:'100余社区，超180场主题活动，天奕星河COCO City将爱与惊喜送到千家万户。',img:require("../../images/9_1.jpg"),year:'2020',date:'09-17'},
-          {ti:'睦邻社区悠乐计划',te:'100余社区，超180场主题活动，天奕星河COCO City将爱与惊喜送到千家万户。',img:require("../../images/9_1.jpg"),year:'2020',date:'09-17'},
-          {ti:'睦邻社区悠乐计划',te:'100余社区，超180场主题活动，天奕星河COCO City将爱与惊喜送到千家万户。',img:require("../../images/9_1.jpg"),year:'2020',date:'09-17'},
-          {ti:'睦邻社区悠乐计划',te:'100余社区，超180场主题活动，天奕星河COCO City将爱与惊喜送到千家万户。',img:require("../../images/9_1.jpg"),year:'2020',date:'09-17'}
-        ],
-        calendar: {
-          bgImg: require("../../images/c1_1.png"),
-          img: require("../../images/9_1.jpg"),
-          year: "2020月09日",
-          day: "18"
-        },
+        newList:[],
+        calendar: {},
         bo:false,
         value: new Date()
       }
@@ -86,11 +76,19 @@
           this.$store.commit('showBlock')
       }
     },
-    created: function () {
-      // laydate.render({
-      //   elem: '#test-n1'
-      //   ,position: 'static'
-      // });
+    mounted () {
+      let _this = this;
+      this.axios.get("ajax/review.json").then(function(re){
+        _this.newList =  re.data.newList;
+        _this.calendar = re.data.calendar;
+      }).catch(function(err){
+        console.log(err)
+      })
+    },
+    destroyed: function () {//实例销毁后调用
+      this.$nextTick(function () {
+         this.bo = false;
+      })
     }
   }
 
