@@ -2,6 +2,7 @@
 var app = require('express')();
 var http = require('http').createServer(app);
 var mysql = require('mysql');
+const io = require('socket.io')(http);
 
     //链接数据库
     const connection = mysql.createConnection({   //配置数据库
@@ -27,19 +28,22 @@ var mysql = require('mysql');
         "message": "success", 
     }
     
-    const sql = 'SELECT * FROM business';
-    
+    //数据库查询
+    const sql = 'SELECT * FROM business';    
     connection.query(sql, function(err, rows, fields) {
         if (err) throw err;
         //console.log(rows)
         return  result.data=rows;
     });
-    // setInterval(function () { //实时读数据库数据（注释connection.end();  确实可以用，不过不合理）
-    //     connection.query(sql, function(err, rows, fields) {
-    //         if (err) throw err;
-    //         return  result.data=rows;
-    //     });
-    // },1000)
+
+    
+    setInterval(function () { //实时读数据库数据（注释connection.end();  确实可以用，不过不合理，临时用下）
+        connection.query(sql, function(err, rows, fields) {
+            if (err) throw err;
+            return  result.data=rows;
+        });
+    }, 1000)
+    
     
     //数据接口business
     app.get('/business',function(req,res){
@@ -47,10 +51,18 @@ var mysql = require('mysql');
         res.json(result)   //接口数据      
     }); 
     
-    connection.end();    
+    // app.get('/business', (req, res) => {
+    //     res.sendFile(__dirname + '/ind.html');
+    // });
+
+    io.on('connection', (socket) => {
+        console.log('a user connected');
+    });
+    
+    //connection.end();    
     
     //配置服务端口 
-
     http.listen(2101, () => {
         console.log('listening on *:2101');
     });
+    

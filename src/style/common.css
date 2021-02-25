@@ -2315,3 +2315,6 @@ html.manage div#Footer {
     position: relative;
     max-width: 323px;
 }
+.el-icon-user:before,.el-icon-lock:before {
+    color: #333;
+}

@@ -54,7 +54,7 @@
       },     
       mounted () {
         let _this = this;
-        this.axios.get('ajax/activity.json')  //axios
+        this.$http.get('ajax/activity.json')  //axios
         .then(function (response) {
              _this.newList = response.data
         })

@@ -40,7 +40,7 @@
       },
       created () {
         var _this = this;
-        this.axios.get("ajax/member.json").then(function(re){
+        this.$http.get("ajax/member.json").then(function(re){
           _this.newList = re.data;
         }).catch(function(err){
           console.log(err);

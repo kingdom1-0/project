@@ -78,7 +78,7 @@
     },
     mounted () {
       let _this = this;
-      this.axios.get("ajax/review.json").then(function(re){
+      this.$http.get("ajax/review.json").then(function(re){
         _this.newList =  re.data.newList;
         _this.calendar = re.data.calendar;
       }).catch(function(err){

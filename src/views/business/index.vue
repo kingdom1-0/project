@@ -36,10 +36,10 @@
         </div>
     </div>  
 </template>
-
 <script>
     import  bus from "../event/index"
-
+    import io from 'socket.io'
+    io();
     export default {
         data () {
             return {
@@ -83,7 +83,7 @@
             // console.log(error);
             // });
 
-            this.axios.get('http://127.0.0.1:2101/business')  //node数据接口   （来自于db.js）
+            this.$http.get('http://127.0.0.1:2101/business')  //node数据接口   （来自于db.js）
             .then(function (response) {
                 console.log(response.data.data)
                 _this.magUl = response.data.data

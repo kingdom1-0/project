@@ -62,7 +62,7 @@
         },
         mounted () {
             let _this = this;
-            this.axios.get("ajax/brand.json").then(function(re){
+            this.$http.get("ajax/brand.json").then(function(re){
                 _this.sortDa =  re.data.sortDa;
                 _this.flDa = re.data.flDa;
                 _this.store = re.data.store;

@@ -1,20 +1,15 @@
-var app = require('express')();
-var http = require('http').createServer(app);
-var io = require('socket.io')(http);
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
-app.get('/business', (req, res) => {//访问接口  http://127.0.0.1:2101/business
+app.get('/business', (req, res) => {
   res.sendFile(__dirname + '/ind.html');
 });
 
-var n = 0;
 io.on('connection', (socket) => {
-  console.log('a user connected', n++);
-  socket.on('on text', (msg) => {//监听数据    
-    console.log(msg);
-    io.emit('chat message', msg);//返回数据
-  });
+  console.log('a user connected');
 });
 
-http.listen(2101, () => {//建立web服务
-  console.log('listening on *:2101');
+http.listen(3000, () => {
+  console.log('listening on *:3000');
 });

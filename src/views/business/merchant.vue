@@ -45,7 +45,7 @@
     },
     created () {
       let _this = this;
-      this.axios.get("ajax/merchant.json").then(function(re){
+      this.$http.get("ajax/merchant.json").then(function(re){
          _this.store = re.data;
       }).catch(function(err){
         console.log(err)

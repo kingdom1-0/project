@@ -1,115 +1,277 @@
 <template>
-    <div class="man_content">
-        <el-container>
-            <el-header>
-                <el-row :gutter="20">                   
-                    <el-col :span="16">
-                        <el-menu
-                            :default-active="activeIndex2"
-                            class="el-menu-demo"
-                            mode="horizontal"
-                            @select="handleSelect"
-                            background-color="#545c64"
-                            text-color="#fff"
-                            active-text-color="#66b1ff">
-                            <img class="logo" src="http://gspark.cnweb.cn/images/miclogo.png"/>
-                            <el-submenu index="1">                                    
-                                    <template slot="title"><i class="el-icon-s-home" style="opacity:0.9"></i>首页</template>
-                                    <el-menu-item index="1-1"><i class="el-icon-info"></i>系统信息</el-menu-item>
-                                    <el-menu-item index="1-2"><i class="el-icon-s-marketing"></i>统计流量</el-menu-item>
-                            </el-submenu>
-                            <el-menu-item index="2"><a href="javascript:;"><i class="el-icon-document-copy"></i>内容管理</a></el-menu-item>                            
-                            <el-submenu index="3">
-                                <template slot="title"><i class="el-icon-chat-dot-square"></i>留言管理</template>
-                                <el-menu-item index="3-1">投诉与建议</el-menu-item>
-                                <el-menu-item index="3-2">招聘列表</el-menu-item>
-                            </el-submenu>   
-                            <el-submenu index="4">
-                                <template slot="title"><i class="el-icon-setting"></i>系统设置</template>
-                                <el-menu-item index="4-1">登录日志</el-menu-item>
-                                <el-menu-item index="4-2">操作日志</el-menu-item>
-                                <el-menu-item index="4-3">角色管理</el-menu-item>
-                                <el-menu-item index="4-4">管理员管理</el-menu-item>
-                                <el-menu-item index="4-5">SEO设置</el-menu-item>
-                            </el-submenu>     
-                            <el-menu-item index="5"><a href="javascript:;"><i class="el-icon-tickets"></i>操作说明</a></el-menu-item>                           
-                        </el-menu>
-                    </el-col>
-                    <el-col :span="8" style="text-align: right;">                             
-                          <el-dropdown>
-                            <span class="el-dropdown-link">
-                              <i class="el-icon-s-custom" style="margin-right: 10px;"></i>admin
-                            </span>
-                            <el-dropdown-menu slot="dropdown">
-                              <el-dropdown-item>修改密码</el-dropdown-item>
-                              <el-dropdown-item>退出</el-dropdown-item> 
-                            </el-dropdown-menu>
-                          </el-dropdown>                     
-                    </el-col>
-                  </el-row>
-                
-              </el-header> 
-            <el-container>                      
-              <el-main>
-                    <router-view name="manage"></router-view>
-              </el-main>
-            </el-container>
-          </el-container>
+  <div class="man_content">
+    <div class="log_content">
+      <div class="log_bg">
+        <iframe src="canvas.html"></iframe>
+      </div>
+      <div class="log_conBlock">
+        <div class="log_logo"><img src="../../images/logo.png" /></div>
+        <el-form ref="formRef" :model="form" :rules="rules">
+          <!-- 用户名 -->
+          <el-form-item prop="username">
+            <el-input prefix-icon="el-icon-user" v-model="form.username"></el-input>
+          </el-form-item>
+          <!-- 密码 -->
+          <el-form-item prop="password">
+            <el-input type="password" prefix-icon="el-icon-lock" v-model="form.password"></el-input>
+          </el-form-item>
+          <!-- 按钮区域 -->
+          <el-form-item class="bu_block">
+            <el-button type="primary" @click="logIn">登 录</el-button>
+            <el-button type="info" @click="reset">重 置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
+    <div class="man_body">
+      <el-container>
+        <el-header>
+          <el-row :gutter="20">
+            <el-col :span="22">
+              <el-menu class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff"
+                active-text-color="#66b1ff">
+                <img class="logo" src="http://gspark.cnweb.cn/images/miclogo.png" />
+                <el-submenu index="1">
+                  <template slot="title"><i class="el-icon-s-home" style="opacity:0.9"></i>首页</template>
+                  <el-menu-item index="1-1"><i class="el-icon-info"></i>系统信息</el-menu-item>
+                  <el-menu-item index="1-2"><i class="el-icon-s-marketing"></i>统计流量</el-menu-item>
+                </el-submenu>
+                <el-menu-item index="2"><a href="javascript:;"><i class="el-icon-document-copy"></i>内容管理</a>
+                </el-menu-item>
+                <el-submenu index="3">
+                  <template slot="title"><i class="el-icon-chat-dot-square"></i>留言管理</template>
+                  <el-menu-item index="3-1">投诉与建议</el-menu-item>
+                  <el-menu-item index="3-2">招聘列表</el-menu-item>
+                </el-submenu>
+                <el-submenu index="4">
+                  <template slot="title"><i class="el-icon-setting"></i>系统设置</template>
+                  <el-menu-item index="4-1">登录日志</el-menu-item>
+                  <el-menu-item index="4-2">操作日志</el-menu-item>
+                  <el-menu-item index="4-3">角色管理</el-menu-item>
+                  <el-menu-item index="4-4">管理员管理</el-menu-item>
+                  <el-menu-item index="4-5">SEO设置</el-menu-item>
+                </el-submenu>
+                <el-menu-item index="5"><a href="javascript:;"><i class="el-icon-tickets"></i>操作说明</a></el-menu-item>
+              </el-menu>
+            </el-col>
+            <el-col :span="2" style="text-align: right;">
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  <i class="el-icon-s-custom" style="margin-right: 10px;"></i>admin
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>修改密码</el-dropdown-item>
+                  <el-dropdown-item>退出</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </el-col>
+          </el-row>
+
+        </el-header>
+        <el-container>
+          <el-main>
+            <router-view name="manage"></router-view>
+          </el-main>
+        </el-container>
+      </el-container>
+    </div>
+  </div>
 </template>
 <style>
-    .el-header {
-      background-color: #545c64;
-      color: #333;
-      line-height: 60px;
-    }
-    
-    .el-aside {
-      color: #333;
-    }
-    .man_content {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
+  .el-header {
+    background-color: #545c64;
+    color: #333;
+    line-height: 60px;
+  }
 
-    section.el-container {
-        height: 100%;
-    }
+  .el-aside {
+    color: #333;
+  }
 
-    ul.el-menu {
-        height: 100%;
-    }
-    .logo {margin-top:16px;float: left;margin-right: 30px;outline: none;}
-    i {color:#fff;position: relative;top:-1px;}
-    li.el-submenu.is-active i {color:#66b1ff;}
-    .el-menu-item-group__title {
-        font-size: 14px;
-        color: #333;
-    }
+  .man_content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
 
-    .el-menu-item {
-        color: #888;
-    }
-    .el-dropdown-link {display: block;color:#fff;padding-top:20px;outline: none;}
-  </style>
-  
+  section.el-container {
+    height: 100%;
+  }
+
+  ul.el-menu {
+    height: 100%;
+  }
+
+  .logo {
+    margin-top: 16px;
+    float: left;
+    margin-right: 30px;
+    outline: none;
+  }
+
+  i {
+    color: #fff;
+    position: relative;
+    top: -1px;
+  }
+
+  li.el-submenu.is-active i {
+    color: #66b1ff;
+  }
+
+  .el-menu-item-group__title {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .el-menu-item {
+    color: #888;
+  }
+
+  .el-dropdown-link {
+    display: block;
+    color: #fff;
+    padding-top: 20px;
+    outline: none;
+  }
+
+  .log_content {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+  }
+
+  .log_bg {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .log_bg iframe {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1920px;
+    height: 1920px;
+    margin-left: -960px;
+    margin-top: -960px;
+    border: 0px;
+  }
+
+  .log_conBlock {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    margin-left: -200px;
+    margin-top: -100px;
+    background: #fff;
+    padding: 30px 20px 10px 20px;
+
+  }
+
+  .log_logo {
+    position: absolute;
+    top: -60px;
+    text-align: center;
+    width: 100%;
+    left: 0px;
+  }
+
+  .log_logo img {
+    display: block;
+    margin: auto;
+  }
+
+  .bu_block {
+    text-align: center;
+  }
+
+  .el-button {
+    min-width: 100px;
+  }
+
+</style>
+
 <script>
-    //引入elementUi
-    import Vue from 'vue';
-    import ElementUI  from 'element-ui';
-    import 'element-ui/lib/theme-chalk/index.css';
-    Vue.use(ElementUI)
-    export default{
-        data() {
-        const item = {
-          date: '2016-05-02',
-          name: 'admin',
-          address: '上海市普陀区金沙江路 1518 弄'
-        };
-        return {
-          tableData: Array(20).fill(item)
+
+  export default {
+    data() {
+      return {
+        //这是登录表单的数据绑定对象
+        form: {
+          username: "admin",
+          password: '123456'
+        },
+        //这是表单的预验证规则对象
+        rules: {
+          username: [ //预验证用户名
+            {
+              required: true,
+              message: '请输入用户名',
+              trigger: 'blur'
+            },
+            {
+              min: 3,
+              max: 15,
+              message: '长度在 3 到 15 个字符',
+              trigger: 'blur'
+            }
+          ],
+          password: [ //预验证密码
+            {
+              required: true,
+              message: '请输入密码',
+              trigger: 'blur'
+            },
+            {
+              min: 6,
+              max: 15,
+              message: '长度在 6 到 15 个字符',
+              trigger: 'blur'
+            }
+          ]
         }
       }
+    },
+    methods: {      
+      //点击提交，预验证
+      logIn() {
+        this.$refs.formRef.validate(async value => {//表单预验证
+          if (!value) {
+            return;
+          }
+          //登陆验证          
+          const {data:res} = await this.$http.post("login",this.form)//this.form要对应API文档约定命名（username、password）
+          if(res.meta.status != 200){//响应状态
+            this.open4();
+          }else{
+            this.open1();
+          }
+        })
+      },
+      reset(){
+        this.$refs.formRef.resetFields();//表单重置
+      },
+      open1() {//消息提示(成功)
+        this.$notify({
+          title: '成功',
+          message: '登陆成功',
+          type: 'success',
+        });
+      },
+      open4() {//消息提示(错误)
+        this.$notify.error({
+          title: '错误',
+          message: '登陆失败',
+        });
+      }
     }
+  }
+
 </script>
