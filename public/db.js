@@ -1,3 +1,4 @@
+//http://127.0.0.1:2101/api/v1/
 // 生成动态API （使用node调数据库，生成数据API）
 var app = require('express')();
 var http = require('http').createServer(app);
@@ -23,33 +24,43 @@ const io = require('socket.io')(http);
        res.header("Content-Type", "application/json;charset=utf-8");
        next();
     });
-    var result = {
-        "status": "200",
-        "message": "success", 
-    }
-    
-    //数据库查询
-    const sql = 'SELECT * FROM business';    
-    connection.query(sql, function(err, rows, fields) {
-        if (err) throw err;
-        //console.log(rows)
-        return  result.data=rows;
-    });
 
     
-    setInterval(function () { //实时读数据库数据（注释connection.end();  确实可以用，不过不合理，临时用下）
-        connection.query(sql, function(err, rows, fields) {
+    //数据库查询    
+    const sql = 'SELECT * FROM business';    
+    const sql2 = 'SELECT * FROM bus_inner';    
+    const result = {
+        "status": "200",
+        "message": "success", 
+    }       
+    function select() { 
+        connection.query(sql, function(err, rows, fields) {//读取楼层信息
             if (err) throw err;
-            return  result.data=rows;
+            return result.floor = rows;
+            da = rows;
         });
+        connection.query(sql2, function(err, rows, fields) {//读取相关店铺信息
+            if (err) throw err;
+            return  result.inner=rows;
+        });
+    }    
+    select();
+    
+    setInterval(function () { //实时读数据库数据（注释connection.end();  确实可以用，不过不合理，临时用下）
+        //select();
     }, 1000)
     
     
     //数据接口business
-    app.get('/business',function(req,res){
+    app.get('/api/v1/business',function(req,res){
         res.status(200),
         res.json(result)   //接口数据      
     }); 
+    app.post('/api/v1/login', function (req,res) { 
+        res.status(200),
+        res.json(result)
+    })
+
     
     // app.get('/business', (req, res) => {
     //     res.sendFile(__dirname + '/ind.html');

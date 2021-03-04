@@ -42,11 +42,12 @@ const routes = [
     ]
   },
   {
-    path: '/manage', component: () => import("../views/manage/index.vue"),//后台管理
-    beforeEnter: (to, from, next) => {
-      document.getElementsByTagName("html")[0].className = "manage";
-      next()
-    }
+    path: '/manage', component: () => import("../views/manage/common.vue"),//后台登陆页
+    children: [//嵌套路由
+      { path: '/', component: () => import("../views/manage/index.vue") },
+      { path: 'content', component: () => import("../views/manage/content.vue") },
+      { path: 'home', component: () => import("../views/manage/home.vue") }
+    ]
   } 
 ]
 
@@ -74,8 +75,15 @@ router.beforeEach((to, from, next) => {   //导航守卫
   // } else {
   //   document.title = "星河-COCO City ";
   // }
-  document.getElementsByTagName("html")[0].classList.remove("manage");
-  document.getElementsByTagName("html")[0].classList.remove("ind_body");//给html删除类名(该类名只在首页需要)
+  var _htmlClass = document.getElementsByTagName("html")[0].classList;
+  var href = location.href;
+  var manage = new RegExp("/manage");
+  if (manage.test(href)) {
+    _htmlClass.add("manage");
+  } else {
+    _htmlClass.remove("manage");
+  }  
+  _htmlClass.remove("ind_body");//给html删除类名(该类名只在首页需要)
   window.scrollTo(0, 0);  //切换路由，默认返回顶部
   next();
 })

@@ -1,19 +1,19 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <header-content></header-content>
     <div class="ind_content" :style="{height:windHeight+'px'}">
       <transition name="fad">
         <router-view @footerDa="footerFun" :clDa="foBl"></router-view> <!-- da 向子组件传值 -->
       </transition>      
     </div>
-    <Footer :da="foBl" @closeDa="closeFooter"></Footer>
+    <footer-content :da="foBl" @closeDa="closeFooter"></footer-content>
   </div>
 </template>
 <style>
 </style>
 <script>
-    import Header from "./views/Shared/Header.vue" //引入页头
-    import Footer from "./views/Shared/Footer.vue" //引入页尾
+    import headerContent from "./views/Shared/Header.vue" //引入页头
+    import footerContent from "./views/Shared/Footer.vue" //引入页尾
 
     export default {      
       data () {
@@ -38,8 +38,8 @@
 
       },
       components: {  //注册
-        Header,
-        Footer
+        headerContent,
+        footerContent
       }
     }
 </script>

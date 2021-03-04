@@ -41,11 +41,32 @@
       "unicode_decimal": 58631
     },
     {
+      "icon_id": "8176564",
+      "name": "查询",
+      "font_class": "chaxun",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
       "icon_id": "8988594",
       "name": "用户",
       "font_class": "yonghu",
       "unicode": "e6e5",
       "unicode_decimal": 59109
+    },
+    {
+      "icon_id": "11598024",
+      "name": "取消置顶",
+      "font_class": "quxiaozhiding",
+      "unicode": "e666",
+      "unicode_decimal": 58982
+    },
+    {
+      "icon_id": "11979287",
+      "name": "添加",
+      "font_class": "add-sy",
+      "unicode": "e501",
+      "unicode_decimal": 58625
     },
     {
       "icon_id": "14498135",
@@ -55,11 +76,46 @@
       "unicode_decimal": 59000
     },
     {
+      "icon_id": "15402019",
+      "name": "发布",
+      "font_class": "fabu",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "16549801",
+      "name": "置顶",
+      "font_class": "zhiding",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "16834648",
+      "name": "编 辑",
+      "font_class": "bianji",
+      "unicode": "e6c1",
+      "unicode_decimal": 59073
+    },
+    {
       "icon_id": "17971282",
       "name": "密 码",
       "font_class": "mima1",
       "unicode": "e664",
       "unicode_decimal": 58980
+    },
+    {
+      "icon_id": "18600357",
+      "name": "待发布",
+      "font_class": "daifabu",
+      "unicode": "e6a7",
+      "unicode_decimal": 59047
+    },
+    {
+      "icon_id": "19261720",
+      "name": "批量删除 ",
+      "font_class": "shanchu",
+      "unicode": "e610",
+      "unicode_decimal": 58896
     }
   ]
 }

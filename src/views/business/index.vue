@@ -22,7 +22,7 @@
                 <transition name="fadeDown">
                     <div class="busI_block" v-if="bl" :style="{width:thisStore().width*m+'px',height:thisStore().height*m+'px',left:(parseInt(thisStore().left)+parseInt(thisStore().width)/2)*m+'px',top:(parseInt(thisStore().top) - parseInt(thisStore().height)/2)*m+'px'}">
                         <div class="busI_InnBlock">
-                            <div class="busI_logo"><img :src="thisStore().Img"></div>
+                            <div class="busI_logo"><img :src="thisStore().img"></div>
                             <div class="busI_teBl">
                                 <div class="busI_name">{{thisStore().ti}}</div>
                                 <div class="busI_Shop">店铺号：<span>{{thisStore().store}}</span></div>
@@ -38,15 +38,13 @@
 </template>
 <script>
     import  bus from "../event/index"
-    import io from 'socket.io'
-    io();
     export default {
         data () {
             return {
                 on:0,//楼层索引
                 m:1,//楼层图与原图比例
-                sN:0,//触发块索引
-                bl:false, //店铺块显示           
+                sN:0,//触发示块索引
+                bl:false, //店铺块显           
                 magUl:[]                
             }
         },
@@ -74,19 +72,16 @@
         },
         created () {
             let _this = this;
-            // this.axios.get('ajax/business.json')  //axios
-            // .then(function (response) {
-            //     console.log(response.data)
-            //     _this.magUl = response.data
-            // })
-            // .catch(function (error) {
-            // console.log(error);
-            // });
-
-            this.$http.get('http://127.0.0.1:2101/business')  //node数据接口   （来自于db.js）
-            .then(function (response) {
-                console.log(response.data.data)
-                _this.magUl = response.data.data
+           
+            this.$http.get('http://127.0.0.1:2101/api/v1/business')  //node数据接口   （来自于public/db.js）
+            .then(function (response) { //get到数据并拼接
+                _this.magUl = response.data.floor                
+                for(var i = 0;i < _this.magUl.length;i++){
+                    _this.magUl[i].ul = response.data.inner.filter(function(item){
+                        return item.pId == (i+1)
+                    })
+                }
+                console.log(_this.magUl)
             })
             .catch(function (error) {
             console.log(error);

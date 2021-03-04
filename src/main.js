@@ -18,11 +18,10 @@ import 'element-ui/lib/theme-chalk/index.css';
 import vueSwiper from "vue-awesome-swiper"
 import 'swiper/css/swiper.css' //npm i swiper@^5.2.0 -s   
 Vue.use(vueSwiper);
-
-Vue.use(ElementUI);
+Vue.use(ElementUI, { zIndex: 1000 });
 //Vue.use(VueAxios, axios)
 //配置请求的跟路径
-axios.defaults.baseURL = "http://127.0.0.1:8888/api/private/v1/"
+//axios.defaults.baseURL = "http://127.0.0.1:8888/api/private/v1/"
 Vue.prototype.$http = axios
 
 

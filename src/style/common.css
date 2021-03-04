@@ -1120,6 +1120,7 @@ a.busI_li.cur,a.busI_li:hover {
     background: #fff;
     border-radius: 6px;
     left: -95px;
+    border: 1px solid #eee;
 }
 
 .busI_logo img {
