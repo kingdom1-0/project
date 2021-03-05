@@ -4,8 +4,8 @@
             <img class="b9_2" src="../../images/c9_2.png">
             <img class="b9_4" src="../../images/c9_4.png">
         </div>
-        <div class="com_conBlock">              
-            <div class="bus_ul">                
+        <div class="com_conBlock">
+            <div class="bus_ul">
                 <router-link to="/member" class="bus_li">会员活动</router-link>
                 <router-link to="/member/join" class="bus_li">加入会员</router-link>
                 <router-link to="/member/notice" class="bus_li">会员须知</router-link>
@@ -14,29 +14,30 @@
                 <div class="clear"></div>
             </div>
             <transition name="fad">
-                <router-view @showDa="showDa" ref="child"></router-view>          
-            </transition>              
+                <router-view @showDa="showDa" ref="child"></router-view>
+            </transition>
         </div>
         {{shNum}}
-        <Alert :show="shNum"></Alert>
-</div>
+        <news-content :show="shNum"></news-content>
+    </div>
 </template>
 
 <script>
-    import Alert from "../Shared/news.vue"  //引入新闻弹出组件
+    import newsContent from "../components/news.vue" //引入新闻弹出组件
     export default {
-        data () {
+        data() {
             return {
-                shNum:false      
+                shNum: false
             }
         },
-        methods: {           
-            showDa:function(val){   //显示弹出层
-                this.shNum = val;     
+        methods: {
+            showDa: function (val) { //显示弹出层
+                this.shNum = val;
             }
         },
-        components: {   //调用组件
-            Alert
+        components: { //调用组件
+            newsContent
         }
     }
+
 </script>

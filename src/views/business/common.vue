@@ -7,21 +7,22 @@
         </div>
         <div class="com_conBlock">
             <div class="bus_ul">
-                <router-link to="/activity" class="bus_li">活动资讯</router-link>
-                <router-link to="/activity/review" class="bus_li"><span @click="initCh">活动回顾</span></router-link>
+                <router-link to="/business/" class="bus_li">楼层导视</router-link>
+                <router-link to="/business/brand" class="bus_li">品牌展示</router-link>
+                <router-link to="/business/merchant" class="bus_li">商家介绍</router-link>
                 <div class="clear"></div>
             </div>
             <transition name="fad">
-                <router-view @showDa="showDa" ref="child"></router-view>
+                <router-view @showDa="showDa"></router-view>
             </transition>
         </div>
         {{shNum}}
-        <news-content :show="shNum"></news-content>
+        <alert-content :show="shNum"></alert-content>
     </div>
 </template>
 
 <script>
-    import newsContent from "../components/news.vue"
+    import alertContent from "../components/alert.vue"
     export default {
         data() {
             return {
@@ -36,17 +37,16 @@
                     params: {
                         on: "2"
                     }
-                }) //编程式动态导                 
+                }) //编程式动态导 
+
             },
             showDa: function (val) {
                 this.shNum = val;
-            },
-            initCh: function () {
-                this.$refs.child.bo = false //通过ref操作子组件
             }
+
         },
         components: {
-            newsContent
+            alertContent
         }
     }
 

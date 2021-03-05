@@ -15,10 +15,12 @@
           <el-form-item prop="password">
             <el-input type="password" prefix-icon="el-icon-lock" v-model="form.password"></el-input>
           </el-form-item>
+
           <!-- 按钮区域 -->
           <el-form-item class="bu_block">
             <el-button type="primary" @click="logIn">登 录</el-button>
             <el-button type="info" @click="reset">重 置</el-button>
+            <!-- <el-button type="info" @click="register">注 册</el-button> -->
           </el-form-item>
         </el-form>
       </div>
@@ -60,13 +62,13 @@
               </el-menu>
             </el-col>
             <el-col :span="2" style="text-align: right;">
-              <el-dropdown>
+              <el-dropdown @command="logout">
                 <span class="el-dropdown-link">
                   <i class="el-icon-s-custom" style="margin-right: 10px;"></i>{{form.username}}
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>修改密码</el-dropdown-item>
-                  <el-dropdown-item>退出</el-dropdown-item>
+                  <el-dropdown-item command="reset">修改密码</el-dropdown-item>
+                  <el-dropdown-item command="out">退出</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </el-col>
@@ -145,8 +147,18 @@
           }
         })
       },
-      reset() {
-        this.$refs.formRef.resetFields(); //表单重置
+      logout(command) { //登陆退出
+        if (command == 'out') {
+          sessionStorage.removeItem("token");
+          this.$router.push('/manage/');
+          this.shOn = true;
+        }
+      },
+      register() {
+        console.log("注册")
+      },
+      reset() { //表单重置
+        this.$refs.formRef.resetFields();
       },
       open1() { //消息提示(成功)
         this.$notify({

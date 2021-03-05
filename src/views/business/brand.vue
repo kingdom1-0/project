@@ -4,71 +4,101 @@
             <div class="bra_tiBl">
                 <div class="bra_bl">
                     <div class="bra_ul">
-                        <a href="javascript:;" :class="{bra_li:true,w1:!i,cur:(en==i)}" v-for="(e,i) in enDa" :key="e.id">{{e}}</a>  
+                        <a href="javascript:;" :class="{bra_li:true,w1:!i,cur:(le==e)}" @click="leFilters(e)"
+                            v-for="(e,i) in enDa" :key="e.id">{{e}}</a>
                     </div>
-                </div>                                
-                <select class="bra_select">
-                    <option value="全部分类" v-for="s in sortDa" :key="s.id">{{s}}</option>                    
+                </div>
+                <select class="bra_select" v-model="sort">
+                    <option value="全部分类">全部分类</option>
+                    <option :value="s.sort" v-for="s in sortDa" :key="s.id">{{s.sort}}</option>
                 </select>
             </div>
             <div class="bra_conBlock">
                 <div class="bra_floorUl">
-                    <div :class="{bra_floorLi:true,fir_1:!i,cur:(fl==i)}" @click="floorFun" v-for="(f,i) in flDa" :key="f.id"><div class="bra_center ">{{f}}</div></div>                   
+                    <div :class="{bra_floorLi:true,fir_1:true,cur:fl < 0}" @click="floorFilters(-1)">
+                        <div class="bra_center ">全部楼层</div>
+                    </div>
+                    <div :class="{bra_floorLi:true,cur:i==fl}" @click="floorFilters(i)" v-for="(f,i) in flDa"
+                        :key="f.id">
+                        <div class="bra_center ">{{f.fl}}</div>
+                    </div>
                 </div>
                 <div class="bra_showBl">
-                    <div class="bra_ulBl">                        
-                        <div class="bra_liBl" @click="showBlock()"  v-for="s in store" :key="s.id">
-                            <div class="bra_img"><img :src="s.logo"/></div>
-                            <div class="bra_teBl">
-                                <div class="bra_teTi">{{s.name}}</div>
-                                <router-link :to="s.href" class="bra_lo">{{s.lo}}</router-link>
+                    <div class="bra_ulBl">
+                        <template v-for="s in store">
+                            <div class="bra_liBl" v-show="storeFilers(s)" :key="s.id">
+                                <div class="bra_Inner" @click="showStore(s)">
+                                    <div class="bra_img"><img :src="s.img" /></div>
+                                    <div class="bra_teBl">
+                                        <div class="bra_teTi">{{s.ti}}</div>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <router-link :to="{path:'/business/',query:{sid:s.id}}" class="bra_lo">
+                                    {{s.store}}
+                                </router-link>
                             </div>
-                            <div class="clear"></div>
-                        </div>
+                        </template>
                         <div class="clear"></div>
                     </div>
-                </div>                               
+                </div>
                 <div class="clear"></div>
             </div>
         </div>
-</div>
+    </div>
 </template>
 
 <script>
-    //import  bus from "../event/index"
+    import bus from "../event/index"
     export default {
-        data () {
+        data() {
             return {
-                en:0,
-                sort:0,
-                fl:0,
-                enDa:["全部","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
-                sortDa:[],
-                flDa:[],
-                store:[]
+                sort: '全部分类', //分类筛选(v-moedl)
+                fl: -1, //楼层
+                le: "全部", //字母
+                enDa: ["全部", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
+                    "S", "T", "U", "V", "W", "X", "Y", "Z" //字母
+                ],
+                sortDa: [], //分类数据
+                flDa: [], //楼层数据
+                store: [] //店铺数据
             }
         },
         methods: {
-            floorFun:function(){
-                
+            floorFilters: function (i) { //楼层筛选
+                this.fl = i;
             },
-            backData:function(){
-                //事件总线发送数据
-                //bus.$emit("showDa",true)
+            leFilters: function (i) { //楼层筛选
+                this.le = i;
             },
-            showBlock() {
-                this.$store.commit('showBlock')
+            storeFilers: function (s) { //店铺筛选
+                var bo = (s.sort == this.sort || this.sort == "全部分类") && (s.pId - 1 == this.fl || this.fl == -1) &&
+                    (s.le == this.le || this.le == "全部")
+                return bo
+            },
+            showStore(s) { //显示店铺详细信息
+                bus.$emit('data', {
+                    showDa: true,
+                    logo: s.img,
+                    ti: s.ti,
+                    lo: s.store,
+                    sort: s.sort,
+                    text: s.text,
+                    imgUl: s.imgul.split(",")
+                })
             }
         },
-        mounted () {
+        mounted() {
             let _this = this;
-            this.$http.get("ajax/brand.json").then(function(re){
-                _this.sortDa =  re.data.sortDa;
-                _this.flDa = re.data.flDa;
+            this.$http.get("http://127.0.0.1:2101/api/v1/business").then(function (re) { //get楼层，分类，店铺数据
+                _this.sortDa = re.data.sort;
+                _this.flDa = re.data.floor;
                 _this.store = re.data.store;
-            }).catch(function(err){
+                console.log(_this.store)
+            }).catch(function (err) {
                 console.log(err)
             })
         }
     }
+
 </script>
