@@ -8,43 +8,20 @@
         <div class="com_conBlock">
             <div class="bus_ul">
                 <router-link to="/activity" class="bus_li">活动资讯</router-link>
-                <router-link to="/activity/review" class="bus_li"><span @click="initCh">活动回顾</span></router-link>
+                <router-link to="/activity/review" class="bus_li"><span>活动回顾</span></router-link>
                 <div class="clear"></div>
             </div>
             <transition name="fad">
-                <router-view @showDa="showDa" ref="child"></router-view>
+                <router-view></router-view>
             </transition>
         </div>
-        {{shNum}}
-        <news-content :show="shNum"></news-content>
+        <news-content></news-content>
     </div>
 </template>
 
 <script>
     import newsContent from "../components/news.vue"
     export default {
-        data() {
-            return {
-                shNum: false
-            }
-        },
-        methods: {
-            toBrand: function () {
-                //this.$router.push({ path: '/business/brand',query:{on:"2"}})  //编程式导航
-                this.$router.push({
-                    name: 'brand',
-                    params: {
-                        on: "2"
-                    }
-                }) //编程式动态导                 
-            },
-            showDa: function (val) {
-                this.shNum = val;
-            },
-            initCh: function () {
-                this.$refs.child.bo = false //通过ref操作子组件
-            }
-        },
         components: {
             newsContent
         }

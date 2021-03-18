@@ -1,3 +1,12 @@
+/*  
+    node 的 mySql  使用 (数据库)
+
+    速查表
+    https://www.runoob.com/nodejs/nodejs-mysql.html   
+    https://www.runoob.com/sql/sql-tutorial.html  
+
+    cnpm install mysql   
+*/
 //http://127.0.0.1:2101/api/v1/
 // 生成动态API （使用node调数据库，生成数据API）
 var app = require('express')();
@@ -27,29 +36,36 @@ app.all('*', function (req, res, next) {
 
 
 //数据库查询    
-const sql = 'SELECT * FROM bu_floor';
-const sql1 = 'SELECT * FROM bu_sort';
-const sql2 = 'SELECT * FROM bu_store';
-const result = {
+const result = { //楼层返回数据
     "status": "200",
     "message": "success",
     floor: [{}, {}, {}, {}], //楼层数据
     sort: ['', ''],
     store: [{}, {}, {}, {}] //店铺数据
 }
+const result2 = { //新闻返回数据
+    "status": "200",
+    "message": "success",
+    news: []
+}
+
 
 function select() {
-    connection.query(sql, function (err, rows, fields) { //读取楼层信息
+    connection.query('SELECT * FROM bu_floor', function (err, rows, fields) { //读取楼层信息
         if (err) throw err;
         return result.floor = rows;
     });
-    connection.query(sql1, function (err, rows, fields) { //读取楼层信息
+    connection.query('SELECT * FROM bu_sort', function (err, rows, fields) { //读取楼层信息
         if (err) throw err;
         return result.sort = rows;
     });
-    connection.query(sql2, function (err, rows, fields) { //读取相关店铺信息
+    connection.query('SELECT * FROM bu_store', function (err, rows, fields) { //读取相关店铺信息
         if (err) throw err;
         return result.store = rows;
+    });
+    connection.query('SELECT * FROM bu_news', function (err, rows, fields) { //读取相关店铺信息
+        if (err) throw err;
+        return result2.news = rows;
     });
 }
 select();
@@ -60,14 +76,14 @@ setInterval(function () { //实时读数据库数据（注释connection.end();  
 
 
 //数据接口business
-app.get('/api/v1/business', function (req, res) {
-    res.status(200),
-        res.json(result) //接口数据      
-});
-app.post('/api/v1/login', function (req, res) {
+app.get('/api/v1/business', function (req, res) { //楼层接口
     res.status(200),
         res.json(result)
-})
+});
+app.get('/api/v1/news', function (req, res) { //新闻接口
+    res.status(200),
+        res.json(result2)
+});
 
 
 // app.get('/business', (req, res) => {
@@ -78,7 +94,7 @@ io.on('connection', (socket) => {
     console.log('a user connected');
 });
 
-connection.end();
+connection.end(); //关闭数据库
 
 //配置服务端口 
 http.listen(2101, () => {

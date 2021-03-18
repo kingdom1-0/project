@@ -75,9 +75,7 @@
           </el-row>
         </el-header>
         <el-container>
-          <el-main>
-            <router-view></router-view>
-          </el-main>
+          <router-view></router-view>
         </el-container>
       </el-container>
     </div>
@@ -85,6 +83,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     data() {
       return {
@@ -173,6 +172,12 @@
           message: '登陆失败',
         });
       }
+    },
+    created() {
+      axios.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
+        config.headers.Authorization = window.sessionStorage.getItem("token") //挂载token
+        return config //最后必需
+      })
     },
     mounted: function () {
       if (sessionStorage.token != undefined) { //判断token值，显示后台管理系统

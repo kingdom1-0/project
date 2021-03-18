@@ -1363,7 +1363,6 @@ a.bus_aBl {
 
 .alt_swiperBl {
     position: relative;
-    padding-top: 60px;
 }
 
 .alt_tiBl {
@@ -1783,7 +1782,10 @@ img.b6_7 {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    padding-right: 40px;
+}
+
+.act_te p {
+    line-height: 1.6em;
 }
 
 .act_te {
@@ -3957,4 +3959,70 @@ html.manage div#Footer {
 .el-icon-user:before,
 .el-icon-lock:before {
     color: #333;
+}
+
+a.bus_img img {
+    width: 100%;
+}
+
+
+.N404_content {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: -webkit-linear-gradient(bottom, #e7f4f5, #e7f4f5);
+}
+
+.N404 {
+    font-size: 60px;
+    color: rgb(117, 189, 41);
+    width: 100%;
+    text-align: center;
+    position: relative;
+    top: 36%;
+    letter-spacing: 10px;
+}
+
+.N404 span {
+    font-size: 100px;
+    position: relative;
+    top: 10px;
+    left: 20px;
+}
+
+.bu_unfold {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    background: #4f5356;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+ul.el-menu {
+    background: #eee;
+}
+
+li.el-submenu i {
+    color: #fff;
+}
+
+.el-icon-user:before,
+.el-icon-lock:before {
+    color: #fff;
+}
+
+ul.el-menu {
+    border-right: 0px;
+}
+
+.man_content {
+    min-height: 600px;
+}
+
+aside.nav_bl {
+    overflow: hidden;
 }

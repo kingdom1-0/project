@@ -79,6 +79,7 @@
             showStore(s) { //显示店铺详细信息
                 bus.$emit('data', {
                     showDa: true,
+                    id: s.id,
                     logo: s.img,
                     ti: s.ti,
                     lo: s.store,
@@ -94,7 +95,7 @@
                 _this.sortDa = re.data.sort;
                 _this.flDa = re.data.floor;
                 _this.store = re.data.store;
-                console.log(_this.store)
+                //console.log(_this.store)
             }).catch(function (err) {
                 console.log(err)
             })

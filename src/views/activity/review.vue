@@ -1,9 +1,9 @@
 <template>
   <div class="bus_content">
     <div class="rev_content">
-      <div class="rev_conBlock"  v-show="!bo">
+      <div class="rev_conBlock" v-show="!bo">
         <div class="rev_dataBlock">
-          <div class="rev_bgBl"><img :src="calendar.bgImg" /></div>
+          <div class="rev_bgBl"><img src="../../images/c1_1.png" /></div>
           <div class="revB_content">
             <el-calendar v-model="value">
             </el-calendar>
@@ -14,8 +14,8 @@
           <div class="rev1_block">
             <div class="rev1_img"><img :src="calendar.img" /></div>
             <div class="rev1_teBl">
-              <div class="rev_da">{{calendar.year}}</div>
-              <div class="rev_day">{{calendar.day}}</div>
+              <div class="rev_da">{{calendar.date.slice(0,7)}}</div>
+              <div class="rev_day">{{calendar.date.slice(8,10)}}</div>
             </div>
             <div class="clear"></div>
           </div>
@@ -27,18 +27,18 @@
       </div>
       <div class="act_context" v-show="bo">
         <swiper class="swiper" :options="swiperOption">
-          <swiper-slide v-for="li in newList" :key="li.id">
-            <a href="javascript:;" class="act_block Inn_button" @click="showBlock()">
+          <swiper-slide v-for="(li,i) in newList" :key="li.id">
+            <a href="javascript:;" class="act_block Inn_button" @click="showBlock(i)">
               <div class="act_img"> <img :src="li.img"> </div>
               <div class="act_teBlock">
                 <div class="act_date">
-                  <div class="act_year">{{li.year}}</div>
-                  <div class="act_day">{{li.date}}</div>
+                  <div class="act_year">{{li.date.slice(0,4)}}</div>
+                  <div class="act_day">{{li.date.slice(5,10)}}</div>
                 </div>
                 <div class="act_teBl">
-                  <div class="act_ti">{{li.ti}}</div>
+                  <div class="act_ti">{{li.title}}</div>
                   <div class="act_bu"></div>
-                  <div class="act_te">{{li.te}}</div>
+                  <div class="act_te" v-html="li.text"></div>
                 </div>
                 <div class="clear"></div>
               </div>
@@ -54,40 +54,42 @@
   </div>
 </template>
 <script>
-
   export default {
     data() {
       return {
         swiperOption: {
-            slidesPerView: 4,
-            navigation: {
-              nextEl: '.sw_riBu',
-              prevEl: '.sw_leBu'
-            }
+          slidesPerView: 4,
+          navigation: {
+            nextEl: '.sw_riBu',
+            prevEl: '.sw_leBu'
+          }
         },
-        newList:[],
+        newList: [],
         calendar: {},
-        bo:false,
+        bo: false,
         value: new Date()
       }
     },
     methods: {
-      showBlock() {
-          this.$store.commit('showBlock')
+      showBlock(i) {
+        this.$store.commit("showNews", { //vuex
+          on: true,
+          data: this.newList[i]
+        })
       }
     },
-    mounted () {
+    mounted() {
       let _this = this;
-      this.$http.get("ajax/review.json").then(function(re){
-        _this.newList =  re.data.newList;
-        _this.calendar = re.data.calendar;
-      }).catch(function(err){
+      this.$http.get("http://127.0.0.1:2101/api/v1/news").then(function (res) {
+        _this.newList = res.data.news;
+        _this.calendar = res.data.news[0];
+      }).catch(function (err) {
         console.log(err)
       })
     },
-    destroyed: function () {//实例销毁后调用
+    destroyed: function () { //实例销毁后调用
       this.$nextTick(function () {
-         this.bo = false;
+        this.bo = false;
       })
     }
   }

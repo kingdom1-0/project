@@ -2,26 +2,27 @@
   <div class="bus_content">
     <div class="bus_conBlock">
       <swiper class="swiper" :options="swiperOption">
-        <swiper-slide  v-for="s in store" :key="s.id">
-          <div class="bus_block" @click="showBlock">
-              <a href="javascript:;" class="bus_img"><img :src="s.logo" /></a>
-              <div class="bus_teBl">
-                  <a href="javascript:;" class="bus_ti">{{s.name}}</a>                  
-                  <router-link :to="s.href" class="bus_aBl">店铺号:<span>{{s.lo}}</span></router-link>
-              </div>
+        <swiper-slide v-for="s in store" :key="s.id">
+          <div class="bus_block" @click="showBlock(s)">
+            <a href="javascript:;" class="bus_img"><img :src="s.img" /></a>
+            <div class="bus_teBl">
+              <a href="javascript:;" class="bus_ti">{{s.ti}}</a>
+              <router-link :to="{path:'/business/',query:{sid:s.id}}" class="bus_aBl">店铺号:<span>{{s.store}}</span>
+              </router-link>
+            </div>
           </div>
-        </swiper-slide>    
+        </swiper-slide>
       </swiper>
-        <div class="sw_button">
-            <div class="sw_leBu"></div>
-            <div class="sw_riBu"></div>
-        </div>
+      <div class="sw_button">
+        <div class="sw_leBu"></div>
+        <div class="sw_riBu"></div>
+      </div>
     </div>
-</div>
+  </div>
 </template>
 <script>
-  //import  bus from "../event/index"
-  export default {    
+  import bus from "../event/index" //事件总线
+  export default {
     data() {
       return {
         swiperOption: {
@@ -31,26 +32,32 @@
             prevEl: '.sw_leBu'
           }
         },
-        store:[]
+        store: []
       }
     },
     methods: {
-      backData:function(){
-          //事件总线发送数据
-          //bus.$emit("showDa",true)
-      },
-      showBlock() {
-        this.$store.commit('showBlock')
+      showBlock(s) { //弹出店铺详情
+        bus.$emit('data', {
+          showDa: true,
+          id: s.id,
+          logo: s.img,
+          ti: s.ti,
+          lo: s.store,
+          sort: s.sort,
+          text: s.text,
+          imgUl: s.imgul.split(",")
+        })
       }
     },
-    created () {
+    created() {
       let _this = this;
-      this.$http.get("ajax/merchant.json").then(function(re){
-         _this.store = re.data;
-      }).catch(function(err){
+      this.$http.get("http://127.0.0.1:2101/api/v1/business").then(function (re) {
+        _this.store = re.data.store;
+        //console.log(re.data.store)
+      }).catch(function (err) {
         console.log(err)
       })
     }
   }
-</script>
 
+</script>

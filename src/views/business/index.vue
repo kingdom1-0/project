@@ -42,7 +42,7 @@
     </div>
 </template>
 <script>
-    import bus from "../event/index"
+    import bus from "../event/index" //事件总线
     export default {
         data() {
             return {
@@ -71,7 +71,7 @@
                 return this.magUl[this.on].ul[this.sN]
             },
             backData: function () {
-                //事件总线发送数据
+                //显示店铺详情页（事件总线）
                 bus.$emit('data', {
                     showDa: true,
                     logo: this.thisStore().img,
@@ -85,18 +85,20 @@
         },
         created() {
             let _this = this;
-
-            this.$http.get('http://127.0.0.1:2101/api/v1/business') //node数据接口   （来自于public/db.js）
-                .then(function (response) { //get到数据并拼接
-                    _this.magUl = response.data.floor
+            /*node数据接口
+            （floor(楼层数据)，sort（店铺分类）,store(店铺数据)）   
+            （来自于public/db.js）*/
+            this.$http.get('http://127.0.0.1:2101/api/v1/business')
+                .then(function (res) { //get到数据并拼接
+                    _this.magUl = res.data.floor
                     for (var i = 0; i < _this.magUl.length; i++) {
-                        _this.magUl[i].ul = response.data.store.filter(function (item) {
+                        _this.magUl[i].ul = res.data.store.filter(function (item) {
                             return item.pId == (i + 1)
                         })
                     }
-                    if (location.href.indexOf("sid=") > 0) {
+                    if (location.href.indexOf("sid=") > 0) { //传参显示店铺信息
                         var sid = parseInt(location.href.split("sid=")[1])
-                        var thisStore = response.data.store[sid - 1]
+                        var thisStore = res.data.store[sid - 1]
                         _this.on = thisStore.pId - 1;
                         var storeAr = _this.magUl[_this.on].ul;
                         for (var n = 0; n < storeAr.length; n++) {

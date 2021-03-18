@@ -22,14 +22,17 @@ Vue.use(ElementUI, {
   zIndex: 1000
 });
 //Vue.use(VueAxios, axios)
-//配置请求的跟路径
-//axios.defaults.baseURL = "http://127.0.0.1:8888/api/private/v1/"
+//axios.defaults.baseURL = "http://127.0.0.1:8888/api/private/v1/"//配置请求的根路径
+// axios.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
+//   config.headers.Authorization = window.sessionStorage.getItem("token") //挂载token
+//   return config //最后必需
+// })
 Vue.prototype.$http = axios
 
 
 Vue.config.productionTip = false
 new Vue({
   router,
-  store,
+  store, //把 store 的实例注入所有的子组件(this.$store)
   render: h => h(App)
 }).$mount('#app')

@@ -1,34 +1,15 @@
 <template>
   <el-container class="man_content">
     <!-- 导航 -->
-    <el-aside width="200px">
-      <el-menu :default-openeds="['1', '2']">
-        <el-submenu index="1">
-          <template slot="title">品牌指引</template>
-          <el-menu-item index="1-1">楼层导视</el-menu-item>
-          <el-menu-item index="1-2">品牌展示</el-menu-item>
-          <el-menu-item index="1-3">商家介绍</el-menu-item>
-        </el-submenu>
-        <el-submenu index="2">
-          <template slot="title">活动精选</template>
-          <el-menu-item index="2-1">活动资讯</el-menu-item>
-          <el-menu-item index="2-2">活动回顾</el-menu-item>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title">会员天地</template>
-          <el-menu-item index="3-1">会员活动</el-menu-item>
-          <el-menu-item index="3-2">加入会员</el-menu-item>
-          <el-menu-item index="3-3">会员须知</el-menu-item>
-          <el-menu-item index="3-4">积分兑换</el-menu-item>
-          <el-menu-item index="3-5">留言板</el-menu-item>
-        </el-submenu>
-        <el-submenu index="4">
-          <template slot="title">关于我们</template>
-          <el-menu-item index="4-1">项目简介</el-menu-item>
-          <el-menu-item index="4-2">交通指南</el-menu-item>
-          <el-menu-item index="4-3">招商租赁</el-menu-item>
-          <el-menu-item index="4-4">场地合作</el-menu-item>
-          <el-menu-item index="4-5">联系我们</el-menu-item>
+    <el-aside class="nav_bl" :width="unfold?(200+''):(64+'')">
+      <!--el-icon-s-unfold-->
+      <el-menu unique-opened default-active="2" class="el-menu-vertical-demo" background-color="#545c64"
+        text-color="#fff" active-text-color="rgb(64, 158, 255)" :collapse="unfold" :collapse-transition="false">
+        <div class="bu_unfold" @click="unfold = !unfold"><i class="el-icon-s-unfold"></i></div>
+        <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id">
+          <template slot="title"><i :class="icoList[item.id]"></i><span
+              class="title">{{item.authName}}</span></template>
+          <el-menu-item v-for="it in item.children" :index="it.id+''" :key="it.id">{{it.authName}}</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-aside>
@@ -275,10 +256,30 @@
             }
           ],
         },
-        fileList: []
+        fileList: [],
+        menulist: [], //左侧菜单数据
+        icoList: {
+          125: 'el-icon-user',
+          103: 'el-icon-help',
+          101: 'el-icon-goods',
+          102: 'el-icon-tickets',
+          145: 'el-icon-notebook-2',
+        }, //左侧图标
+        unfold: false
       }
     },
+    created() {
+      this.getMenuList();
+    },
     methods: {
+      async getMenuList() { //获取所有的菜单
+        const {
+          data: res
+        } = await this.$http.get('http://127.0.0.1:8888/api/private/v1/menus');
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        this.menulist = res.data
+        console.log(res)
+      },
       toggleSelection(rows) { //表格
         if (rows) {
           rows.forEach(row => {
@@ -394,6 +395,17 @@
   i.el-icon {
     color: #666;
     padding-top: 2px;
+  }
+
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+  }
+
+  li.el-submenu.is-active .title,
+  li.el-submenu.is-active i:before,
+  li.el-submenu.is-active a:before {
+    color: #409EFF;
   }
 
 </style>

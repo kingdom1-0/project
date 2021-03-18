@@ -1,6 +1,6 @@
-import Vue from 'vue' //引入vue
+import Vue from 'vue' // 引入vue
 import VueRouter from 'vue-router'
-Vue.use(VueRouter) //挂载vueRouter插件
+Vue.use(VueRouter) // 挂载vueRouter插件
 
 const routes = [{
     path: '/',
@@ -105,6 +105,10 @@ const routes = [{
       document.getElementsByTagName("html")[0].className = "manage";
       next()
     }
+  },
+  {
+    path: '*', //404页面
+    component: () => import("../views/N404/index.vue")
   }
 ]
 

@@ -10,7 +10,11 @@
                             <div class="alt_log"><img :src="store.logo" /></div>
                             <div class="alt_tBl">
                                 <div class="alt_ti">{{store.ti}}</div>
-                                <a href="/business/?lo=2" class="alt_aBl">{{store.lo}}</a>
+                                <div @click="sh=false">
+                                    <router-link :to="{path:'/business/',query:{sid:store.id}}" class="alt_aBl">
+                                        {{store.lo}}
+                                    </router-link>
+                                </div>
                                 <div class="alt_t">类别：{{store.sort}}</div>
                             </div>
                             <div class="clear"></div>
@@ -38,12 +42,6 @@
 <script>
     import bus from "../event/index" //事件总线
     export default {
-        props: {
-            show: {
-                type: Boolean,
-                default: false
-            }
-        },
         data() {
             return {
                 sh: false,
@@ -58,6 +56,7 @@
                     }
                 },
                 store: {
+                    id: "",
                     logo: "",
                     ti: "",
                     lo: "",
@@ -73,18 +72,11 @@
                 this.sh = val.showDa; //显示开送
                 this.store = val //弹出块相关数据
             })
-            //this.sh = this.$store.state.showDa;
         },
         methods: {
             closeAlert: function () {
-                //this.$store.state.showDa = false;
                 this.sh = false;
             }
-        },
-        watch: {
-            // '$store.state.showDa': function () { //监听vuex数据
-            //     this.sh = this.$store.state.showDa;
-            // }
         }
     }
 
