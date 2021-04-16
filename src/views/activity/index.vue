@@ -53,8 +53,7 @@
         let _this = this;
         this.$http.get('http://127.0.0.1:2101/api/v1/news') //axios
           .then(function (res) {
-            _this.newList = res.data.news
-            //console.log(res.data.news)
+            _this.newList = res.data.data
           })
           .catch(function (error) {
             console.log(error);

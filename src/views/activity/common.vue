@@ -8,11 +8,12 @@
         <div class="com_conBlock">
             <div class="bus_ul">
                 <router-link to="/activity" class="bus_li">活动资讯</router-link>
-                <router-link to="/activity/review" class="bus_li"><span>活动回顾</span></router-link>
+                <router-link to="/activity/review" class="bus_li"><span @click="initCh">活动回顾</span>
+                </router-link>
                 <div class="clear"></div>
             </div>
             <transition name="fad">
-                <router-view></router-view>
+                <router-view ref="child"></router-view>
             </transition>
         </div>
         <news-content></news-content>
@@ -22,6 +23,11 @@
 <script>
     import newsContent from "../components/news.vue"
     export default {
+        methods: {
+            initCh: function () {
+                this.$refs.child.bo = false //通过ref操作子组件
+            }
+        },
         components: {
             newsContent
         }

@@ -20,6 +20,7 @@
             <div class="clear"></div>
           </div>
           <div class="rev_te">
+
           </div>
           <a href="javascript:;" class="rev_more" @click="bo = true">查看详情</a>
         </div>
@@ -65,7 +66,9 @@
           }
         },
         newList: [],
-        calendar: {},
+        calendar: {
+          date: ""
+        },
         bo: false,
         value: new Date()
       }
@@ -81,7 +84,7 @@
     mounted() {
       let _this = this;
       this.$http.get("http://127.0.0.1:2101/api/v1/news").then(function (res) {
-        _this.newList = res.data.news;
+        _this.newList = res.data.data;
         _this.calendar = res.data.news[0];
       }).catch(function (err) {
         console.log(err)

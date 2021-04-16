@@ -257,7 +257,49 @@
           ],
         },
         fileList: [],
-        menulist: [], //左侧菜单数据
+        menulist: [{
+            id: 1,
+            authName: "品牌指引",
+            children: [{
+                id: "1_1",
+                authName: "楼层管理"
+              },
+              {
+                id: "1_2",
+                authName: "类别管理"
+              },
+              {
+                id: "1_3",
+                authName: "品牌管理"
+              }
+            ]
+          },
+          {
+            id: 2,
+            authName: "活动精选"
+          },
+          {
+            id: 3,
+            authName: "会员天地",
+            children: [{
+                id: "3_1",
+                authName: "会员活动"
+              },
+              {
+                id: "3_2",
+                authName: "加入会员"
+              },
+              {
+                id: "3_3",
+                authName: "会员须知"
+              },
+              {
+                id: "3_4",
+                authName: "积分特权"
+              }
+            ]
+          }
+        ], //左侧菜单数据
         icoList: {
           125: 'el-icon-user',
           103: 'el-icon-help',
@@ -269,17 +311,9 @@
       }
     },
     created() {
-      this.getMenuList();
+
     },
     methods: {
-      async getMenuList() { //获取所有的菜单
-        const {
-          data: res
-        } = await this.$http.get('http://127.0.0.1:8888/api/private/v1/menus');
-        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
-        this.menulist = res.data
-        console.log(res)
-      },
       toggleSelection(rows) { //表格
         if (rows) {
           rows.forEach(row => {

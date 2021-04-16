@@ -32,7 +32,7 @@
             <el-col :span="22">
               <el-menu class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff"
                 active-text-color="#409EFF">
-                <img class="logo" src="http://gspark.cnweb.cn/images/miclogo.png" />
+                <img class="logo" src="../../images/logo.png" />
                 <el-submenu index="1">
                   <template slot="title">
                     <router-link to="/manage"><i class="el-icon-s-home"></i>首页</router-link>
@@ -83,7 +83,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  //import axios from 'axios'
   export default {
     data() {
       return {
@@ -134,16 +134,18 @@
           //登陆验证          
           const {
             data: res
-          } = await this.$http.post("http://127.0.0.1:8888/api/private/v1/login", this
+          } = await this.$http.post("http://127.0.0.1:2101/api/v1/login", this
             .form) //this.form要对应API文档约定命名（username、password）
           if (res.meta.status != 200) { //响应状态
-            this.open4();
+            this.open4(res.meta.message);
           } else {
-            this.open1();
-            window.sessionStorage.setItem("token", res.data.token);
+            this.open1(res.meta.message);
+            window.sessionStorage.setItem("token", res.token);
             this.shOn = false; //显示后台管理系统
             //this.$router.push('/manage/Home')            
           }
+
+
         })
       },
       logout(command) { //登陆退出
@@ -159,25 +161,25 @@
       reset() { //表单重置
         this.$refs.formRef.resetFields();
       },
-      open1() { //消息提示(成功)
+      open1(val) { //消息提示(成功)
         this.$notify({
           title: '成功',
-          message: '登陆成功',
+          message: val,
           type: 'success',
         });
       },
-      open4() { //消息提示(错误)
+      open4(val) { //消息提示(错误)
         this.$notify.error({
           title: '错误',
-          message: '登陆失败',
+          message: val,
         });
       }
     },
     created() {
-      axios.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
-        config.headers.Authorization = window.sessionStorage.getItem("token") //挂载token
-        return config //最后必需
-      })
+      // axios.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
+      //   config.headers.Authorization = window.sessionStorage.getItem("token") //挂载token
+      //   return config //最后必需
+      // })
     },
     mounted: function () {
       if (sessionStorage.token != undefined) { //判断token值，显示后台管理系统
@@ -314,6 +316,10 @@
   .el-submenu__title *,
   .el-menu-item * {
     color: #fff;
+  }
+
+  ul.el-menu-demo.el-menu--horizontal.el-menu {
+    min-width: 1000px;
   }
 
 </style>

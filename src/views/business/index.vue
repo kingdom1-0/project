@@ -90,7 +90,7 @@
             （来自于public/db.js）*/
             this.$http.get('http://127.0.0.1:2101/api/v1/business')
                 .then(function (res) { //get到数据并拼接
-                    _this.magUl = res.data.floor
+                    _this.magUl = res.data.data;
                     for (var i = 0; i < _this.magUl.length; i++) {
                         _this.magUl[i].ul = res.data.store.filter(function (item) {
                             return item.pId == (i + 1)

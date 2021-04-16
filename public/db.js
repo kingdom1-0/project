@@ -13,6 +13,7 @@ var app = require('express')();
 var http = require('http').createServer(app);
 var mysql = require('mysql');
 const io = require('socket.io')(http);
+var bodyParser = require('body-parser'); //用于获取前端传送过来的数据
 
 //链接数据库
 const connection = mysql.createConnection({ //配置数据库
@@ -27,7 +28,7 @@ connection.connect(); //连接数据库
 //设置跨域访问
 app.all('*', function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
     res.header("X-Powered-By", ' 3.2.1');
     res.header("Content-Type", "application/json;charset=utf-8");
@@ -35,68 +36,95 @@ app.all('*', function (req, res, next) {
 });
 
 
-//数据库查询    
-const result = { //楼层返回数据
-    "status": "200",
-    "message": "success",
-    floor: [{}, {}, {}, {}], //楼层数据
-    sort: ['', ''],
-    store: [{}, {}, {}, {}] //店铺数据
-}
-const result2 = { //新闻返回数据
-    "status": "200",
-    "message": "success",
-    news: []
-}
-
-
-function select() {
-    connection.query('SELECT * FROM bu_floor', function (err, rows, fields) { //读取楼层信息
+//数据库查询
+const dataArray = [];
+const sqlArray = [ //做个数组封装单个数据读取（复杂数据结构下面单独写sql）
+    'SELECT * FROM bu_floor',
+    'SELECT * FROM bu_news',
+    'SELECT * FROM me_active',
+    'SELECT * FROM me_join',
+    'SELECT * FROM me_notice'
+]
+sqlArray.forEach(function (item, n) {
+    connection.query(item, function (err, rows, fields) { //读取数据库
         if (err) throw err;
-        return result.floor = rows;
+        dataArray[n] = {
+            "status": "200",
+            "message": "数据获取成功"
+        };
+        return dataArray[n].data = rows;
     });
-    connection.query('SELECT * FROM bu_sort', function (err, rows, fields) { //读取楼层信息
-        if (err) throw err;
-        return result.sort = rows;
-    });
-    connection.query('SELECT * FROM bu_store', function (err, rows, fields) { //读取相关店铺信息
-        if (err) throw err;
-        return result.store = rows;
-    });
-    connection.query('SELECT * FROM bu_news', function (err, rows, fields) { //读取相关店铺信息
-        if (err) throw err;
-        return result2.news = rows;
-    });
-}
-select();
+})
 
-setInterval(function () { //实时读数据库数据（注释connection.end();  确实可以用，不过不合理，临时用下）
-    //select();
-}, 1000)
-
-
-//数据接口business
-app.get('/api/v1/business', function (req, res) { //楼层接口
-    res.status(200),
-        res.json(result)
+connection.query('SELECT * FROM bu_sort', function (err, rows, fields) { //读取楼层信息(合并多sql数据)
+    if (err) throw err;
+    return dataArray[0].sort = rows;
 });
-app.get('/api/v1/news', function (req, res) { //新闻接口
-    res.status(200),
-        res.json(result2)
+connection.query('SELECT * FROM bu_store', function (err, rows, fields) { //读取相关店铺信息(合并多sql数据)
+    if (err) throw err;
+    return dataArray[0].store = rows;
 });
 
-
-// app.get('/business', (req, res) => {
-//     res.sendFile(__dirname + '/ind.html');
-// });
-
-io.on('connection', (socket) => {
-    console.log('a user connected');
+const user = {}; //数据库用户数据
+connection.query('SELECT * FROM ma_login', function (err, rows, fields) {
+    if (err) throw err;
+    rows = JSON.parse(JSON.stringify(rows));
+    return user.data = rows;
 });
 
 connection.end(); //关闭数据库
 
-//配置服务端口 
+
+//简单数据接口
+const apiArray = ['business', 'news', 'active', 'join', 'notice']; //做个数组封装下简单的get API(对应上面dataArray数据)
+apiArray.forEach(function (item, n) {
+    app.get('/api/v1/' + item, function (req, res) { //建立数据接口
+        res.status(200),
+            res.json(dataArray[n]) //响应头返回相应查询数据
+    });
+})
+
+
+//创建application/json解析(用于解析post发送的req数据)
+var jsonParser = bodyParser.json();
+
+//用户登录数据接口
+app.post('/api/v1/login', jsonParser, function (req, res) { //建立数据接口
+    const reqBody = req.body; //前端数据
+    const resData = {}; //响应数据
+    /*
+        user.data  //数据库用户数据
+        对比数据返回登陆结果
+    */
+    user.data.forEach(function (item, n) {
+        if (reqBody.username == item.username && reqBody.password == item.password) {
+            resData.meta = {
+                "status": "200",
+                "message": "用户登录成功"
+            };
+            resData.token = item.token
+        } else if (reqBody.username != item.username) {
+            resData.meta = {
+                "status": "400",
+                "message": "用户不存在"
+            };
+        } else if (reqBody.password != item.password) {
+            resData.meta = {
+                "status": "401",
+                "message": "密码错误"
+            };
+        }
+    })
+    res.json(resData); //以json形式发送响应数据
+});
+
+//使用setInterval实时读数据库数据，注释connection.end();  确实可以用，不过不合理，使用socket.io监控后台页面提交数据，更新数据接口会比较合理
+io.on('connection', (socket) => {
+    console.log('a user connected');
+});
+
+
+//配置服务端口
 http.listen(2101, () => {
     console.log('listening on *:2101');
 });

@@ -1745,6 +1745,7 @@ img.b6_7 {
     margin: auto;
     background: #fff;
     display: block;
+    max-width: 320px;
 }
 
 .act_img img {
@@ -1944,6 +1945,10 @@ img.b1_2 {
     padding-top: 20px;
     text-align: center;
     font-size: 18px;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    text-overflow: ellipsis;
 }
 
 .mem_date {

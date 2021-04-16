@@ -93,7 +93,7 @@
             let _this = this;
             this.$http.get("http://127.0.0.1:2101/api/v1/business").then(function (re) { //get楼层，分类，店铺数据
                 _this.sortDa = re.data.sort;
-                _this.flDa = re.data.floor;
+                _this.flDa = re.data.data;
                 _this.store = re.data.store;
                 //console.log(_this.store)
             }).catch(function (err) {
