@@ -12,10 +12,10 @@
         <div class="rev_teBlock">
           <div class="rev_ti">活动精选</div>
           <div class="rev1_block">
-            <div class="rev1_img"><img :src="calendar.img" /></div>
+            <div class="rev1_img"><img :src="newList[0].img" /></div>
             <div class="rev1_teBl">
-              <div class="rev_da">{{calendar.date.slice(0,7)}}</div>
-              <div class="rev_day">{{calendar.date.slice(8,10)}}</div>
+              <div class="rev_da">{{newList[0].date.slice(0,7)}}</div>
+              <div class="rev_day">{{newList[0].date.slice(8,10)}}</div>
             </div>
             <div class="clear"></div>
           </div>
@@ -83,7 +83,7 @@
     },
     mounted() {
       let _this = this;
-      this.$http.get("http://127.0.0.1:2101/api/v1/news").then(function (res) {
+      this.$http.get("news").then(function (res) {
         _this.newList = res.data.data;
         _this.calendar = res.data.news[0];
       }).catch(function (err) {

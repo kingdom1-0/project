@@ -45,7 +45,7 @@
     },
     created() {
       var _this = this;
-      this.$http.get("http://127.0.0.1:2101/api/v1/active").then(function (re) {
+      this.$http.get("active").then(function (re) {
         _this.newList = re.data.data;
         console.log(re.data)
       }).catch(function (err) {

@@ -3292,13 +3292,13 @@ a.he_a:after {
 }
 
 .he_liBl:hover .he_a:after,
-.he_liBl .he_a.active:after {
+.he_liBl .he_a.router-link-exact-active:after {
     width: 97%;
     margin-left: -80px;
 }
 
 .he_liBl:hover a.he_a,
-.he_liBl a.he_a.active {
+.he_liBl a.he_a.router-link-exact-active {
     color: #fff;
 }
 

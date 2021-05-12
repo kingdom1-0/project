@@ -88,7 +88,7 @@
             /*node数据接口
             （floor(楼层数据)，sort（店铺分类）,store(店铺数据)）   
             （来自于public/db.js）*/
-            this.$http.get('http://127.0.0.1:2101/api/v1/business')
+            this.$http.get('business')
                 .then(function (res) { //get到数据并拼接
                     _this.magUl = res.data.data;
                     for (var i = 0; i < _this.magUl.length; i++) {

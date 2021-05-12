@@ -51,7 +51,7 @@
       },
       getNews() {
         let _this = this;
-        this.$http.get('http://127.0.0.1:2101/api/v1/news') //axios
+        this.$http.get('news') //axios
           .then(function (res) {
             _this.newList = res.data.data
           })

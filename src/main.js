@@ -21,12 +21,11 @@ Vue.use(vueSwiper);
 Vue.use(ElementUI, {
   zIndex: 1000
 });
-//Vue.use(VueAxios, axios)
-//axios.defaults.baseURL = "http://127.0.0.1:8888/api/private/v1/"//配置请求的根路径
-// axios.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
-//   config.headers.Authorization = window.sessionStorage.getItem("token") //挂载token
-//   return config //最后必需
-// })
+
+//配置Neditor图片上传路径
+Vue.prototype.ueditorURL = "http://127.0.0.1:2101/api/v1/file_upload"
+//配置请求的根路径
+axios.defaults.baseURL = "http://127.0.0.1:2101/api/v1/";
 Vue.prototype.$http = axios
 
 

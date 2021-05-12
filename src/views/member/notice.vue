@@ -45,7 +45,7 @@
     },
     created() {
       var _this = this;
-      this.$http.get("http://127.0.0.1:2101/api/v1/notice").then(function (re) {
+      this.$http.get("notice").then(function (re) {
         _this.newList = re.data.data;
       }).catch(function (err) {
         console.log(err);

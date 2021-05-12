@@ -51,7 +51,7 @@
     },
     created() {
       let _this = this;
-      this.$http.get("http://127.0.0.1:2101/api/v1/business").then(function (re) {
+      this.$http.get("business").then(function (re) {
         _this.store = re.data.store;
         //console.log(re.data.store)
       }).catch(function (err) {
