@@ -1,0 +1,193 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+          "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <script type="text/javascript" src="../internal.js"></script>
+
+    <link href="/js/layui/css/layui.css" rel="stylesheet">
+    <link href="/js/webuploader/webuploader.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/manage.css">
+    <script src="/js/lib/jquery/jquery.min.js"></script>
+    <script src="/js/webuploader/webuploader.html5only.min.js"></script>
+    <script src="/js/layui/layui.all.js"></script>
+    <style type="text/css">
+        .wrapper { width: 600px; padding: 10px; height: 352px; position: relative; border-bottom: 1px solid #d7d7d7; overflow: hidden; }
+        .clipboard input { display: none; }
+        .description { color: #0066cc; margin: 5px 10px; }
+        .uploader-list { max-height: 220px; }
+        .webuploaderImg { height: auto; padding: 5px 10px; }
+        .msg { height: 40px; line-height: 40px; margin-top: -33px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="description">
+            <span style="color: red">转存步骤: </span>1、点击复制路径按钮，将文件夹地址复制到剪贴板；2、点击选择图片按钮，在弹出的对话框中使用Ctrl+V粘贴地址；3、点击打开后使用Ctrl+A全选图片，然后确定；4、等待所有图片加入上传列队，然后点击开始上传，完成所有图片上传
+        </div>
+        <div class="localPath">
+            <input type="hidden" id="localPath" />
+            <!--<input id="localPath" type="text" readonly />
+            <div id="clipboard"></div>
+            <div class="clear"></div>-->
+        </div>
+        <div class="webuploaderImg">
+            <button class="layui-btn layui-btn-normal" id="btnCopy" type="button">复制路径</button>
+            <span class="Picker">选择图片</span>
+            <button class="layui-btn startimgup" type="button">开始上传</button>
+            <div class="msg"></div>
+        </div>
+        <div class="uploader-list"></div>
+    </div>
+    <script>
+        var images = domUtils.getElementsByTagName(editor.document, "img");
+        var arrSrc = [];
+        for (var i = 0, img; img = images[i++];) {
+            var src = img.getAttribute("word_img");
+            arrSrc.push(src);
+        }
+        var arrSrc = arrSrc.filter(function (s) {
+            return s && s.trim(); 
+        });
+        var path = arrSrc[0];
+        var leftSlashIndex = path.lastIndexOf("/") || 0,  //不同版本的doc和浏览器都可能影响到这个符号，故直接判断两种
+            rightSlashIndex = path.lastIndexOf("\\") || 0,
+            separater = leftSlashIndex > rightSlashIndex ? "/" : "\\";
+        path = path.substring(0, path.lastIndexOf(separater) + 1);
+        $("#localPath").val(path);
+
+
+        var layer = layui.layer;
+
+        // 初始化图片上传控件
+        var $this = $('.webuploaderImg'),
+            $list = $('.uploader-list'),
+            // 优化retina, 在retina下这个值是2
+            ratio = window.devicePixelRatio || 1,
+            // 缩略图大小
+            thumbnailWidth = 100 * ratio,
+            thumbnailHeight = 100 * ratio;
+        // 初始化Web Uploader
+        var uploader = WebUploader.create({
+            prepareNextFile: true,
+            // 文件接收服务端。
+            server: editor.getActionUrl(editor.getOpt('imageActionName')),
+            //设置文件上传域
+            fileVal: editor.getOpt('imageFieldName'),
+            // 选择文件的按钮。可选。
+            pick: { id: $this.find('.Picker') },
+            // 只允许选择文件，可选。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,png',
+                mimeTypes: 'image/jpg,image/jpeg,image/png,image/gif'
+            },
+            compress: false,
+        });
+
+        uploader.on('beforeFileQueued', function (file) {
+            if (arrSrc.find((i) => i.indexOf(file.name) > 0) === undefined) {
+                return false;
+            }
+        });
+        // 当有文件添加进来的时候
+        uploader.on('fileQueued', function (file) {
+            var $li = $(
+                '<div id="' + file.id + '" class="file-item thumbnail"><img style="width:100px;"><span class="success"></span><span class="del"></span></div>'),
+                $img = $li.find('img');
+
+            $list.append($li);
+
+            // 创建缩略图
+            uploader.makeThumb(file, function (error, src) {
+                if (error) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+                $img.attr('src', src);
+            }, thumbnailWidth, thumbnailHeight);
+        });
+
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader.on('uploadSuccess', function (file, response) {
+            if (response.code == 200) {
+                $('#' + file.id).addClass('upload-state-done');
+                $('#' + file.id).append("<input type=\"hidden\" name=\"CI_MinImg\" Value=\"" + response.url + "\" />");
+                editor.fireEvent('saveScene');
+                for (var i = 0, img; img = images[i++];) {
+                    var src = img.getAttribute("word_img");
+                    if (!src) continue;
+                    if (src.indexOf(response.original) != -1) {
+                        img.src = response.url;
+                        img.setAttribute("title", response.title);
+                        domUtils.removeAttributes(img, ["word_img", "style", "width", "height", "_src","title"]);
+                        editor.fireEvent("selectionchange");
+                        break;
+                    }
+                }
+                editor.fireEvent('saveScene');
+            } else {
+                layer.msg(response.message);
+            }
+        });
+        //不管成功或者失败，文件上传完成时触发。
+        uploader.on('uploadComplete', function (file, response) {
+            $(".msg").text("图片全部上传完成");
+        });
+
+        $this.find(".startimgup").click(function () {
+            uploader.upload();
+        });
+        // 文件上传失败，现实上传出错。
+        uploader.on('uploadError', function (file, response) {
+            layer.msg("上传失败");
+        });
+        //当文件验证不通过时
+        uploader.on('error', function (handler) {
+            console.log(handler);
+            switch (handler) {
+                case "Q_TYPE_DENIED":
+                    layer.msg("不允许的文件格式");
+                    break;
+                case "Q_EXCEED_SIZE_LIMIT":
+                    layer.msg("文件大小超出限制");
+                    break;
+                case "F_DUPLICATE":
+                    //layer.msg("请勿重复选择文件");
+                    break;
+                default:
+                    layer.msg("上传失败");
+                    break;
+            }
+        });
+
+
+        $("#btnCopy").click(function () {
+            var val = $("#localPath").val();
+            var flag = copyText(val); //传递文本
+            layer.msg(flag ? "复制成功！" : "复制失败！");
+        });
+        function copyText(text) {
+            var textarea = document.createElement("input");//创建input对象
+            var currentFocus = document.activeElement;//当前获得焦点的元素
+            document.body.appendChild(textarea);//添加元素
+            textarea.value = text;
+            textarea.focus();
+            if (textarea.setSelectionRange)
+                textarea.setSelectionRange(0, textarea.value.length);//获取光标起始位置到结束位置
+            else
+                textarea.select();
+            try {
+                var flag = document.execCommand("copy");//执行复制
+            } catch (eo) {
+                var flag = false;
+            }
+            document.body.removeChild(textarea);//删除元素
+            currentFocus.focus();
+            return flag;
+        }
+    </script>
+
+</body>
+</html>

@@ -23,7 +23,7 @@ Vue.use(ElementUI, {
 });
 
 //配置Neditor图片上传路径
-Vue.prototype.ueditorURL = "http://127.0.0.1:2101/api/v1/file_upload"
+Vue.prototype.ueditorURL = "http://127.0.0.1:2101/api/v1/ueditor"
 //配置请求的根路径
 axios.defaults.baseURL = "http://127.0.0.1:2101/api/v1/";
 Vue.prototype.$http = axios

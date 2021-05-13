@@ -120,8 +120,6 @@ app.put('/api/v1/books/:id', (req, res) => {
 })
 
 
-
-
 //用户登录数据接口
 app.post('/api/v1/login', function (req, res) { //建立数据接口
     const reqBody = req.body; //post请求数据
@@ -175,30 +173,53 @@ app.post('/api/v1/file_upload', multipartMiddleware, function (req, res) { //文
     });
 })
 
-var buf = new Buffer.alloc(10240);
-fs.open(__dirname + '/ueConfig.json', 'r+', function (err, fd) {
+var buf = new Buffer.alloc(3000);
+fs.open(__dirname + '/ueConfig.json', 'r+', function (err, fd) { //打开ueditor配置文件
     if (err) {
         return console.error(err);
     }
     console.log("文件打开成功！");
-    console.log("准备读取文件：");
-    fs.read(fd, buf, 0, buf.length, 0, function (err, bytes) {
+    fs.read(fd, buf, 0, buf.length, 0, function (err, bytes) { //读取配置
         if (err) {
             console.log(err);
         }
         console.log(bytes + "  字节被读取");
-        // 仅输出读取的字节
-        if (bytes > 0) {
-            console.log(buf.slice(0, bytes).toString());
-        }
-        app.get('/api/v1/ueditor', function (req, res) { //文件上传
-
-            console.log(JSON.parse(buf.slice(0, bytes).toString()))
-            res.send(JSON.parse(buf.slice(0, bytes).toString()));
-            //res.json({"imageMaxSize": 2048,})
+        app.get('/api/v1/ueditor', function (req, res) { //文件上传          
+            var daOb = JSON.parse(buf.slice(0, bytes).toString())
+            res.jsonp(daOb); //传送JSONP响应
         })
     });
 });
+
+app.post('/api/v1/ueditor', multipartMiddleware, function (req, res) { //文件上传      
+    const action = req.query.action;
+    if (action == 'uploadimage') {
+        console.log(req.files.upfile)
+        var r = new Date().getTime(); //定文件唯一路径
+        var des_file = "/tmp/image/" + r + req.files.upfile.originalFilename; //文件存放相对路径
+        fs.readFile(req.files.upfile.path, function (err, data) {
+            fs.writeFile(__dirname + des_file, data, function (err) { //_dirname （写入需绝对路径，把相对路径转换成绝对路径）
+                if (err) {
+                    console.log(err);
+                } else {
+                    responseImg = {
+                        code: '200',
+                        message: 'SUCCESS',
+                        url: des_file,
+                        thumbnail: des_file,
+                        title: req.files.upfile.originalFilename,
+                        original: req.files.upfile.originalFilename,
+                        error: err
+                    };
+                }
+                console.log(responseImg);
+                res.json(responseImg);
+            });
+        });
+    }
+
+})
+
 
 
 
