@@ -26,8 +26,7 @@ Vue.use(ElementUI, {
 Vue.prototype.ueditorURL = "http://127.0.0.1:2101/api/v1/ueditor"
 //配置请求的根路径
 axios.defaults.baseURL = "http://127.0.0.1:2101/api/v1/";
-Vue.prototype.$http = axios
-
+Vue.prototype.$http = axios //方便所有组件直接使用 this.$http.get().then()
 
 Vue.config.productionTip = false
 new Vue({

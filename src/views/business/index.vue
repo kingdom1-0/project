@@ -3,7 +3,7 @@
         <div class="busI_content">
             <div class="busI_ul">
                 <a href="javascript:;" :class="{'busI_li':true,'cur':n==on}" v-for="(magLi,n) in magUl" :key="magLi.id"
-                    @mouseenter="showBlock(n)">{{magLi.fl}}</a>
+                    @mouseenter="showBlock(n)">{{magLi.title}}</a>
             </div>
             <div class="busI_conBlock" id="img_width">
                 <div class="busI_ulBl">
@@ -14,7 +14,7 @@
                                 <div class="busB_ul">
                                     <div class="busB_li" :sid="blLi.id" @click="backData()" v-for="(blLi,i) in magLi.ul"
                                         :key="blLi.id"
-                                        :style="{width:blLi.width*m+'px',height:blLi.height*m+'px',left:blLi.left*m+'px',top:blLi.top*m+'px'}"
+                                        :style="{width:blLi.width*m+'px',height:blLi.height*m+'px',left:blLi.leftVal*m+'px',top:blLi.topVal*m+'px'}"
                                         @mouseenter="showStore(i)" @mouseout="hideStore">
                                         {{blLi.daWidth}}
                                     </div>
@@ -25,13 +25,13 @@
                 </div>
                 <transition name="fadeDown">
                     <div class="busI_block" v-if="bl"
-                        :style="{width:thisStore().width*m+'px',height:thisStore().height*m+'px',left:(parseInt(thisStore().left)+parseInt(thisStore().width)/2)*m+'px',top:(parseInt(thisStore().top) - parseInt(thisStore().height)/2)*m+'px'}">
+                        :style="{width:thisStore().width*m+'px',height:thisStore().height*m+'px',left:(parseInt(thisStore().leftVal)+parseInt(thisStore().width)/2)*m+'px',top:(parseInt(thisStore().topVal) - parseInt(thisStore().height)/2)*m+'px'}">
                         <div class="busI_InnBlock">
                             <div class="busI_logo"><img :src="thisStore().img"></div>
                             <div class="busI_teBl">
-                                <div class="busI_name">{{thisStore().ti}}</div>
+                                <div class="busI_name">{{thisStore().title}}</div>
                                 <div class="busI_Shop">店铺号：<span>{{thisStore().store}}</span></div>
-                                <div class="busI_sort">类别：<span>{{thisStore().sort}}</span></div>
+                                <div class="busI_sort">类别：<span>{{thisStore().class}}</span></div>
                             </div>
                             <div class="busI_ico"></div>
                         </div>
@@ -75,12 +75,33 @@
                 bus.$emit('data', {
                     showDa: true,
                     logo: this.thisStore().img,
-                    ti: this.thisStore().ti,
+                    ti: this.thisStore().title,
                     lo: this.thisStore().store,
-                    sort: this.thisStore().sort,
-                    text: this.thisStore().text,
+                    sort: this.thisStore().class,
+                    text: this.thisStore().value,
                     imgUl: this.thisStore().imgul.split(",")
                 })
+            },
+            concatDate: function (resFloor, resStore) {
+                this.magUl = resFloor.data;
+                for (var i = 0; i < this.magUl.length; i++) { //拼接店铺数据
+                    this.magUl[i].ul = resStore.data.filter(function (item) {
+                        return item.pId == (i + 1)
+                    })
+                }
+                console.log(resFloor.data)
+                if (location.href.indexOf("sid=") > 0) { //传参显示店铺信息
+                    var sid = parseInt(location.href.split("sid=")[1])
+                    var thisStore = resStore.data[sid - 1]
+                    this.on = thisStore.pId - 1;
+                    var storeAr = this.magUl[this.on].ul;
+                    for (var n = 0; n < storeAr.length; n++) {
+                        if (storeAr[n].id == sid) {
+                            this.sN = n;
+                        }
+                    }
+                    this.bl = true;
+                }
             }
         },
         created() {
@@ -88,30 +109,25 @@
             /*node数据接口
             （floor(楼层数据)，sort（店铺分类）,store(店铺数据)）   
             （来自于public/db.js）*/
-            this.$http.get('business')
-                .then(function (res) { //get到数据并拼接
-                    _this.magUl = res.data.data;
-                    for (var i = 0; i < _this.magUl.length; i++) {
-                        _this.magUl[i].ul = res.data.store.filter(function (item) {
-                            return item.pId == (i + 1)
-                        })
-                    }
-                    if (location.href.indexOf("sid=") > 0) { //传参显示店铺信息
-                        var sid = parseInt(location.href.split("sid=")[1])
-                        var thisStore = res.data.store[sid - 1]
-                        _this.on = thisStore.pId - 1;
-                        var storeAr = _this.magUl[_this.on].ul;
-                        for (var n = 0; n < storeAr.length; n++) {
-                            if (storeAr[n].id == sid) {
-                                _this.sN = n;
-                            }
-                        }
-                        _this.bl = true;
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+
+            //使用axios.all();处理多个异步
+            // function getAxios(url) {
+            //     return _this.$http.get(url);
+            // }
+            // _this.$http.all([getAxios('floor'), getAxios('store')]).then(_this.$http.spread(function (resFloor,
+            //     resStore) {
+            //     _this.concatDate(resFloor, resStore);
+            // })).catch(function (error) {
+            //     console.log(error)
+            // })
+
+            //使用async/await处理多个异步
+            async function queryDate() {
+                var resFloor = await _this.$http.get('floor');
+                var resStore = await _this.$http.get('store');
+                _this.concatDate(resFloor, resStore);
+            }
+            queryDate()
         },
         mounted() {
             const _this = this; //存储上下文

@@ -46,7 +46,7 @@
     created() {
       var _this = this;
       this.$http.get("active").then(function (re) {
-        _this.newList = re.data.data;
+        _this.newList = re.data;
         console.log(re.data)
       }).catch(function (err) {
         console.log(err);

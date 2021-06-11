@@ -3770,7 +3770,6 @@ input.mes_inputB {
 }
 
 .mes_t {
-    color: rgb(153, 153, 153);
     padding-top: 5px;
 }
 
@@ -3810,7 +3809,6 @@ input.mes_inputB {
 .mes_submit:hover,
 .mes_reset:hover {
     background: rgb(83, 156, 113);
-    color: rgb(255, 255, 255);
 }
 
 .com_bgImg.bgImg_6 {
@@ -3845,7 +3843,6 @@ input.mes_inputB {
 .con_tiBl {
     position: absolute;
     top: 11%;
-    color: rgb(165, 227, 191);
     font-size: 36px;
     z-index: 90;
     letter-spacing: 2px;
@@ -3859,7 +3856,6 @@ input.mes_inputB {
 
 .att_ti {
     font-size: 28px;
-    color: rgb(82, 156, 113);
     letter-spacing: 1px;
 }
 
@@ -3961,10 +3957,6 @@ html.manage div#Footer {
     max-width: 323px;
 }
 
-.el-icon-user:before,
-.el-icon-lock:before {
-    color: #333;
-}
 
 a.bus_img img {
     width: 100%;
@@ -4011,14 +4003,6 @@ ul.el-menu {
     background: #eee;
 }
 
-li.el-submenu i {
-    color: #fff;
-}
-
-.el-icon-user:before,
-.el-icon-lock:before {
-    color: #fff;
-}
 
 ul.el-menu {
     border-right: 0px;

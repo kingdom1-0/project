@@ -10,7 +10,7 @@
                 </div>
                 <select class="bra_select" v-model="sort">
                     <option value="全部分类">全部分类</option>
-                    <option :value="s.sort" v-for="s in sortDa" :key="s.id">{{s.sort}}</option>
+                    <option :value="s.title" v-for="s in sortDa" :key="s.id">{{s.title}}</option>
                 </select>
             </div>
             <div class="bra_conBlock">
@@ -20,7 +20,7 @@
                     </div>
                     <div :class="{bra_floorLi:true,cur:i==fl}" @click="floorFilters(i)" v-for="(f,i) in flDa"
                         :key="f.id">
-                        <div class="bra_center ">{{f.fl}}</div>
+                        <div class="bra_center ">{{f.title}}</div>
                     </div>
                 </div>
                 <div class="bra_showBl">
@@ -30,7 +30,7 @@
                                 <div class="bra_Inner" @click="showStore(s)">
                                     <div class="bra_img"><img :src="s.img" /></div>
                                     <div class="bra_teBl">
-                                        <div class="bra_teTi">{{s.ti}}</div>
+                                        <div class="bra_teTi">{{s.title}}</div>
                                     </div>
                                     <div class="clear"></div>
                                 </div>
@@ -72,7 +72,7 @@
                 this.le = i;
             },
             storeFilers: function (s) { //店铺筛选
-                var bo = (s.sort == this.sort || this.sort == "全部分类") && (s.pId - 1 == this.fl || this.fl == -1) &&
+                var bo = (s.class == this.sort || this.sort == "全部分类") && (s.pId - 1 == this.fl || this.fl == -1) &&
                     (s.le == this.le || this.le == "全部")
                 return bo
             },
@@ -81,21 +81,30 @@
                     showDa: true,
                     id: s.id,
                     logo: s.img,
-                    ti: s.ti,
+                    ti: s.title,
                     lo: s.store,
-                    sort: s.sort,
-                    text: s.text,
+                    sort: s.calss,
+                    text: s.value,
                     imgUl: s.imgul.split(",")
                 })
             }
         },
         mounted() {
             let _this = this;
-            this.$http.get("business").then(function (re) { //get楼层，分类，店铺数据
-                _this.sortDa = re.data.sort;
-                _this.flDa = re.data.data;
-                _this.store = re.data.store;
-                //console.log(_this.store)
+            this.$http.get("floor").then(function (re) { //get楼层
+                _this.flDa = re.data;
+            }).catch(function (err) {
+                console.log(err)
+            })
+
+            this.$http.get("sort").then(function (re) { //get分类
+                _this.sortDa = re.data;
+            }).catch(function (err) {
+                console.log(err)
+            })
+
+            this.$http.get("store").then(function (re) { //get店铺数据
+                _this.store = re.data;
             }).catch(function (err) {
                 console.log(err)
             })

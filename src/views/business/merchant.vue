@@ -41,19 +41,19 @@
           showDa: true,
           id: s.id,
           logo: s.img,
-          ti: s.ti,
+          ti: s.title,
           lo: s.store,
-          sort: s.sort,
-          text: s.text,
+          sort: s.class,
+          text: s.value,
           imgUl: s.imgul.split(",")
         })
       }
     },
     created() {
       let _this = this;
-      this.$http.get("business").then(function (re) {
-        _this.store = re.data.store;
-        //console.log(re.data.store)
+      this.$http.get("store").then(function (re) {
+        _this.store = re.data;
+        console.log(re.data)
       }).catch(function (err) {
         console.log(err)
       })

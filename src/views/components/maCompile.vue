@@ -1,46 +1,59 @@
 <template>
     <!-- 数据修改模块 -->
-    <el-dialog title="编辑" :visible.sync="show" width="30%" :before-close="handleClose" :fullscreen="true"
-        :modal="false">
+    <el-dialog title="编辑" :visible="show" width="30%" :before-close="handleClose" :fullscreen="true" :modal="false">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="标题" prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="所属楼层" prop="pId" v-if="ruleForm.pId != 'undefined'">
+                <el-radio v-model="ruleForm.pId" :label="fl.title" v-for="fl in floor" :key="fl.id">{{fl.title}}
+                </el-radio>
             </el-form-item>
-            <el-form-item label="内容">
-                <vue-neditor-wrap v-model="msg" :config="myConfig" :destroy="false"></vue-neditor-wrap>
+            <el-form-item label="所属类别" prop="class" v-if="ruleForm.class != 'undefined'">
+                <el-checkbox-group v-model="ruleForm.class">
+                    <el-checkbox :label="item.title" v-for="item in classDa" :key="item.id">
+                        {{item.title}}
+                    </el-checkbox>
+                </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="图片">
-                <el-upload class="upload-demo" action="http://127.0.0.1:2101/api/v1/file_upload"
+            <el-form-item label="字母索引" prop="en" v-if="ruleForm.en != 'undefined'">
+                <el-radio v-model="ruleForm.en" :label="item" v-for="(item,n) in enDa" :key="n">{{item}}
+                </el-radio>
+            </el-form-item>
+            <el-form-item label="标题" prop="title">
+                <el-input v-model="ruleForm.title"></el-input>
+            </el-form-item>
+            <el-form-item label="店铺位置" prop="store" v-if="ruleForm.store">
+                <el-input v-model="ruleForm.store"></el-input>
+            </el-form-item>
+
+            <el-form-item label="内容" v-if="ruleForm.value">
+                <vue-neditor-wrap v-model="ruleForm.value" :config="myConfig" :destroy="false"></vue-neditor-wrap>
+            </el-form-item>
+            <el-form-item label="图片" v-if="ruleForm.img">
+                <!-- <el-upload class="upload-demo" action="http://127.0.0.1:2101/api/v1/file_upload"
                     :on-success="handleAvatarSuccess" :on-remove="handleRemove" list-type="picture-card" :limit="3"
                     accept=".jpg, .jpeg, .png" :before-upload="beforeAvatarUpload">
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                </el-upload> -->
+                <el-upload class="avatar-uploader" action="http://127.0.0.1:2101/api/v1/file_upload"
+                    :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                    <img v-if="ruleForm.img" :src="ruleForm.img" class="avatar">
+                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
             </el-form-item>
-            <el-form-item label="是否发布" prop="issueRe">
-                <el-switch v-model="ruleForm.issueRe"></el-switch>
+            <el-form-item label="是否发布" prop="issue">
+                <el-switch v-model="ruleForm.issue"></el-switch>
             </el-form-item>
-            <el-form-item label="是否置顶" prop="topRe">
-                <el-switch v-model="ruleForm.topRe"></el-switch>
+            <el-form-item label="是否置顶" prop="top">
+                <el-switch v-model="ruleForm.top"></el-switch>
             </el-form-item>
-            <el-form-item label="数字排序" prop="num">
-                <el-input-number v-model="ruleForm.num" @change="handleChange" :min="1" :max="100" label="描述文字">
+            <el-form-item label="数字排序" prop="sort">
+                <el-input-number v-model="ruleForm.sort" @change="handleChange" :min="1" :max="100" label="描述文字">
                 </el-input-number>
             </el-form-item>
-            <el-form-item label="发布时间" required>
-                <el-col :span="6">
-                    <el-form-item prop="date1">
-                        <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;">
-                        </el-date-picker>
-                    </el-form-item>
-                </el-col>
-                <el-col class="line" :span="2">-</el-col>
-                <el-col :span="6">
-                    <el-form-item prop="date2">
-                        <el-time-picker placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;">
-                        </el-time-picker>
-                    </el-form-item>
-                </el-col>
+            <el-form-item label="发布时间" required prop="date">
+                <el-date-picker v-model="ruleForm.date" type="datetime" placeholder="选择日期时间"
+                    value-format="yyyy-MM-dd HH:mm:ss">
+                </el-date-picker>
             </el-form-item>
             <el-form-item>
                 排序条件：置顶 》 数字排序（升序，0不参与排序） 》 发布时间（倒序）
@@ -63,11 +76,18 @@
         props: {
             show: {
                 type: Boolean
+            },
+            alData: {
+                type: Object
             }
         },
         data() {
             return {
-                msg: '',
+                classDa: [], //类别
+                floor: [], //楼层
+                enDa: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
+                    "T", "U", "V", "W", "X", "Y", "Z"
+                ],
                 myConfig: {
                     serverUrl: this.ueditorURL, //this.ueditorURL在main.js文件配置
                     // 你的UEditor资源存放的路径,相对于打包后的index.html
@@ -82,13 +102,13 @@
                 currentPage4: 4,
                 dialogVisible: false, //弹出框
                 ruleForm: { //修改表单模块
-                    name: '',
-                    date1: '',
-                    date2: '',
-                    issueRe: true,
-                    topRe: false,
-                    num: 0,
-                    images: []
+                    // title: '',
+                    // date: '',
+                    // issue: true,
+                    // top: false,
+                    // sort: 0,
+                    // img: '',
+                    // value: ""
                 },
                 rules: {
                     name: [{
@@ -103,19 +123,7 @@
                             trigger: 'blur'
                         }
                     ],
-                    date1: [{
-                        type: 'date',
-                        required: true,
-                        message: '请选择日期',
-                        trigger: 'change'
-                    }],
-                    date2: [{
-                        type: 'date',
-                        required: true,
-                        message: '请选择时间',
-                        trigger: 'change'
-                    }],
-                    num: [{
+                    sort: [{
                             required: true,
                             message: '数字排序不能为空'
                         },
@@ -128,9 +136,14 @@
             }
         },
         created() {
-            // this.$http.get("http://127.0.0.1:2101/api/v1/ueditor").then(function (res) {
-            //     console.log(res.data)
-            // })
+            this.$http.get("floor").then((res) => {
+                this.floor = res.data;
+                console.log(this.floor)
+            })
+            this.$http.get("sort").then((res) => {
+                this.classDa = res.data;
+                console.log(this.classDa)
+            })
         },
         methods: {
             toggleSelection(rows) { //表格
@@ -159,8 +172,13 @@
             submitForm(formName) { //修改表单模块 (提交表单)
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        //alert('submit!');
                         this.closeCompile();
+                        this.ruleForm.class = this.ruleForm.class.toString(); //数组转字符串
+                        console.log(this.ruleForm)
+                        this.$http.put(this.$route.params.id, this.ruleForm).then((res) => { //
+                            console.log(res.data);
+                        })
                     } else {
                         console.log('error submit!!');
                         return false;
@@ -170,9 +188,13 @@
             handleChange(value) {
                 console.log(value);
             },
+            // handleAvatarSuccess(res) {//传多图
+            //     this.ruleForm.images.push(res.filename);
+            //     console.log(this.ruleForm.images)
+            // },
             handleAvatarSuccess(res) {
-                this.ruleForm.images.push(res.filename);
-                console.log(this.ruleForm.images)
+                this.ruleForm.img = res.data;
+                console.log(res.data)
             },
             beforeAvatarUpload(file) {
                 const isLt2M = file.size / 1024 / 1024 < 2;
@@ -189,6 +211,12 @@
                     }
                 })
                 console.log(this.ruleForm.images)
+            }
+        },
+        watch: {
+            alData: function () {
+                this.ruleForm = this.alData;
+                console.log(this.alData)
             }
         }
     }
@@ -217,7 +245,7 @@
     }
 
     .avatar {
-        width: 178px;
+        width: auto;
         height: 178px;
         display: block;
     }

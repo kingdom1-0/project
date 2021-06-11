@@ -2,133 +2,156 @@
     node 的 mySql  使用 (数据库)
 
     速查表
-    https://www.runoob.com/nodejs/nodejs-mysql.html   
-    https://www.runoob.com/sql/sql-tutorial.html  
+    https://www.runoob.com/nodejs/nodejs-express-framework.html   //Express
+    https://www.runoob.com/nodejs/nodejs-mysql.html   //连接 MySQL
+    https://www.runoob.com/sql/sql-tutorial.html    //写SQL
 
     cnpm install mysql   
 */
 //http://127.0.0.1:2101/api/v1/
 // 生成动态API （使用node调数据库，生成数据API）
-var express = require('express');
-var app = express();
-var http = require('http').createServer(app);
-var mysql = require('mysql'); //请求数据库
-const io = require('socket.io')(http);
-var bodyParser = require('body-parser'); //post中间件，用于post请求解析
-var fs = require("fs");
-var multipart = require('connect-multiparty'); //在处理模块中引入第三方解析模块
+const express = require('express');
+const cors = require('cors'); //cors跨域支持
+const app = express();
+const http = require('http').createServer(app);
+const mysql = require('mysql'); //请求数据库
+const bodyParser = require('body-parser'); //post中间件，用于post解析参数
+const fs = require("fs");
+const multipart = require('connect-multiparty'); //在处理模块中引入第三方解析模块
+const multipartMiddleware = multipart(); //post数据解析
+const {
+    default: axios
+} = require('axios');
 
-//处理静态资源
-app.use('/public', express.static('public'));
+app.use(cors()); //解决跨域(替换下面的处理方案)
+
+//设置跨域访问
+// app.all('*', function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+//     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+//     res.header("X-Powered-By", ' 3.2.1');
+//     res.header("Content-Type", "application/json;charset=utf-8");
+//     next();
+// });
+
+app.use('/public', express.static('public')); //设置图片、视频、附件等静态资源存放路径
 
 //处理post请求数据解析 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
+app.use(bodyParser.json()); //JSON请求
+app.use(bodyParser.urlencoded({ //表单请求
     extended: false
 }))
 
+//版本号
+var apiLo = "/api/v1/"
 
-//链接数据库
-const connection = mysql.createConnection({ //配置数据库
+//数据库查询
+const dataArray = [];
+const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'join', 'notice', 'banner', 'login']; //做个数组封装下简单的get API(对应上面dataArray数据)
+
+/*配置数据库*/
+var sqlConfig = {
     host: 'localhost', //主机地址
     user: 'king10',
     password: '@kingdom10',
     database: 'project' //数据库名
-});
+}
 
-connection.connect(); //连接数据库
+let conn;
+/*数据库重连机制(防止数据库断开)*/
+function reconn() {
+    conn = mysql.createPool(sqlConfig); //数据库连接池
+    // 封装
+    query = function (sql, callback) {
+        pool.getConnection(function (err, conn) { //从连接池中取出连接,如无连接可用则隐式的建立一个数据库连接。
+            conn.query(sql, function (err, results) {
+                callback(err, results) // 结果回调
+                conn.release() // 释放连接资源 | 跟 conn.destroy() 不同，它是销毁
+            })
+        })
+    }
+    conn.on("error", err => { //数据库断开的回调
+        console.log("数据库重连");
+        setTimeout(reconn, 1000) //递归调用数据库连接
+    })
+}
+reconn();
 
-//设置跨域访问
-app.all('*', function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
-    res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-    res.header("X-Powered-By", ' 3.2.1');
-    res.header("Content-Type", "application/json;charset=utf-8");
-    next();
-});
-
-
-//数据库查询
-const dataArray = [];
-const sqlArray = [ //做个数组封装单个数据读取（复杂数据结构下面单独写sql）    
-    'SELECT * FROM bu_floor',
-    'SELECT * FROM bu_news',
-    'SELECT * FROM me_active',
-    'SELECT * FROM me_join',
-    'SELECT * FROM me_notice',
-    'SELECT * FROM bu_banner',
-]
-sqlArray.forEach(function (item, n) {
-    connection.query(item, function (err, rows, fields) { //读取数据库
+/* 封装数据库读取 */
+function getQuery(item) {
+    conn.query('SELECT * FROM bu_' + item, function (err, rows, fields) { //读取数据库
         if (err) throw err;
-        dataArray[n] = {
-            "status": "200",
-            "message": "数据获取成功"
-        };
-        return dataArray[n].data = rows;
+        return dataArray[apiArray.indexOf(item)] = rows;
     });
+}
+
+
+/*刷新全部SQL数据池*/
+apiArray.forEach(function (item) { //遍历sql数据读取
+    getQuery(item) //引用数据读取
 })
 
-connection.query('SELECT * FROM bu_sort', function (err, rows, fields) { //读取楼层信息(合并多sql数据)
-    if (err) throw err;
-    return dataArray[0].sort = rows;
-});
-connection.query('SELECT * FROM bu_store', function (err, rows, fields) { //读取相关店铺信息(合并多sql数据)
-    if (err) throw err;
-    return dataArray[0].store = rows;
-});
 
-const user = {}; //数据库用户数据
-connection.query('SELECT * FROM ma_login', function (err, rows, fields) {
-    if (err) throw err;
-    rows = JSON.parse(JSON.stringify(rows));
-    return user.data = rows;
-});
-
-connection.end(); //关闭数据库
-
-
-//简单数据接口
-const apiArray = ['business', 'news', 'active', 'join', 'notice', 'banner']; //做个数组封装下简单的get API(对应上面dataArray数据)
+//常规get数据接口
 apiArray.forEach(function (item, n) {
-    app.get('/api/v1/' + item, function (req, res) { //建立数据接口
+    app.get(apiLo + item, function (req, res) { //建立数据接口
         res.status(200),
             res.json(dataArray[n]) //响应头返回相应查询数据
     });
 })
 
-
-//delete请求
-app.delete('/api/v1/books/:id', (req, res) => {
-    // res.json('传统的?id=123 : ' + req.query.id)  
-    res.json('delete传参 ： ' + req.params.id)
+/*修改内容数据接口*/
+function putData(item) {
+    app.put(apiLo + item, function (req, res) { //建立数据接口
+        const da = req.body; //post请求数据
+        const resData = {}; //响应数据
+        let te = "";
+        let idT = "";
+        let daAr = [];
+        for (var key in da) { //sql字段拼接
+            if (key == "id") {
+                idT = " id=?"
+            } else {
+                te += "," + key + "=?";
+                daAr.push(da[key]);
+            }
+        }
+        daAr.push(da.id);
+        console.log(te.slice(1))
+        //console.log(daAr.toString())
+        conn.query('UPDATE bu_' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT, daAr, function (err, result) { //修改指定数据
+            if (err) {
+                console.log(err.message);
+                return;
+            } else {
+                resData.meta = {
+                    "status": "200",
+                    "message": "内容修改成功"
+                };
+                getQuery(item) //刷新单个数据池
+            }
+        });
+        res.json(resData); //以json形式发送响应数据
+    });
+}
+//常规数据修改
+apiArray.forEach((item) => {
+    if (item != "login") { //登录用户数据修改单独处理
+        putData(item);
+    }
 })
-
-
-//post请求
-app.post('/api/v1/books', (req, res) => {
-    // res.json('传统的?id=123 : ' + req.query.id)  
-    res.json('post传参 ： ' + req.body.uname + '---' + req.body.pwd)
-})
-
-//put请求
-app.put('/api/v1/books/:id', (req, res) => {
-    // res.json('传统的?id=123 : ' + req.query.id)  
-    res.json('put传参 ： ' +
-        req.params.id + '---' + req.params.username + '---' + req.params.password)
-})
-
 
 //用户登录数据接口
-app.post('/api/v1/login', function (req, res) { //建立数据接口
+app.post(apiLo + 'login', function (req, res) { //建立数据接口
+    // req.params.id(get请求参数 /:id)  req.query.id(get请求 ?id=0)   req.body.id(post请求体)      
     const reqBody = req.body; //post请求数据
     const resData = {}; //响应数据
     /*
-        user.data  //数据库用户数据
+        dataArray[8]  //数据库用户数据
         对比数据返回登陆结果
     */
-    user.data.forEach(function (item, n) {
+    dataArray[8].forEach(function (item, n) {
         if (reqBody.username == item.username && reqBody.password == item.password) {
             resData.meta = {
                 "status": "200",
@@ -150,13 +173,51 @@ app.post('/api/v1/login', function (req, res) { //建立数据接口
     res.json(resData); //以json形式发送响应数据
 });
 
+//修改密码数据接口
+app.put(apiLo + 'login', function (req, res) { //建立数据接口
+    const reqBody = req.body; //post请求数据
+    const resData = {}; //响应数据
+    /*
+        dataArray[8]  //数据库用户数据
+        对比数据返回登陆结果
+    */
+    dataArray[8].forEach(function (item, n) {
+        if (reqBody.username == item.username && reqBody.password == item.password) {
+            var modSql = 'UPDATE bu_login SET password = ? WHERE username = ?';
+            var modSqlParams = [reqBody.setPassword, reqBody.username];
+            conn.query(modSql, modSqlParams, function (err, result) { //修改指定用户密码
+                if (err) {
+                    console.log(err.message);
+                    return;
+                }
+                getQuery('login') //刷新数据池单个数据
+            });
 
-var multipartMiddleware = multipart(); //服务器文件上传
+            resData.meta = {
+                "status": "200",
+                "message": "密码修改成功"
+            };
+            resData.token = item.token
+        } else if (reqBody.username != item.username) {
+            resData.meta = {
+                "status": "400",
+                "message": "用户不存在"
+            };
+        } else if (reqBody.password != item.password) {
+            resData.meta = {
+                "status": "401",
+                "message": "密码错误"
+            };
+        }
+    })
+    res.json(resData); //以json形式发送响应数据
+});
 
-app.post('/api/v1/file_upload', multipartMiddleware, function (req, res) { //文件上传
+
+app.post(apiLo + 'file_upload', multipartMiddleware, function (req, res) { //文件上传
     console.log(req.files.file); //上传文件信息
     var r = new Date().getTime(); //定文件唯一路径
-    var des_file = "/tmp/image/" + r + req.files.file.originalFilename; //文件存放相对路径
+    var des_file = "/serves/images/" + r + req.files.file.originalFilename; //文件存放相对路径
     fs.readFile(req.files.file.path, function (err, data) {
         fs.writeFile(__dirname + des_file, data, function (err) { //_dirname （写入需绝对路径，把相对路径转换成绝对路径）
             if (err) {
@@ -164,7 +225,7 @@ app.post('/api/v1/file_upload', multipartMiddleware, function (req, res) { //文
             } else {
                 response = {
                     message: '文件上传成功',
-                    filename: des_file
+                    data: des_file
                 };
             }
             console.log(response);
@@ -173,67 +234,56 @@ app.post('/api/v1/file_upload', multipartMiddleware, function (req, res) { //文
     });
 })
 
+/* neditor编辑器 */
 var buf = new Buffer.alloc(3000);
 fs.open(__dirname + '/ueConfig.json', 'r+', function (err, fd) { //打开ueditor配置文件
     if (err) {
         return console.error(err);
     }
-    console.log("文件打开成功！");
+    //console.log("配置文件打开成功");
     fs.read(fd, buf, 0, buf.length, 0, function (err, bytes) { //读取配置
         if (err) {
             console.log(err);
         }
-        console.log(bytes + "  字节被读取");
-        app.get('/api/v1/ueditor', function (req, res) { //文件上传          
+        //console.log(bytes + "  字节被读取");
+        app.get(apiLo + 'ueditor', function (req, res) { //文件上传          
             var daOb = JSON.parse(buf.slice(0, bytes).toString())
             res.jsonp(daOb); //传送JSONP响应
         })
     });
 });
 
-app.post('/api/v1/ueditor', multipartMiddleware, function (req, res) { //文件上传      
-    const action = req.query.action;
-    if (action == 'uploadimage') {
-        console.log(req.files.upfile)
-        var r = new Date().getTime(); //定文件唯一路径
-        var des_file = "/tmp/image/" + r + req.files.upfile.originalFilename; //文件存放相对路径
-        fs.readFile(req.files.upfile.path, function (err, data) {
-            fs.writeFile(__dirname + des_file, data, function (err) { //_dirname （写入需绝对路径，把相对路径转换成绝对路径）
-                if (err) {
-                    console.log(err);
-                } else {
-                    responseImg = {
-                        code: '200',
-                        message: 'SUCCESS',
-                        url: des_file,
-                        thumbnail: des_file,
-                        title: req.files.upfile.originalFilename,
-                        original: req.files.upfile.originalFilename,
-                        error: err
-                    };
-                }
-                console.log(responseImg);
-                res.json(responseImg);
-            });
+app.post(apiLo + 'ueditor', multipartMiddleware, function (req, res) { //文件上传      
+    //const action = req.query.action;
+    //if (action == 'uploadimage' || action == 'uploadvideo' || action == 'uploadfile') { //图片/视频/附件上传判断  
+    console.log(req.is())
+    console.log(req.files.upfile)
+    var r = new Date().getTime(); //定文件唯一路径
+    var des_file = "/serves/images/" + r + req.files.upfile.originalFilename; //文件存放相对路径
+    fs.readFile(req.files.upfile.path, function (err, data) {
+        fs.writeFile(__dirname + des_file, data, function (err) { //_dirname （写入需绝对路径，把相对路径转换成绝对路径）
+            if (err) {
+                console.log(err);
+            } else {
+                responseImg = { //要按neditor后端请求规范返回响应数据
+                    code: '200',
+                    message: 'SUCCESS',
+                    url: des_file,
+                    thumbnail: des_file,
+                    title: req.files.upfile.originalFilename,
+                    original: req.files.upfile.originalFilename,
+                    error: err
+                };
+            }
+            //console.log(responseImg);
+            res.jsonp(responseImg);
         });
-    }
-
+    });
 })
 
-
-
-
-
-
-
-
-//使用setInterval实时读数据库数据，注释connection.end();  确实可以用，不过不合理，使用socket.io监控后台页面提交数据，更新数据接口会比较合理
-io.on('connection', (socket) => {
-    console.log('a user connected');
-});
-
+//conn.end(); //关闭数据库
 
 //配置服务端口
 app.listen(2101, () => {
-    console.log('listening on *:2101');
+    console.log('serve :2101');
 });

@@ -5,7 +5,7 @@
                 <swiper class="swiper vertical" :options="swiperOptionv">
                     <swiper-slide v-for="img in banner" :key="img.id">
                         <div class="ind_banner">
-                            <div class="ind_baImg" :style="{backgroundImage:'url('+img.bannerImg+')'}">
+                            <div class="ind_baImg" :style="{backgroundImage:'url('+img.img+')'}">
                             </div>
                         </div>
                     </swiper-slide>
@@ -392,17 +392,11 @@
             const _this = this;
 
             this.$http.get('banner').then(function (res) { //banner    
-                _this.banner = res.data.data
+                _this.banner = res.data
             }).catch(function (error) {
                 console.log(error)
             })
 
-            this.$http.get('business').then(function (res) { //banner    
-                _this.business = res.data
-                console.log(_this.business)
-            }).catch(function (error) {
-                console.log(error)
-            })
 
             this.swiperOptionh = { //把swiper放入created中,解决this冲突
                 direction: 'vertical',

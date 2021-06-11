@@ -13,7 +13,8 @@
           </el-form-item>
           <!-- 密码 -->
           <el-form-item prop="password">
-            <el-input type="password" prefix-icon="el-icon-lock" v-model="form.password"></el-input>
+            <el-input type="password" @keyup.enter.native="logIn" prefix-icon="el-icon-lock" v-model="form.password">
+            </el-input>
           </el-form-item>
 
           <!-- 按钮区域 -->
@@ -31,19 +32,15 @@
           <el-row :gutter="20">
             <el-col :span="22">
               <el-menu class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff"
-                active-text-color="#409EFF">
+                active-text-color="#409EFF" router>
                 <img class="logo" src="../../images/logo.png" />
-                <el-submenu index="1">
-                  <template slot="title">
-                    <router-link to="/manage"><i class="el-icon-s-home"></i>首页</router-link>
-                  </template>
-                  <el-menu-item index="1-1">
-                    <router-link to="/manage">系统信息</router-link>
-                  </el-menu-item>
-                  <el-menu-item index="1-2"><a href="javascript:;">统计流量</a></el-menu-item>
+                <el-submenu index="/manage/">
+                  <template slot="title"><i class="el-icon-chat-dot-square"></i>首页</template>
+                  <el-menu-item index="/manage/">系统信息</el-menu-item>
+                  <el-menu-item disabled>统计流量</el-menu-item>
                 </el-submenu>
-                <el-menu-item index="2">
-                  <router-link to="/manage/content"><i class="el-icon-document-copy"></i>内容管理</router-link>
+                <el-menu-item index="/manage/content/banner">
+                  <i class="el-icon-document-copy"></i>内容管理
                 </el-menu-item>
                 <el-submenu index="3">
                   <template slot="title"><i class="el-icon-chat-dot-square"></i>留言管理</template>
@@ -79,6 +76,47 @@
         </el-container>
       </el-container>
     </div>
+    <el-dialog title="修改密码" :visible.sync="resetPassword" center width="600px">
+      <el-form ref="setRef" :model="setForm" :rules="setRules">
+        <el-row>
+          <el-col :span="4">
+            <div class="user_te">用户名：</div>
+          </el-col>
+          <el-col :span="20">
+            <el-form-item prop="username">
+              <el-input prefix-icon="el-icon-user" v-model="setForm.username"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">
+            <div class="user_te">原密码：</div>
+          </el-col>
+          <el-col :span="20">
+            <el-form-item prop="password">
+              <el-input type="password" prefix-icon="el-icon-lock" v-model="setForm.password"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">
+            <div class="user_te">新密码：</div>
+          </el-col>
+          <el-col :span="20">
+            <el-form-item prop="setPassword">
+              <el-input prefix-icon="el-icon-lock" v-model="setForm.setPassword" @keyup.enter.native="resPass()">
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="resetPassword = false">取 消</el-button>
+        <el-button type="primary" @click="resPass()">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -90,7 +128,7 @@
         //这是登录表单的数据绑定对象
         form: {
           username: "admin",
-          password: '123456'
+          password: '',
         },
         //这是表单的预验证规则对象
         rules: {
@@ -121,7 +159,54 @@
             }
           ]
         },
-        shOn: true
+        setForm: {
+          username: "admin",
+          password: '',
+          setPassword: ''
+        },
+        setRules: {
+          username: [ //预验证用户名
+            {
+              required: true,
+              message: '请输入用户名',
+              trigger: 'blur'
+            },
+            {
+              min: 3,
+              max: 15,
+              message: '长度在 3 到 15 个字符',
+              trigger: 'blur'
+            }
+          ],
+          password: [ //预验证密码
+            {
+              required: true,
+              message: '请输入密码',
+              trigger: 'blur'
+            },
+            {
+              min: 6,
+              max: 15,
+              message: '长度在 6 到 15 个字符',
+              trigger: 'blur'
+            }
+          ],
+          setPassword: [ //预验证新密码
+            {
+              required: true,
+              message: '请输入密码',
+              trigger: 'blur'
+            },
+            {
+              min: 6,
+              max: 15,
+              message: '长度在 6 到 15 个字符',
+              trigger: 'blur'
+            }
+          ]
+        },
+        shOn: true,
+        resetPassword: false //重置密码
       }
     },
     methods: {
@@ -134,8 +219,7 @@
           //登陆验证          
           const {
             data: res
-          } = await this.$http.post("http://127.0.0.1:2101/api/v1/login", this
-            .form) //this.form要对应API文档约定命名（username、password）
+          } = await this.$http.post("login", this.form)
           if (res.meta.status != 200) { //响应状态
             this.open4(res.meta.message);
           } else {
@@ -144,8 +228,29 @@
             this.shOn = false; //显示后台管理系统
             //this.$router.push('/manage/Home')            
           }
-
-
+        })
+      },
+      consolelog() {
+        alert(2)
+      },
+      resPass() {
+        this.$refs.setRef.validate(async value => { //表单预验证
+          if (!value) {
+            return;
+          }
+          //登陆验证          
+          const {
+            data: res
+          } = await this.$http.put("login", this.setForm)
+          if (res.meta.status != 200) { //响应状态
+            this.open4(res.meta.message);
+          } else {
+            this.open1(res.meta.message);
+            sessionStorage.removeItem("token");
+            this.$router.push('/manage/');
+            this.shOn = true;
+            this.resetPassword = false;
+          }
         })
       },
       logout(command) { //登陆退出
@@ -153,6 +258,11 @@
           sessionStorage.removeItem("token");
           this.$router.push('/manage/');
           this.shOn = true;
+        }
+        if (command == 'reset') { //修改密码
+          this.resetPassword = true;
+          this.setForm.password = "";
+          this.setForm.setPassword = "";
         }
       },
       register() {
@@ -313,13 +423,20 @@
     min-width: 100px;
   }
 
-  .el-submenu__title *,
-  .el-menu-item * {
-    color: #fff;
-  }
 
   ul.el-menu-demo.el-menu--horizontal.el-menu {
     min-width: 1000px;
+  }
+
+  .el-submenu__title i,
+  .el-menu-item i {
+    color: #fff;
+  }
+
+  .user_te {
+    line-height: 40px;
+    text-align: right;
+    padding-right: 20px;
   }
 
 </style>

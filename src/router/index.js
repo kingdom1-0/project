@@ -20,7 +20,8 @@ const routes = [{
       },
       {
         path: 'review',
-        component: () => import("../views/activity/review.vue")
+        component: () => import("../views/activity/review.vue"),
+        name: 'review' //命名路由
       }
     ]
   },
@@ -93,13 +94,19 @@ const routes = [{
   },
   {
     path: '/manage',
-    component: () => import("../views/manage/common.vue"), //后台管理
+    component: () => import("../views/manage/common.vue"), //后台管理    
     children: [{
       path: '/',
-      component: () => import('../views/manage/index.vue')
+      component: () => import('../views/manage/index.vue'),
+      //redirect: 'user', //路由重定向
     }, {
-      path: 'content',
-      component: () => import('../views/manage/content.vue')
+      path: 'content/:id',
+      component: () => import('../views/manage/content.vue'),
+      //props: true //props传参(传递:id动参)
+      props: router => ({ //props传参（动静参数结合）
+        id: router.params.id, //动态参数
+        arg: '参数' //静态参数
+      })
     }],
     beforeEnter: (to, from, next) => {
       document.getElementsByTagName("html")[0].className = "manage";

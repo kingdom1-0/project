@@ -138,6 +138,10 @@
                 }]
             }
         },
+        created: function () {
+            //记录编程导航
+            //this.this.$route.params
+        },
         methods: {
             showNav: function (n) {
                 this.navBo = n;

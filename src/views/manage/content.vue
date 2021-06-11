@@ -4,13 +4,23 @@
     <!-- 数据列表 -->
     <el-main>
       <el-row>
-        <el-button type="primary"><span class="iconfont icon-add-sy"></span>添加</el-button>
-        <el-button type="primary"><span class="iconfont icon-bianji"></span>编辑</el-button>
+        <el-tooltip class="item" effect="dark" content="添加新数据" placement="bottom">
+          <el-button type="primary"><span class="iconfont icon-add-sy"></span>添加</el-button>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="一次只能单条编辑" placement="bottom">
+          <el-button type="primary"><span class="iconfont icon-bianji"></span>编辑</el-button>
+        </el-tooltip>
         <el-button type="success"><span class="iconfont icon-zhiding"></span>置顶</el-button>
         <el-button type="success"><span class="iconfont icon-quxiaozhiding"></span>取消置顶</el-button>
-        <el-button type="success"><span class="iconfont icon-fabu"></span>发布</el-button>
-        <el-button type="success"><span class="iconfont icon-daifabu"></span>待发布</el-button>
-        <el-button type="danger"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
+        <el-tooltip class="item" effect="dark" content="只有发布的数据，在会显示在网站" placement="bottom">
+          <el-button type="success"><span class="iconfont icon-fabu"></span>发布</el-button>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="内容不在网站显示，但存储于数据库" placement="bottom">
+          <el-button type="success"><span class="iconfont icon-daifabu"></span>待发布</el-button>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="删除的数据无法找回，如不明确删除，建议待发布" placement="bottom">
+          <el-button type="danger"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
+        </el-tooltip>
       </el-row>
       <el-row>
         <div class="el_li">
@@ -58,15 +68,15 @@
           </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <div class="page">
+        <!-- <div class="page">
           <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
             :current-page="currentPage4" :page-sizes="[100, 200, 300, 400]" :page-size="100"
             layout="total, sizes, prev, pager, next, jumper" :total="400">
           </el-pagination>
-        </div>
+        </div> -->
       </el-row>
     </el-main>
-    <ma-compile :show="dialogVisible" @close-compile="closeCompile"></ma-compile>
+    <ma-compile :show="dialogVisible" :al-data="alData" @close-compile="closeCompile"></ma-compile>
   </el-container>
 </template>
 <script>
@@ -77,6 +87,7 @@
       maNav,
       maCompile
     },
+    props: ['id', 'arg'], //router props传参(取参)
     data() {
       return {
         options: [{ //发布状态
@@ -102,90 +113,40 @@
         }],
         value2: '选项1',
         input: '', //标题搜索
-        tableData: [{ //列表数据
-          title: 'L1',
-          sort: '0',
-          issue: true,
-          top: false,
-          date: '2020-09-15 16:28:39'
-        }, {
-          title: 'L2',
-          sort: '0',
-          issue: true,
-          top: false,
-          date: '2020-09-15 16:28:39'
-        }, {
-          title: 'L3',
-          sort: '0',
-          issue: true,
-          top: false,
-          date: '2020-09-15 16:28:39'
-        }, {
-          title: 'L4',
-          sort: '0',
-          issue: true,
-          top: false,
-          date: '2020-09-15 16:28:39'
-        }, {
-          title: 'L5',
-          sort: '0',
-          issue: true,
-          top: true,
-          date: '2020-09-15 16:28:39'
+        tableData: [{
+          value: '',
+          sort: '',
+          issue: 0,
+          top: 0,
+          date: ''
         }],
         multipleSelection: [],
         currentPage4: 4,
         dialogVisible: false, //弹出框
-        ruleForm: { //修改表单模块
-          name: '',
-          date1: '',
-          date2: '',
-          issueRe: true,
-          topRe: false,
-          num: 0
-        },
-        rules: {
-          name: [{
-              required: true,
-              message: '请输入活动名称',
-              trigger: 'blur'
-            },
-            {
-              min: 1,
-              max: 500,
-              message: '长度在 1 到 500 个字符',
-              trigger: 'blur'
-            }
-          ],
-          date1: [{
-            type: 'date',
-            required: true,
-            message: '请选择日期',
-            trigger: 'change'
-          }],
-          date2: [{
-            type: 'date',
-            required: true,
-            message: '请选择时间',
-            trigger: 'change'
-          }],
-          num: [{
-              required: true,
-              message: '数字排序不能为空'
-            },
-            {
-              type: 'number',
-              message: '数字排序必须为数字值'
-            }
-          ],
-        },
-        fileList: []
+        alData: {
+          date: "",
+          id: "",
+          img: "",
+          issue: true,
+          sort: "",
+          title: "",
+          top: true
+        }
       }
     },
     created() {
-
+      console.log(this.id + this.arg) //this.id  直接对就接口名
+      //this.$route.params.id  直接访问router动态参数(用了以上props传参代替)
+      this.axioxGet(this.id); //get数据
     },
     methods: {
+      axioxGet: function (url) {
+        var _this = this;
+        this.$http.get(url).then(function (res) {
+          console.log(res.data);
+          _this.tableData = res.data;
+        })
+      },
       closeCompile: function (bo) { //关闭编辑
         this.dialogVisible = bo;
       },
@@ -200,7 +161,7 @@
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
-        console.log(this.multipleSelection)
+        //console.log(this.multipleSelection)
       },
       handleSizeChange(val) { //分页
         console.log(`每页 ${val} 条`);
@@ -218,9 +179,15 @@
             console.log(_)
           });
       },
-      showBlock(row) { //弹出页
-        this.dialogVisible = true
-        console.log(row)
+      showBlock(row) { //数据修改页显示与传递数据
+        this.alData = row;
+        this.alData.issue = Boolean(row.issue); //0 1  转换boolean值 
+        this.alData.top = Boolean(row.top);
+        if (typeof (row.class) == "string") {
+          this.alData.class = row.class.split(",")
+        }
+        //console.log(this.alData)
+        this.dialogVisible = true;
       },
       submitForm(formName) { //修改表单模块 (提交表单)
         this.$refs[formName].validate((valid) => {
@@ -236,11 +203,13 @@
       handleChange(value) {
         console.log(value);
       },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
       handlePreview(file) {
         console.log(file);
+      }
+    },
+    watch: {
+      $route(to) {
+        this.axioxGet(to.params.id); //监控路由参数，对应axios数据
       }
     }
   }

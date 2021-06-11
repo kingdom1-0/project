@@ -9,7 +9,7 @@
               <div class="join_teBl">
                 <div class="join_ti">{{li.ti}}</div>
                 <div class="join_vip"><img :src="li.img"></div>
-                <div class="join_te" v-html="li.text">
+                <div class="join_te" v-html="li.value">
 
                 </div>
               </div>
@@ -46,7 +46,7 @@
     created() {
       var _this = this;
       this.$http.get("join").then(function (re) {
-        _this.newList = re.data.data;
+        _this.newList = re.data;
       }).catch(function (err) {
         console.log(err);
       })

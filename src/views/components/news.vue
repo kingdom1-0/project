@@ -6,7 +6,7 @@
                 <div class="alt_InnBlock">
                     <div class="In_ti">{{newsVal.data.title}}</div>
                     <div class="In_date">时间：{{newsVal.data.date.slice(0,10)}}</div>
-                    <div class="In_te" v-html="newsVal.data.text">
+                    <div class="In_te" v-html="newsVal.data.value">
                     </div>
                 </div>
                 <div class="In_bu">
@@ -15,7 +15,6 @@
             </div>
         </div>
     </transition>
-
 </template>
 <script>
     export default {

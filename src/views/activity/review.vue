@@ -39,7 +39,7 @@
                 <div class="act_teBl">
                   <div class="act_ti">{{li.title}}</div>
                   <div class="act_bu"></div>
-                  <div class="act_te" v-html="li.text"></div>
+                  <div class="act_te" v-html="li.value"></div>
                 </div>
                 <div class="clear"></div>
               </div>
@@ -84,8 +84,8 @@
     mounted() {
       let _this = this;
       this.$http.get("news").then(function (res) {
-        _this.newList = res.data.data;
-        _this.calendar = res.data.news[0];
+        _this.newList = res.data;
+        _this.calendar = res.news[0];
       }).catch(function (err) {
         console.log(err)
       })

@@ -1,14 +1,22 @@
 <!-- 导航 -->
 <template>
+    <!-- unfold参数 控制导航收放 -->
     <el-aside class="nav_bl" :width="unfold?(200+''):(64+'')">
         <el-menu unique-opened default-active="2" class="el-menu-vertical-demo" background-color="#545c64"
-            text-color="#fff" active-text-color="rgb(64, 158, 255)" :collapse="unfold" :collapse-transition="false">
+            text-color="#fff" active-text-color="rgb(64, 158, 255)" :collapse="unfold" :collapse-transition="false"
+            router>
             <div class="bu_unfold" @click="unfold = !unfold"><i class="el-icon-s-unfold"></i></div>
-            <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id">
-                <template slot="title"><i :class="icoList[item.id]"></i><span
-                        class="title">{{item.authName}}</span></template>
-                <el-menu-item v-for="it in item.children" :index="it.id+''" :key="it.id">{{it.authName}}</el-menu-item>
-            </el-submenu>
+            <!-- 二级导航 -->
+            <div v-for="item in menulist" :key="item.id">
+                <el-submenu :index="item.id + ''" v-if="item.hasOwnProperty('children')">
+                    <template slot="title"><i :class="icoList[item.id]"></i><span class="title"
+                            v-show="!unfold">{{item.authName}}</span></template>
+                    <el-menu-item v-for="it in item.children" :index="it.path" :key="it.id">{{it.authName}}
+                    </el-menu-item>
+                </el-submenu>
+                <el-menu-item :index="item.path" v-else><i :class="icoList[item.id]"></i><span class="title"
+                        v-show="!unfold">{{item.authName}}</span></el-menu-item>
+            </div>
         </el-menu>
     </el-aside>
 </template>
@@ -20,46 +28,50 @@
             return {
                 menulist: [{
                         id: 1,
-                        authName: "首页(banner)"
+                        authName: "首页(banner)",
+                        path: "banner"
                     }, { //左侧菜单数据
                         id: 2,
                         authName: "品牌指引",
                         children: [{
                                 id: "1_1",
-                                authName: "楼层管理"
+                                authName: "楼层管理",
+                                path: "floor" // 路由参数
                             },
                             {
                                 id: "1_2",
-                                authName: "类别管理"
+                                authName: "类别管理",
+                                path: "sort"
                             },
                             {
                                 id: "1_3",
-                                authName: "品牌管理"
+                                authName: "品牌管理",
+                                path: "store"
                             }
                         ]
                     },
                     {
                         id: 3,
-                        authName: "活动精选"
+                        authName: "活动精选",
+                        path: "news"
                     },
                     {
                         id: 4,
                         authName: "会员天地",
                         children: [{
                                 id: "3_1",
-                                authName: "会员活动"
+                                authName: "会员活动",
+                                path: "active"
                             },
                             {
                                 id: "3_2",
-                                authName: "加入会员"
+                                authName: "加入会员",
+                                path: "join"
                             },
                             {
                                 id: "3_3",
-                                authName: "会员须知"
-                            },
-                            {
-                                id: "3_4",
-                                authName: "积分特权"
+                                authName: "会员须知",
+                                path: "notice"
                             }
                         ]
                     }
@@ -73,6 +85,9 @@
                 },
                 unfold: false
             }
+        },
+        created: function () {
+
         }
 
     }
