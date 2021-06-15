@@ -13,15 +13,11 @@
 const express = require('express');
 const cors = require('cors'); //cors跨域支持
 const app = express();
-const http = require('http').createServer(app);
 const mysql = require('mysql'); //请求数据库
 const bodyParser = require('body-parser'); //post中间件，用于post解析参数
 const fs = require("fs");
 const multipart = require('connect-multiparty'); //在处理模块中引入第三方解析模块
 const multipartMiddleware = multipart(); //post数据解析
-const {
-    default: axios
-} = require('axios');
 
 app.use(cors()); //解决跨域(替换下面的处理方案)
 
@@ -59,11 +55,13 @@ var sqlConfig = {
 }
 
 let conn;
+let pool;
+let que;
 /*数据库重连机制(防止数据库断开)*/
 function reconn() {
     conn = mysql.createPool(sqlConfig); //数据库连接池
     // 封装
-    query = function (sql, callback) {
+    que = function (sql, callback) {
         pool.getConnection(function (err, conn) { //从连接池中取出连接,如无连接可用则隐式的建立一个数据库连接。
             conn.query(sql, function (err, results) {
                 callback(err, results) // 结果回调
@@ -80,7 +78,7 @@ reconn();
 
 /* 封装数据库读取 */
 function getQuery(item) {
-    conn.query('SELECT * FROM bu_' + item, function (err, rows, fields) { //读取数据库
+    conn.query('SELECT * FROM bu_' + item, function (err, rows) { //读取数据库
         if (err) throw err;
         return dataArray[apiArray.indexOf(item)] = rows;
     });
@@ -120,7 +118,7 @@ function putData(item) {
         daAr.push(da.id);
         console.log(te.slice(1))
         //console.log(daAr.toString())
-        conn.query('UPDATE bu_' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT, daAr, function (err, result) { //修改指定数据
+        conn.query('UPDATE bu_' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT, daAr, function (err) { //修改指定数据
             if (err) {
                 console.log(err.message);
                 return;
@@ -151,7 +149,7 @@ app.post(apiLo + 'login', function (req, res) { //建立数据接口
         dataArray[8]  //数据库用户数据
         对比数据返回登陆结果
     */
-    dataArray[8].forEach(function (item, n) {
+    dataArray[8].forEach(function (item) {
         if (reqBody.username == item.username && reqBody.password == item.password) {
             resData.meta = {
                 "status": "200",
@@ -181,11 +179,11 @@ app.put(apiLo + 'login', function (req, res) { //建立数据接口
         dataArray[8]  //数据库用户数据
         对比数据返回登陆结果
     */
-    dataArray[8].forEach(function (item, n) {
+    dataArray[8].forEach(function (item) {
         if (reqBody.username == item.username && reqBody.password == item.password) {
             var modSql = 'UPDATE bu_login SET password = ? WHERE username = ?';
             var modSqlParams = [reqBody.setPassword, reqBody.username];
-            conn.query(modSql, modSqlParams, function (err, result) { //修改指定用户密码
+            conn.query(modSql, modSqlParams, function (err) { //修改指定用户密码
                 if (err) {
                     console.log(err.message);
                     return;
@@ -213,7 +211,7 @@ app.put(apiLo + 'login', function (req, res) { //建立数据接口
     res.json(resData); //以json形式发送响应数据
 });
 
-
+let response;
 app.post(apiLo + 'file_upload', multipartMiddleware, function (req, res) { //文件上传
     console.log(req.files.file); //上传文件信息
     var r = new Date().getTime(); //定文件唯一路径
@@ -253,6 +251,7 @@ fs.open(__dirname + '/ueConfig.json', 'r+', function (err, fd) { //打开ueditor
     });
 });
 
+let responseImg;
 app.post(apiLo + 'ueditor', multipartMiddleware, function (req, res) { //文件上传      
     //const action = req.query.action;
     //if (action == 'uploadimage' || action == 'uploadvideo' || action == 'uploadfile') { //图片/视频/附件上传判断  

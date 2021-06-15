@@ -2,18 +2,19 @@
     <!-- 数据修改模块 -->
     <el-dialog title="编辑" :visible="show" width="30%" :before-close="handleClose" :fullscreen="true" :modal="false">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="所属楼层" prop="pId" v-if="ruleForm.pId != 'undefined'">
+            <el-form-item label="所属楼层" prop="pId" v-if="ruleForm.pId">
+
                 <el-radio v-model="ruleForm.pId" :label="fl.title" v-for="fl in floor" :key="fl.id">{{fl.title}}
                 </el-radio>
             </el-form-item>
-            <el-form-item label="所属类别" prop="class" v-if="ruleForm.class != 'undefined'">
+            <el-form-item label="所属类别" prop="class" v-if="ruleForm.class">
                 <el-checkbox-group v-model="ruleForm.class">
                     <el-checkbox :label="item.title" v-for="item in classDa" :key="item.id">
                         {{item.title}}
                     </el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="字母索引" prop="en" v-if="ruleForm.en != 'undefined'">
+            <el-form-item label="字母索引" prop="en" v-if="ruleForm.en">
                 <el-radio v-model="ruleForm.en" :label="item" v-for="(item,n) in enDa" :key="n">{{item}}
                 </el-radio>
             </el-form-item>
@@ -174,7 +175,9 @@
                     if (valid) {
                         //alert('submit!');
                         this.closeCompile();
-                        this.ruleForm.class = this.ruleForm.class.toString(); //数组转字符串
+                        if (this.ruleForm.class) {
+                            this.ruleForm.class = this.ruleForm.class.toString(); //数组转字符串
+                        }
                         console.log(this.ruleForm)
                         this.$http.put(this.$route.params.id, this.ruleForm).then((res) => { //
                             console.log(res.data);
@@ -216,7 +219,8 @@
         watch: {
             alData: function () {
                 this.ruleForm = this.alData;
-                console.log(this.alData)
+                console.log(this.ruleForm)
+                console.log(this.ruleForm.pId)
             }
         }
     }
