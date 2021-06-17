@@ -79,7 +79,7 @@
                     lo: this.thisStore().store,
                     sort: this.thisStore().class,
                     text: this.thisStore().value,
-                    imgUl: this.thisStore().imgul.split(",")
+                    images: this.thisStore().images.split(",")
                 })
             },
             concatDate: function (resFloor, resStore) {

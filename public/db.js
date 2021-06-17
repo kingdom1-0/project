@@ -103,7 +103,6 @@ apiArray.forEach(function (item, n) {
 function putData(item) {
     app.put(apiLo + item, function (req, res) { //建立数据接口
         const da = req.body; //post请求数据
-        const resData = {}; //响应数据
         let te = "";
         let idT = "";
         let daAr = [];
@@ -116,29 +115,30 @@ function putData(item) {
             }
         }
         daAr.push(da.id);
-        console.log(te.slice(1))
-        //console.log(daAr.toString())
+        console.log('UPDATE bu_' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT)
         conn.query('UPDATE bu_' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT, daAr, function (err) { //修改指定数据
             if (err) {
                 console.log(err.message);
                 return;
             } else {
-                resData.meta = {
-                    "status": "200",
-                    "message": "内容修改成功"
-                };
                 getQuery(item) //刷新单个数据池
             }
         });
-        res.json(resData); //以json形式发送响应数据
+        res.json();
     });
 }
+//数据删除
+
+
 //常规数据修改
 apiArray.forEach((item) => {
     if (item != "login") { //登录用户数据修改单独处理
         putData(item);
     }
 })
+
+
+
 
 //用户登录数据接口
 app.post(apiLo + 'login', function (req, res) { //建立数据接口

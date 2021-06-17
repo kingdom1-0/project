@@ -2,21 +2,27 @@
   <el-container class="man_content">
     <ma-nav></ma-nav>
     <!-- 数据列表 -->
-    <el-main>
+    <el-main v-loading="loading">
       <el-row>
         <el-tooltip class="item" effect="dark" content="添加新数据" placement="bottom">
           <el-button type="primary"><span class="iconfont icon-add-sy"></span>添加</el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="一次只能单条编辑" placement="bottom">
-          <el-button type="primary"><span class="iconfont icon-bianji"></span>编辑</el-button>
+          <el-button type="primary" @click="redact(selectData)"><span class="iconfont icon-bianji"></span>编辑
+          </el-button>
         </el-tooltip>
-        <el-button type="success"><span class="iconfont icon-zhiding"></span>置顶</el-button>
-        <el-button type="success"><span class="iconfont icon-quxiaozhiding"></span>取消置顶</el-button>
+        <el-button type="success" @click="redactOption('top',true)"><span class="iconfont icon-zhiding"></span>置顶
+        </el-button>
+        <el-button type="success" @click="redactOption('top',false)"><span
+            class="iconfont icon-quxiaozhiding"></span>取消置顶
+        </el-button>
         <el-tooltip class="item" effect="dark" content="只有发布的数据，在会显示在网站" placement="bottom">
-          <el-button type="success"><span class="iconfont icon-fabu"></span>发布</el-button>
+          <el-button type="success" @click="redactOption('issue',true)"><span class="iconfont icon-fabu"></span>发布
+          </el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="内容不在网站显示，但存储于数据库" placement="bottom">
-          <el-button type="success"><span class="iconfont icon-daifabu"></span>待发布</el-button>
+          <el-button type="success" @click="redactOption('issue',false)"><span class="iconfont icon-daifabu"></span>待发布
+          </el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="删除的数据无法找回，如不明确删除，建议待发布" placement="bottom">
           <el-button type="danger"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
@@ -49,21 +55,21 @@
       <el-row></el-row>
       <el-row>
         <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" :border="true"
-          :highlight-current-row="true" style="width: 100%" @selection-change="handleSelectionChange"
-          @row-dblclick="showBlock">
+          :default-sort="{prop: 'sort', order: 'descending'}" :highlight-current-row="true" style="width: 100%"
+          @selection-change="handleSelectionChange" @row-dblclick="redact">
           <el-table-column type="selection" width="80" align="center">
           </el-table-column>
-          <el-table-column prop="title" label="标题" show-overflow-tooltip align="left">
+          <el-table-column prop="title" label="标题" show-overflow-tooltip align="left" sortable>
           </el-table-column>
-          <el-table-column prop="sort" label="排序" width="80" align="center">
+          <el-table-column prop="sort" label="排序" width="80" align="center" sortable>
           </el-table-column>
-          <el-table-column prop="issue" label="发布" width="80" align="center">
+          <el-table-column prop="issue" label="发布" width="80" align="center" sortable>
             <span class="iconfont el-icon-check" slot-scope="scope" v-show="scope.row.issue"></span>
           </el-table-column>
-          <el-table-column prop="top" label="置顶" width="80" align="center">
+          <el-table-column prop="top" label="置顶" width="80" align="center" sortable>
             <span class="iconfont el-icon-check" slot-scope="scope" v-show="scope.row.top"></span>
           </el-table-column>
-          <el-table-column prop="date" label="创建时间" width="200" align="center">
+          <el-table-column prop="date" label="创建时间" width="200" align="center" sortable>
             <template slot-scope="scope">{{ scope.row.date }}</template>
           </el-table-column>
         </el-table>
@@ -90,6 +96,7 @@
     props: ['id', 'arg'], //router props传参(取参)
     data() {
       return {
+        loading: false,
         options: [{ //发布状态
           value: '选项1',
           label: '发布状态'
@@ -120,7 +127,7 @@
           top: 0,
           date: ''
         }],
-        multipleSelection: [],
+        selectData: [],
         currentPage4: 4,
         dialogVisible: false, //弹出框
         alData: {
@@ -135,15 +142,15 @@
       }
     },
     created() {
-      console.log(this.id + this.arg) //this.id  直接对就接口名
+      //console.log(this.id + this.arg) //this.id  直接对就接口名
       //this.$route.params.id  直接访问router动态参数(用了以上props传参代替)
-      this.axioxGet(this.id); //get数据
+      this.axioxGet(this.id); //get对应id参数数据
     },
     methods: {
-      axioxGet: function (url) {
+      axioxGet: function (url) { //get数据
         var _this = this;
         this.$http.get(url).then(function (res) {
-          console.log(res.data);
+          //console.log(res.data);
           _this.tableData = res.data;
         })
       },
@@ -159,15 +166,9 @@
           this.$refs.multipleTable.clearSelection();
         }
       },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-        //console.log(this.multipleSelection)
-      },
-      handleSizeChange(val) { //分页
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+      handleSelectionChange(val) { //表单change事件
+        this.selectData = val;
+        //console.log(this.selectData)
       },
       handleClose(done) {
         this.$confirm('确认关闭？')
@@ -179,15 +180,37 @@
             console.log(_)
           });
       },
-      showBlock(row) { //数据修改页显示与传递数据
-        this.alData = row;
-        this.alData.issue = Boolean(row.issue); //0 1  转换boolean值 
-        this.alData.top = Boolean(row.top);
-        if (typeof (row.class) == "string") {
-          this.alData.class = row.class.split(",")
+      redact(da) { //编辑
+        var te = da.constructor.toString();
+        if (te.indexOf("Object") > 0) {
+          this.alData = da;
+          this.dialogVisible = true;
         }
-        //console.log(this.alData)
-        this.dialogVisible = true;
+        if (te.indexOf("Array") > 0) {
+          if (da.length > 1) {
+            alert("一次只能编辑一条数据！");
+          } else {
+            this.alData = da[0]
+            this.dialogVisible = true;
+          }
+        }
+      },
+      redactOption(op, val) {
+        this.selectData.forEach((item) => {
+          var thDate = this.tableData[item.id - 1];
+          thDate[op] = val;
+          this.loading = true;
+          this.$http.put(this.$route.params.id, thDate).then((res) => {
+            if (res.status == "200") {
+              this.loading = false;
+            }
+          })
+        })
+      },
+      delete(da) { //批量删除
+        da.forEach((item) => {
+          this.tableData[item.id - 1] = false
+        })
       },
       submitForm(formName) { //修改表单模块 (提交表单)
         this.$refs[formName].validate((valid) => {
@@ -199,12 +222,6 @@
           }
         });
         this.dialogVisible = false;
-      },
-      handleChange(value) {
-        console.log(value);
-      },
-      handlePreview(file) {
-        console.log(file);
       }
     },
     watch: {
@@ -284,6 +301,11 @@
   li.el-submenu.is-active i:before,
   li.el-submenu.is-active a:before {
     color: #409EFF;
+  }
+
+  span.caret-wrapper {
+    top: 9px;
+    margin-right: -6px;
   }
 
 </style>

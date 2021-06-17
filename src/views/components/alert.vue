@@ -25,7 +25,7 @@
                     <div class="alt_imgBlock">
                         <div class="alt_swiperBl">
                             <swiper class="swiper vertical" :options="swiperOptionv">
-                                <swiper-slide v-for="img in store.imgUl" :key="img.id">
+                                <swiper-slide v-for="img in store.images" :key="img.id">
                                     <div class="alt_img"><img :src="img" /></div>
                                 </swiper-slide>
                                 <div class="pa05" slot="pagination"></div>
@@ -62,7 +62,7 @@
                     lo: "",
                     sort: "",
                     text: '',
-                    imgUl: []
+                    images: []
                 }
             }
         },
@@ -71,6 +71,7 @@
             bus.$on('data', val => {
                 this.sh = val.showDa; //显示开送
                 this.store = val //弹出块相关数据
+                console.log(this.store)
             })
         },
         methods: {

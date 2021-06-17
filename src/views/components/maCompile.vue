@@ -3,7 +3,6 @@
     <el-dialog title="编辑" :visible="show" width="30%" :before-close="handleClose" :fullscreen="true" :modal="false">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="所属楼层" prop="pId" v-if="ruleForm.pId">
-
                 <el-radio v-model="ruleForm.pId" :label="fl.title" v-for="fl in floor" :key="fl.id">{{fl.title}}
                 </el-radio>
             </el-form-item>
@@ -29,16 +28,19 @@
                 <vue-neditor-wrap v-model="ruleForm.value" :config="myConfig" :destroy="false"></vue-neditor-wrap>
             </el-form-item>
             <el-form-item label="图片" v-if="ruleForm.img">
-                <!-- <el-upload class="upload-demo" action="http://127.0.0.1:2101/api/v1/file_upload"
-                    :on-success="handleAvatarSuccess" :on-remove="handleRemove" list-type="picture-card" :limit="3"
-                    accept=".jpg, .jpeg, .png" :before-upload="beforeAvatarUpload">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload> -->
                 <el-upload class="avatar-uploader" action="http://127.0.0.1:2101/api/v1/file_upload"
                     :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                     <img v-if="ruleForm.img" :src="ruleForm.img" class="avatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                </el-upload>
+            </el-form-item>
+            <el-form-item label="多图" v-if="ruleForm.images">
+                <el-upload class="upload-demo" action="http://127.0.0.1:2101/api/v1/file_upload"
+                    :on-success="imagesAvatarSuccess" :on-remove="handleRemove" :limit="6" accept=".jpg, .jpeg, .png"
+                    :before-upload="beforeAvatarUpload" :file-list="fileList" list-type="picture-card">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                 </el-upload>
             </el-form-item>
             <el-form-item label="是否发布" prop="issue">
@@ -75,21 +77,22 @@
             VueNeditorWrap
         },
         props: {
-            show: {
+            show: { //
                 type: Boolean
             },
-            alData: {
+            alData: { //传入数据
                 type: Object
             }
         },
         data() {
             return {
+                fileList: [], //多图
                 classDa: [], //类别
                 floor: [], //楼层
                 enDa: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
                     "T", "U", "V", "W", "X", "Y", "Z"
-                ],
-                myConfig: {
+                ], //首字母
+                myConfig: { //编辑器配置
                     serverUrl: this.ueditorURL, //this.ueditorURL在main.js文件配置
                     // 你的UEditor资源存放的路径,相对于打包后的index.html
                     UEDITOR_HOME_URL: "/neditor/",
@@ -98,20 +101,9 @@
                     // 关闭自动保存
                     enableAutoSave: false
                 },
-                imageUrl: '',
-                multipleSelection: [],
-                currentPage4: 4,
                 dialogVisible: false, //弹出框
-                ruleForm: { //修改表单模块
-                    // title: '',
-                    // date: '',
-                    // issue: true,
-                    // top: false,
-                    // sort: 0,
-                    // img: '',
-                    // value: ""
-                },
-                rules: {
+                ruleForm: {}, //修改表单模块
+                rules: { //表单数据预验证
                     name: [{
                             required: true,
                             message: '请输入活动名称',
@@ -133,17 +125,19 @@
                             message: '数字排序必须为数字值'
                         }
                     ],
+                    date: [{
+                        required: true,
+                        message: '发布日期不能为空'
+                    }]
                 }
             }
         },
         created() {
-            this.$http.get("floor").then((res) => {
+            this.$http.get("floor").then((res) => { //楼层数据
                 this.floor = res.data;
-                console.log(this.floor)
             })
-            this.$http.get("sort").then((res) => {
+            this.$http.get("sort").then((res) => { //分类数据
                 this.classDa = res.data;
-                console.log(this.classDa)
             })
         },
         methods: {
@@ -158,8 +152,8 @@
             },
             handleClose(done) {
                 this.$confirm('确认关闭？')
-                    .then(_ => {
-                        console.log(_)
+                    .then(() => {
+                        //console.log(_)
                         this.closeCompile();
                         done();
                     })
@@ -167,7 +161,7 @@
                         console.log(_)
                     });
             },
-            closeCompile: function () {
+            closeCompile: function () { //关闭数据修改页
                 this.$emit("close-compile", false);
             },
             submitForm(formName) { //修改表单模块 (提交表单)
@@ -178,9 +172,26 @@
                         if (this.ruleForm.class) {
                             this.ruleForm.class = this.ruleForm.class.toString(); //数组转字符串
                         }
+                        if (this.ruleForm.images) {
+                            var images = "";
+                            this.fileList.forEach((item) => {
+                                if (item.response) {
+                                    images += "," + item.response.data;
+                                } else {
+                                    images += "," + item.url
+                                }
+                            })
+                            this.ruleForm.images = images.slice(1);
+                        }
+
                         console.log(this.ruleForm)
-                        this.$http.put(this.$route.params.id, this.ruleForm).then((res) => { //
-                            console.log(res.data);
+                        this.$http.put(this.$route.params.id, this.ruleForm).then((res) => { //编辑数据提交
+                            if (res.status == '200') {
+                                this.$message({
+                                    message: '编辑成功',
+                                    type: 'success'
+                                });
+                            }
                         })
                     } else {
                         console.log('error submit!!');
@@ -191,10 +202,10 @@
             handleChange(value) {
                 console.log(value);
             },
-            // handleAvatarSuccess(res) {//传多图
-            //     this.ruleForm.images.push(res.filename);
-            //     console.log(this.ruleForm.images)
-            // },
+            imagesAvatarSuccess(res, file, fileList) { //传多图
+                this.fileList = fileList;
+                console.log(this.fileList)
+            },
             handleAvatarSuccess(res) {
                 this.ruleForm.img = res.data;
                 console.log(res.data)
@@ -206,21 +217,30 @@
                 }
                 return isLt2M;
             },
-            handleRemove(file) { //删除图片
-                var _thisImg = this.ruleForm.images
-                _thisImg.forEach(function (item, n) {
-                    if (item.indexOf(file.name) > 0) {
-                        _thisImg.splice(n, 1)
-                    }
-                })
-                console.log(this.ruleForm.images)
+            handleRemove(file, fileList) { //删除图片
+                console.log(fileList)
             }
         },
         watch: {
             alData: function () {
+                this.alData.issue = Boolean(this.alData.issue); //0 1  转换boolean值 
+                this.alData.top = Boolean(this.alData.top);
+                if (typeof (this.alData.class) == "string") { //多选按钮
+                    this.alData.class = this.alData.class.split(",")
+                }
+                if (typeof (this.alData.images) == "string") { //多图转换数据
+                    var img = this.alData.images.split(",")
+                    var images = [];
+                    img.forEach((item, n) => {
+                        images[n] = {
+                            "url": item
+                        };
+                    })
+
+                    this.fileList = images
+                    console.log(this.fileList)
+                }
                 this.ruleForm = this.alData;
-                console.log(this.ruleForm)
-                console.log(this.ruleForm.pId)
             }
         }
     }
@@ -252,6 +272,10 @@
         width: auto;
         height: 178px;
         display: block;
+    }
+
+    .el-checkbox-group {
+        padding-top: 10px;
     }
 
 </style>
