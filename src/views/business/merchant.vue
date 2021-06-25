@@ -3,13 +3,16 @@
     <div class="bus_conBlock">
       <swiper class="swiper" :options="swiperOption">
         <swiper-slide v-for="s in store" :key="s.id">
-          <div class="bus_block" @click="showBlock(s)">
-            <a href="javascript:;" class="bus_img"><img :src="s.img" /></a>
-            <div class="bus_teBl">
-              <a href="javascript:;" class="bus_ti">{{s.ti}}</a>
-              <router-link :to="{path:'/business/',query:{sid:s.id}}" class="bus_aBl">店铺号:<span>{{s.store}}</span>
-              </router-link>
+          <div class="bus_block">
+            <div class="bus_InBl" @click="showBlock(s)">
+              <a href="javascript:;" class="bus_img"><img :src="s.img" /></a>
+              <div class="bus_teBl">
+                <a href="javascript:;" class="bus_ti">{{s.ti}}</a>
+              </div>
             </div>
+            <router-link :to="{path:'/business/',query:{sid:s.id,pId:s.pId}}" class="bus_aBl">
+              店铺号:<span>{{s.store}}</span>
+            </router-link>
           </div>
         </swiper-slide>
       </swiper>
@@ -45,7 +48,7 @@
           lo: s.store,
           sort: s.class,
           text: s.value,
-          imgUl: s.imgul.split(",")
+          images: s.images.split(",")
         })
       }
     },

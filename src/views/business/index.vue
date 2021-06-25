@@ -14,7 +14,7 @@
                                 <div class="busB_ul">
                                     <div class="busB_li" :sid="blLi.id" @click="backData()" v-for="(blLi,i) in magLi.ul"
                                         :key="blLi.id"
-                                        :style="{width:blLi.width*m+'px',height:blLi.height*m+'px',left:blLi.leftVal*m+'px',top:blLi.topVal*m+'px'}"
+                                        :style="{width:blLi.area[2]*m+'px',height:blLi.area[3]*m+'px',left:blLi.area[0]*m+'px',top:blLi.area[1]*m+'px'}"
                                         @mouseenter="showStore(i)" @mouseout="hideStore">
                                         {{blLi.daWidth}}
                                     </div>
@@ -25,7 +25,7 @@
                 </div>
                 <transition name="fadeDown">
                     <div class="busI_block" v-if="bl"
-                        :style="{width:thisStore().width*m+'px',height:thisStore().height*m+'px',left:(parseInt(thisStore().leftVal)+parseInt(thisStore().width)/2)*m+'px',top:(parseInt(thisStore().topVal) - parseInt(thisStore().height)/2)*m+'px'}">
+                        :style="{width:thisStore().area[2]*m+'px',height:thisStore().area[3]*m+'px',left:(parseInt(thisStore().area[0])+parseInt(thisStore().area[2])/2)*m+'px',top:(parseInt(thisStore().area[1]) - parseInt(thisStore().area[3])/2)*m+'px'}">
                         <div class="busI_InnBlock">
                             <div class="busI_logo"><img :src="thisStore().img"></div>
                             <div class="busI_teBl">
@@ -50,7 +50,7 @@
                 m: 1, //楼层图与原图比例
                 sN: 0, //触发示块索引
                 bl: false, //店铺块显           
-                magUl: []
+                magUl: [] //店铺数据
             }
         },
         methods: {
@@ -70,9 +70,8 @@
             thisStore: function () { //返回当前店铺信息
                 return this.magUl[this.on].ul[this.sN]
             },
-            backData: function () {
-                //显示店铺详情页（事件总线）
-                bus.$emit('data', {
+            backData: function () { //显示店铺详情页 
+                bus.$emit('data', { //事件总线
                     showDa: true,
                     logo: this.thisStore().img,
                     ti: this.thisStore().title,
@@ -82,26 +81,26 @@
                     images: this.thisStore().images.split(",")
                 })
             },
-            concatDate: function (resFloor, resStore) {
+            concatDate: function (resFloor, resStore) { //拼接店铺数据
                 this.magUl = resFloor.data;
-                for (var i = 0; i < this.magUl.length; i++) { //拼接店铺数据
+                for (var i = 0; i < this.magUl.length; i++) {
                     this.magUl[i].ul = resStore.data.filter(function (item) {
                         return item.pId == (i + 1)
                     })
                 }
-                console.log(resFloor.data)
-                if (location.href.indexOf("sid=") > 0) { //传参显示店铺信息
-                    var sid = parseInt(location.href.split("sid=")[1])
-                    var thisStore = resStore.data[sid - 1]
-                    this.on = thisStore.pId - 1;
-                    var storeAr = this.magUl[this.on].ul;
-                    for (var n = 0; n < storeAr.length; n++) {
-                        if (storeAr[n].id == sid) {
-                            this.sN = n;
-                        }
-                    }
-                    this.bl = true;
-                }
+                // if (location.href.indexOf("sid=") > 0) { //传参显示店铺信息
+                //     var sid = parseInt(location.href.split("sid=")[1])
+                //     var thisStore = resStore.data[sid - 1]
+                //     console.log(resStore.data[sid - 1])
+                //     this.on = parseInt(thisStore.pId.match(/[0-9]/g)[0]) - 1;
+                //     var storeAr = this.magUl[this.on].ul;
+                //     for (var n = 0; n < storeAr.length; n++) {
+                //         if (storeAr[n].id == sid) {
+                //             this.sN = n;
+                //         }
+                //     }
+                //     this.bl = true;
+                // }
             }
         },
         created() {
@@ -125,7 +124,24 @@
             async function queryDate() {
                 var resFloor = await _this.$http.get('floor');
                 var resStore = await _this.$http.get('store');
+
+                resStore.data.forEach((item) => {
+                    item.area = item.area.split(",") //热区值转数组
+                    //item.pId = parseInt(item.pId.match(/[0-9]/g)[0])
+                })
+
                 _this.concatDate(resFloor, resStore);
+
+                var href = location.href;
+                if (href.indexOf("sid") > 0) {
+                    var pId = parseInt(href.split("pId=")[1]) - 1
+                    var n = _this.magUl[pId].ul.findIndex((ob) => {
+                        return ob.id == parseInt(href.split("sid=")[1])
+                    })
+                    _this.on = pId;
+                    _this.showStore(n)
+                }
+
             }
             queryDate()
         },

@@ -70,26 +70,28 @@ function reconn() {
         })
     }
     conn.on("error", err => { //数据库断开的回调
-        console.log("数据库重连");
+        console.log("数据库重连" + err);
         setTimeout(reconn, 1000) //递归调用数据库连接
     })
 }
 reconn();
 
-/* 封装数据库读取 */
+/* 表数据查询 */
 function getQuery(item) {
     conn.query('SELECT * FROM bu_' + item, function (err, rows) { //读取数据库
         if (err) throw err;
-        return dataArray[apiArray.indexOf(item)] = rows;
+        let data = JSON.parse(JSON.stringify(rows)).sort((a, b) => { //数据排序规则
+            a = new Date(a.date).getTime();
+            b = new Date(b.date).getTime();
+            return b - a;
+        }).sort((a, b) => {
+            return b.sort - a.sort
+        }).sort((a, b) => {
+            return b.top - a.top
+        })
+        return dataArray[apiArray.indexOf(item)] = data;
     });
 }
-
-
-/*刷新全部SQL数据池*/
-apiArray.forEach(function (item) { //遍历sql数据读取
-    getQuery(item) //引用数据读取
-})
-
 
 //常规get数据接口
 apiArray.forEach(function (item, n) {
@@ -99,10 +101,27 @@ apiArray.forEach(function (item, n) {
     });
 })
 
+
+/* 列名查询 */
+apiArray.forEach(function (item) {
+    app.get(apiLo + item + 'Head', function (req, res) { //建立数据接口
+        conn.query('SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME="bu_' + item + '"', function (err, rows) { //读取数据库
+            if (err) {
+                console.log(err.message);
+                return;
+            } else {
+                res.json(rows);
+            }
+        });
+    });
+})
+
+
 /*修改内容数据接口*/
 function putData(item) {
     app.put(apiLo + item, function (req, res) { //建立数据接口
-        const da = req.body; //post请求数据
+        const da = req.body; //请求数据
+        console.log(da)
         let te = "";
         let idT = "";
         let daAr = [];
@@ -115,6 +134,8 @@ function putData(item) {
             }
         }
         daAr.push(da.id);
+
+        //UPDATE websites SET name = ?,url = ? WHERE Id = ?       daAr   [name,url,id]
         console.log('UPDATE bu_' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT)
         conn.query('UPDATE bu_' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT, daAr, function (err) { //修改指定数据
             if (err) {
@@ -122,18 +143,82 @@ function putData(item) {
                 return;
             } else {
                 getQuery(item) //刷新单个数据池
+                res.json();
             }
         });
-        res.json();
+    });
+}
+
+/*插入数据接口*/
+function addData(item) {
+    app.post(apiLo + item, function (req, res) { //建立数据接口
+        const da = req.body; //请求数据
+        console.log(da)
+        let te = "";
+        let te2 = "";
+        let idT = "";
+        let daAr = [];
+        let thDa = dataArray[apiArray.indexOf(item)].sort((a, b) => {
+            return b.id - a.id
+        })
+        console.log(thDa)
+        let thisId;
+        if (thDa.length > 0) {
+            thisId = (thDa[0].id + 1); //id加1
+        } else {
+            thisId = 0;
+        }
+        for (var key in da) { //sql字段拼接
+            if (key == "id") {
+                idT = " id"
+            } else {
+                te += "," + key;
+                te2 += ",?"
+                daAr.push(da[key]);
+            }
+        }
+        te = idT + te;
+        te2 = thisId + te2;
+        //'INSERT INTO websites(Id,name,url,alexa,country) VALUES(0,?,?,?,?)'
+        console.log('INSERT INTO bu_' + item + '(' + te + ' )  VALUES(' + te2 + ')')
+        console.log(daAr)
+        conn.query('INSERT INTO bu_' + item + '(' + te + ' )  VALUES(' + te2 + ')', daAr, function (err) { //修改指定数据
+            if (err) {
+                console.log(err.message);
+                return;
+            } else {
+                getQuery(item) //刷新单个数据池
+                res.json();
+            }
+        });
     });
 }
 //数据删除
+function deleteData(item) {
+    app.delete(apiLo + item, function (req, res) { //建立数据接口
+        const da = req.query; //请求数据
 
+        //DELETE FROM websites where id=6
+        console.log('DELETE FROM bu_' + item + ' WHERE id= ' + da.id)
+        conn.query('DELETE FROM bu_' + item + ' WHERE id= ' + da.id, function (err) { //修改指定数据
+            if (err) {
+                console.log(err.message);
+                return;
+            } else {
+                getQuery(item) //刷新单个数据池
+                res.json();
+            }
+        });
+    });
+}
 
-//常规数据修改
+//表操作遍历
 apiArray.forEach((item) => {
+    getQuery(item) //数据读取（查）
     if (item != "login") { //登录用户数据修改单独处理
-        putData(item);
+        putData(item); //改
+        deleteData(item); //删
+        addData(item); //增
     }
 })
 

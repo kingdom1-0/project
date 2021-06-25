@@ -11,7 +11,8 @@
                             <div class="alt_tBl">
                                 <div class="alt_ti">{{store.ti}}</div>
                                 <div @click="sh=false">
-                                    <router-link :to="{path:'/business/',query:{sid:store.id}}" class="alt_aBl">
+                                    <router-link :to="{path:'/business/',query:{sid:store.id,pId:store.pId}}"
+                                        class="alt_aBl">
                                         {{store.lo}}
                                     </router-link>
                                 </div>
@@ -28,7 +29,7 @@
                                 <swiper-slide v-for="img in store.images" :key="img.id">
                                     <div class="alt_img"><img :src="img" /></div>
                                 </swiper-slide>
-                                <div class="pa05" slot="pagination"></div>
+                                <div class="pa05" slot="pagination" v-if="show"></div>
                             </swiper>
                         </div>
                     </div>
@@ -44,6 +45,7 @@
     export default {
         data() {
             return {
+                show: true,
                 sh: false,
                 swiperOptionv: {
                     speed: 800,
@@ -72,6 +74,11 @@
                 this.sh = val.showDa; //显示开送
                 this.store = val //弹出块相关数据
                 console.log(this.store)
+                if (this.store.images.length < 2) { //多图少于2个时隐藏点点
+                    this.show = false
+                } else {
+                    this.show = true
+                }
             })
         },
         methods: {

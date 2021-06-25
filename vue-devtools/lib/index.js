@@ -10,12 +10,12 @@ exports.install = () => {
   if (process.type === 'renderer') {
     console.log(`Installing ${extName} from ${extPath}`)
     if (electron.remote.BrowserWindow.getDevToolsExtensions &&
-        electron.remote.BrowserWindow.getDevToolsExtensions()[extName]) return true
+      electron.remote.BrowserWindow.getDevToolsExtensions()[extName]) return true
     return electron.remote.BrowserWindow.addDevToolsExtension(extPath)
   } else if (process.type === 'browser') {
     console.log(`Installing ${extName} from ${extPath}`)
     if (electron.BrowserWindow.getDevToolsExtensions &&
-        electron.BrowserWindow.getDevToolsExtensions()[extName]) return true
+      electron.BrowserWindow.getDevToolsExtensions()[extName]) return true
     return electron.BrowserWindow.addDevToolsExtension(extPath)
   } else {
     throw new Error(`${extName} can only be installed from an Electron process.`)

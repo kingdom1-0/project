@@ -3,9 +3,10 @@
     <ma-nav></ma-nav>
     <!-- 数据列表 -->
     <el-main v-loading="loading">
+      <el-row></el-row>
       <el-row>
         <el-tooltip class="item" effect="dark" content="添加新数据" placement="bottom">
-          <el-button type="primary"><span class="iconfont icon-add-sy"></span>添加</el-button>
+          <el-button type="primary" @click="addDate()"><span class="iconfont icon-add-sy"></span>添加</el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="一次只能单条编辑" placement="bottom">
           <el-button type="primary" @click="redact(selectData)"><span class="iconfont icon-bianji"></span>编辑
@@ -25,48 +26,27 @@
           </el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="删除的数据无法找回，如不明确删除，建议待发布" placement="bottom">
-          <el-button type="danger"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
+          <el-button type="danger" @click="deleteDa()"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
         </el-tooltip>
       </el-row>
-      <el-row>
-        <div class="el_li">
-          <el-select v-model="value">
-            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="el_li">
-          <el-select v-model="value2">
-            <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="el_li">
-          <div class="el_input">
-            <el-input v-model="input" placeholder="请输入标题关键字"></el-input>
-          </div>
-          <div class="el_button">
-            <el-button type="primary"><span class="iconfont icon-chaxun"></span>查询</el-button>
-          </div>
-          <div style="clear:both;"></div>
-        </div>
-        <div style="clear:both;"></div>
-      </el-row>
+      <el-row></el-row>
       <el-row></el-row>
       <el-row>
         <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" :border="true"
           :default-sort="{prop: 'sort', order: 'descending'}" :highlight-current-row="true" style="width: 100%"
           @selection-change="handleSelectionChange" @row-dblclick="redact">
-          <el-table-column type="selection" width="80" align="center">
+          <el-table-column type="selection" width="100" align="center">
           </el-table-column>
           <el-table-column prop="title" label="标题" show-overflow-tooltip align="left" sortable>
           </el-table-column>
-          <el-table-column prop="sort" label="排序" width="80" align="center" sortable>
+          <el-table-column prop="sort" label="排序" width="120" align="center" sortable>
           </el-table-column>
-          <el-table-column prop="issue" label="发布" width="80" align="center" sortable>
+          <el-table-column prop="issue" label="发布" width="120" align="center" sortable
+            :filters="[{text: '已发布', value: 1}, {text: '待发布', value: 0}]" :filter-method="issueFilter">
             <span class="iconfont el-icon-check" slot-scope="scope" v-show="scope.row.issue"></span>
           </el-table-column>
-          <el-table-column prop="top" label="置顶" width="80" align="center" sortable>
+          <el-table-column prop="top" label="置顶" width="120" align="center" sortable
+            :filters="[{text: '置顶', value: 1}, {text: '末置顶', value: 0}]" :filter-method="topFilter">
             <span class="iconfont el-icon-check" slot-scope="scope" v-show="scope.row.top"></span>
           </el-table-column>
           <el-table-column prop="date" label="创建时间" width="200" align="center" sortable>
@@ -82,7 +62,8 @@
         </div> -->
       </el-row>
     </el-main>
-    <ma-compile :show="dialogVisible" :al-data="alData" @close-compile="closeCompile"></ma-compile>
+    <ma-compile :show="dialogVisible" :al-data="alData" @close-compile="closeCompile" @refresh="refreshData">
+    </ma-compile>
   </el-container>
 </template>
 <script>
@@ -96,91 +77,72 @@
     props: ['id', 'arg'], //router props传参(取参)
     data() {
       return {
-        loading: false,
-        options: [{ //发布状态
-          value: '选项1',
-          label: '发布状态'
-        }, {
-          value: '选项2',
-          label: '待发布'
-        }, {
-          value: '选项3',
-          label: '已发布'
-        }],
-        value: '选项1',
-        options2: [{ //置顶
-          value: '选项1',
-          label: '置顶状态'
-        }, {
-          value: '选项2',
-          label: '未置顶'
-        }, {
-          value: '选项3',
-          label: '置顶'
-        }],
-        value2: '选项1',
+        loading: false, //加载中        
         input: '', //标题搜索
-        tableData: [{
-          value: '',
-          sort: '',
-          issue: 0,
-          top: 0,
-          date: ''
-        }],
-        selectData: [],
+        tableData: [{}], //列表的数据
+        selectData: [], //多选选中的数据
         currentPage4: 4,
-        dialogVisible: false, //弹出框
-        alData: {
-          date: "",
-          id: "",
-          img: "",
-          issue: true,
-          sort: "",
-          title: "",
-          top: true
-        }
+        dialogVisible: false, //编辑页开关
+        alData: {} //传入编辑页数据
       }
     },
     created() {
       //console.log(this.id + this.arg) //this.id  直接对就接口名
       //this.$route.params.id  直接访问router动态参数(用了以上props传参代替)
-      this.axioxGet(this.id); //get对应id参数数据
+      this.refreshData(); //get对应id参数数据
     },
     methods: {
-      axioxGet: function (url) { //get数据
+      issueFilter(value, row) { //发布筛选
+        return row.issue == value;
+      },
+      topFilter(value, row) { //置顶筛选
+        return row.top == value;
+      },
+      refreshData: function () { //刷新列表数据
         var _this = this;
-        this.$http.get(url).then(function (res) {
-          //console.log(res.data);
+        this.$http.get(this.id).then(function (res) { //字符串转换布尔值 
           _this.tableData = res.data;
+          _this.tableData.forEach((item) => {
+            item.issue = Boolean(parseInt(item.issue));
+            item.top = Boolean(parseInt(item.top));
+          })
+          console.log(_this.tableData)
         })
       },
       closeCompile: function (bo) { //关闭编辑
         this.dialogVisible = bo;
       },
-      toggleSelection(rows) { //表格
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
-        }
-      },
       handleSelectionChange(val) { //表单change事件
         this.selectData = val;
-        //console.log(this.selectData)
       },
-      handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            console.log(_)
-            done();
+      addDate() { //添加数据             
+        this.$http.get(this.id + "Head").then((res) => { //读取列名显示对应的数据项
+          var da = {
+            add: true
+          };
+          res.data.forEach(function (item) {
+            let key = item.COLUMN_NAME
+            if (key == "value") { //编辑器的值不能为空
+              da[key] = "";
+            } else if (key == "class" || key == "images") {
+              da[key] = [];
+            } else if (key == "issue") { //默认发布
+              da[key] = 1;
+            } else if (key == "date") { //默认当前时间
+              var date = new Date();
+              da[key] = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date
+                .getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+            } else {
+              da[key] = null;
+            }
           })
-          .catch(_ => {
-            console.log(_)
-          });
+          console.log(da)
+          this.alData = da;
+          this.dialogVisible = true;
+        })
       },
       redact(da) { //编辑
+        this.refreshData(); //刷新数据列表
         var te = da.constructor.toString();
         if (te.indexOf("Object") > 0) {
           this.alData = da;
@@ -195,9 +157,11 @@
           }
         }
       },
-      redactOption(op, val) {
+      redactOption(op, val) { //置顶、取消置顶、发布、待发布
         this.selectData.forEach((item) => {
-          var thDate = this.tableData[item.id - 1];
+          var thDate = this.tableData.find((age) => {
+            return age.id == item.id
+          });
           thDate[op] = val;
           this.loading = true;
           this.$http.put(this.$route.params.id, thDate).then((res) => {
@@ -207,26 +171,24 @@
           })
         })
       },
-      delete(da) { //批量删除
-        da.forEach((item) => {
-          this.tableData[item.id - 1] = false
+      deleteDa() { //批量删除
+        this.selectData.forEach((item) => {
+          this.$http.delete(this.$route.params.id, {
+            params: {
+              id: item.id //对应ID删除
+            }
+          }).then((res) => {
+            if (res.status == "200") {
+              this.refreshData(); //刷新数据列表
+            }
+          })
         })
-      },
-      submitForm(formName) { //修改表单模块 (提交表单)
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-        this.dialogVisible = false;
       }
     },
     watch: {
-      $route(to) {
-        this.axioxGet(to.params.id); //监控路由参数，对应axios数据
+      $route() {
+        this.refreshData(); //监控路由参数，对应axios数据
+        this.$router.go(0); //刷新当前页(为了清掉编辑页编辑器缓存)
       }
     }
   }
@@ -306,6 +268,10 @@
   span.caret-wrapper {
     top: 9px;
     margin-right: -6px;
+  }
+
+  span.el-table__column-filter-trigger {
+    margin-left: 6px;
   }
 
 </style>

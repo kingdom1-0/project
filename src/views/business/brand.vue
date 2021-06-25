@@ -34,7 +34,7 @@
                                     </div>
                                     <div class="clear"></div>
                                 </div>
-                                <router-link :to="{path:'/business/',query:{sid:s.id}}" class="bra_lo">
+                                <router-link :to="{path:'/business/',query:{sid:s.id,pId:s.pId}}" class="bra_lo">
                                     {{s.store}}
                                 </router-link>
                             </div>
@@ -85,7 +85,7 @@
                     lo: s.store,
                     sort: s.calss,
                     text: s.value,
-                    imgUl: s.imgul.split(",")
+                    images: s.images.split(",")
                 })
             }
         },

@@ -13,7 +13,7 @@
               <div class="act_teBl">
                 <div class="act_ti">{{li.title}}</div>
                 <div class="act_bu"></div>
-                <div class="act_te" v-html="li.value"></div>
+                <div class="act_te" v-html="li.text"></div>
               </div>
               <div class="clear"></div>
             </div>
@@ -32,6 +32,7 @@
     data() {
       return {
         swiperOption: {
+          loop: true,
           slidesPerView: 4,
           navigation: {
             nextEl: '.sw_riBu',

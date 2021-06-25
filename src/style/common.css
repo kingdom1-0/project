@@ -1193,7 +1193,6 @@ a.bus_li.current {
 .bus_block {
     position: relative;
     width: 94%;
-    padding: 40px 5%;
     background: #fff;
     margin: auto;
     max-width: 280px;
@@ -1505,6 +1504,9 @@ a.bra_lo {
     right: 15px;
     width: 38%;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .bra_floorLi {
@@ -3088,7 +3090,6 @@ a.indD_liBl:nth-child(1):hover .indD_InBl {
 .bus_block {
     position: relative;
     width: 94%;
-    padding: 40px 5%;
     background: #fff;
     margin: auto;
     max-width: 280px;
@@ -4014,4 +4015,17 @@ ul.el-menu {
 
 aside.nav_bl {
     overflow: hidden;
+}
+
+.bus_InBl {
+    padding: 40px 5%;
+}
+
+a.bus_aBl {
+    position: absolute;
+    bottom: 40px;
+    left: 0%;
+    width: 100%;
+    text-align: center;
+    z-index: 90;
 }
