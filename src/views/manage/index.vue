@@ -5,47 +5,39 @@
                 <tbody>
                     <tr>
                         <td>服务器名</td>
-                        <td>WIN-822G8BP4APH</td>
+                        <td>{{system.hostname}}</td>
                     </tr>
                     <tr>
                         <td>服务器IP</td>
-                        <td>192.168.16.113</td>
+                        <td>{{system.ip}}</td>
                     </tr>
                     <tr>
-                        <td>.NET Core版本</td>
-                        <td>.NET Core 3.1.7</td>
+                        <td>nodeJs版本</td>
+                        <td>{{system.node}}</td>
                     </tr>
                     <tr>
                         <td>文件目录</td>
-                        <td>D:\wwwroot_2020\zsxhcococity.szvi.com</td>
+                        <td>{{system.location}}</td>
                     </tr>
                     <tr>
                         <td>操作系统</td>
-                        <td>Microsoft Windows 6.3.9600</td>
+                        <td>{{system.system}}</td>
                     </tr>
                     <tr>
                         <td>系统架构</td>
-                        <td>X64</td>
-                    </tr>
-                    <tr>
-                        <td>进程架构</td>
-                        <td>X64</td>
-                    </tr>
-                    <tr>
-                        <td>进程开始时间</td>
-                        <td>2021-02-26 14:09:51</td>
+                        <td>{{system.arch}}</td>
                     </tr>
                     <tr>
                         <td>CPU个数</td>
-                        <td>16 个</td>
+                        <td>{{system.cpus}} 个</td>
                     </tr>
                     <tr>
                         <td>开机运行时长</td>
-                        <td>68.27 小时</td>
+                        <td>{{system.uptime}} 小时</td>
                     </tr>
                     <tr>
                         <td>内存占用</td>
-                        <td>103.65 M</td>
+                        <td>{{system.totalmem}} M</td>
                     </tr>
                 </tbody>
             </table>
@@ -53,6 +45,22 @@
     </el-main>
 
 </template>
+<script>
+    export default {
+        data() {
+            return {
+                system: {} //系统信息
+            }
+        },
+        created() {
+            var _this = this;
+            this.$http.get("system").then(function (res) {
+                _this.system = res.data;
+            })
+        }
+    }
+
+</script>
 <style>
     td:nth-child(1n) {
         text-align: right;

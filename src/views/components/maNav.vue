@@ -72,6 +72,11 @@
                                 id: "3_3",
                                 authName: "会员须知",
                                 path: "notice"
+                            },
+                            {
+                                id: "3_4",
+                                authName: "积分兑换",
+                                path: "conversion"
                             }
                         ]
                     }

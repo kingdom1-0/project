@@ -3,38 +3,38 @@
     <el-dialog :title="alData.hasOwnProperty('add')?'添加':'编辑 '+alData.title" :visible="show" width="30%"
         :before-close="closeCompile" :fullscreen="true" :modal="false">
         <el-form :model="alData" :rules="rules" ref="alData" label-width="100px" class="demo-alData">
-            <el-form-item label="所属楼层" prop="pId" v-if="typeof(alData.pId) != 'undefined'">
+            <el-form-item label="所属楼层" prop="pId" v-show="typeof(alData.pId) != 'undefined'">
                 <el-radio v-model="alData.pId" :label="fl.title | toNum" v-for="fl in floor" :key="fl.id">
                     {{fl.title}}
                 </el-radio>
             </el-form-item>
-            <el-form-item label="所属类别" prop="class" v-if="typeof(alData.class) != 'undefined'">
+            <el-form-item label="所属类别" prop="class" v-show="typeof(alData.class) != 'undefined'">
                 <el-checkbox-group v-model="alData.class">
                     <el-checkbox :label="item.title" v-for="item in classDa" :key="item.id">
                         {{item.title}}
                     </el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="字母索引" prop="en" v-if="typeof(alData.en) != 'undefined'">
+            <el-form-item label="字母索引" prop="en" v-show="typeof(alData.en) != 'undefined'">
                 <el-radio v-model="alData.en" :label="item" v-for="(item,n) in enDa" :key="n">{{item}}
                 </el-radio>
             </el-form-item>
             <el-form-item label="标题" prop="title">
                 <el-input v-model="alData.title"></el-input>
             </el-form-item>
-            <el-form-item label="简介" prop="text" v-if="typeof(alData.text) != 'undefined'">
+            <el-form-item label="简介" prop="text" v-show="typeof(alData.text) != 'undefined'">
                 <el-input v-model="alData.text"></el-input>
             </el-form-item>
-            <el-form-item label="店铺位置" prop="store" v-if="typeof(alData.store) != 'undefined'">
+            <el-form-item label="店铺位置" prop="store" v-show="typeof(alData.store) != 'undefined'">
                 <el-input v-model="alData.store"></el-input>
             </el-form-item>
-            <el-form-item label="矩形热区" prop="area" v-if="typeof(alData.area) != 'undefined'">
+            <el-form-item label="矩形热区" prop="area" v-show="typeof(alData.area) != 'undefined'">
                 <el-input v-model="alData.area"></el-input>
             </el-form-item>
-            <el-form-item label="内容" v-if="typeof(alData.value) != 'undefined'">
+            <el-form-item label="内容" v-show="typeof(alData.value) != 'undefined'">
                 <vue-neditor-wrap v-model="alData.value" :config="myConfig" :destroy="false"></vue-neditor-wrap>
             </el-form-item>
-            <el-form-item label="主图" v-if="typeof(alData.img) != 'undefined'">
+            <el-form-item label="主图" v-show="typeof(alData.img) != 'undefined'">
                 <el-upload class="avatar-uploader" action="http://127.0.0.1:2101/api/v1/file_upload"
                     :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                     <img v-if="alData.img" :src="alData.img" class="avatar">
@@ -42,7 +42,7 @@
                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                 </el-upload>
             </el-form-item>
-            <el-form-item label="配图" v-if="typeof(alData.images) != 'undefined'">
+            <el-form-item label="配图" v-show="typeof(alData.images) != 'undefined'">
                 <el-upload class="upload-demo" action="http://127.0.0.1:2101/api/v1/file_upload"
                     :on-success="imagesAvatarSuccess" :on-remove="handleRemove" :limit="6" accept=".jpg, .jpeg, .png"
                     :before-upload="beforeAvatarUpload" :file-list="fileList" list-type="picture-card">
@@ -139,16 +139,7 @@
             }
         },
         created() {
-            if (typeof (this.floor) != 'undefined') { //判断是否有楼层数据项
-                this.$http.get("floor").then((res) => { //楼层数据
-                    this.floor = res.data;
-                })
-            }
-            if (typeof (this.classDa) != 'undefined') { //判断是否有分类数据项
-                this.$http.get("sort").then((res) => { //分类数据
-                    this.classDa = res.data;
-                })
-            }
+
         },
         filters: {
             toNum: function (val) { //字符串转单数字
@@ -169,7 +160,6 @@
             closeCompile: function () { //关闭数据修改页
                 this.$emit("close-compile", false);
                 this.$emit("refresh") //刷新数据列表
-                //this.$router.go(0); //刷新页面
             },
             submitForm(formName, add) { //提交表单                
                 this.$refs[formName].validate((valid) => {
@@ -263,7 +253,17 @@
                     this.fileList = images //多图组件附值
                     this.alData.images = images
                 }
-                console.log(this.alData.class)
+                if (typeof (this.alData.pId) != 'undefined') { //判断是否有楼层数据项
+                    this.$http.get("floor").then((res) => { //楼层数据
+                        this.floor = res.data;
+                    })
+                }
+                if (typeof (this.alData.class) != 'undefined') { //判断是否有分类数据项
+                    this.$http.get("sort").then((res) => { //分类数据
+                        this.classDa = res.data;
+                    })
+                }
+                console.log(this.alData);
             }
         }
     }

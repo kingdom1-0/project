@@ -19,9 +19,10 @@ const fs = require("fs");
 const multipart = require('connect-multiparty'); //在处理模块中引入第三方解析模块
 const multipartMiddleware = multipart(); //post数据解析
 
+
 app.use(cors()); //解决跨域(替换下面的处理方案)
 
-//设置跨域访问
+//设置跨域访问(采用了上面的cors跨域处理)
 // app.all('*', function (req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
 //     res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
@@ -44,7 +45,7 @@ var apiLo = "/api/v1/"
 
 //数据库查询
 const dataArray = [];
-const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'join', 'notice', 'banner', 'login']; //做个数组封装下简单的get API(对应上面dataArray数据)
+const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'join', 'notice', 'banner', 'login', 'conversion', 'message']; //做个数组封装下简单的get API(对应上面dataArray数据)
 
 /*配置数据库*/
 var sqlConfig = {
@@ -101,6 +102,14 @@ apiArray.forEach(function (item, n) {
     });
 })
 
+var syData = require("./systemData"); //在systemData.js读取系统信息
+const {
+    Agent
+} = require('http');
+app.get(apiLo + "system", function (req, res) { // 返回系统信息
+    res.status(200),
+        res.json(syData);
+})
 
 /* 列名查询 */
 apiArray.forEach(function (item) {
@@ -177,6 +186,9 @@ function addData(item) {
                 daAr.push(da[key]);
             }
         }
+        if (idT.length < 1) {
+            idT = " id"
+        }
         te = idT + te;
         te2 = thisId + te2;
         //'INSERT INTO websites(Id,name,url,alexa,country) VALUES(0,?,?,?,?)'
@@ -231,10 +243,10 @@ app.post(apiLo + 'login', function (req, res) { //建立数据接口
     const reqBody = req.body; //post请求数据
     const resData = {}; //响应数据
     /*
-        dataArray[8]  //数据库用户数据
+        dataArray[apiArray.indexOf("login")]  //数据库用户数据
         对比数据返回登陆结果
     */
-    dataArray[8].forEach(function (item) {
+    dataArray[apiArray.indexOf("login")].forEach(function (item) {
         if (reqBody.username == item.username && reqBody.password == item.password) {
             resData.meta = {
                 "status": "200",
@@ -261,10 +273,10 @@ app.put(apiLo + 'login', function (req, res) { //建立数据接口
     const reqBody = req.body; //post请求数据
     const resData = {}; //响应数据
     /*
-        dataArray[8]  //数据库用户数据
+        dataArray[apiArray.indexOf("login")]  //数据库用户数据
         对比数据返回登陆结果
     */
-    dataArray[8].forEach(function (item) {
+    dataArray[apiArray.indexOf("login")].forEach(function (item) {
         if (reqBody.username == item.username && reqBody.password == item.password) {
             var modSql = 'UPDATE bu_login SET password = ? WHERE username = ?';
             var modSqlParams = [reqBody.setPassword, reqBody.username];

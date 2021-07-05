@@ -42,20 +42,20 @@
                 <el-menu-item index="/manage/content/banner">
                   <i class="el-icon-document-copy"></i>内容管理
                 </el-menu-item>
-                <el-submenu index="3">
-                  <template slot="title"><i class="el-icon-chat-dot-square"></i>留言管理</template>
-                  <el-menu-item index="3-1">投诉与建议</el-menu-item>
-                  <el-menu-item index="3-2">招聘列表</el-menu-item>
+                <el-menu-item index="/manage/message/message">
+                  <i class="el-icon-chat-dot-square"></i>留言管理
+                </el-menu-item>
+                <el-submenu index="/manage/message/">
+                  <template slot="title"><i class="el-icon-chat-dot-square"></i>系统设置</template>
+                  <el-menu-item index="/manage/message/">登陆日志</el-menu-item>
+                  <el-menu-item index="/manage/message/">操作日志</el-menu-item>
+                  <el-menu-item index="/manage/message/">角色管理</el-menu-item>
+                  <el-menu-item index="/manage/message/">管理员管理</el-menu-item>
+                  <el-menu-item index="/manage/message/">SEO设置</el-menu-item>
                 </el-submenu>
-                <el-submenu index="4">
-                  <template slot="title"><i class="el-icon-setting"></i>系统设置</template>
-                  <el-menu-item index="4-1">登录日志</el-menu-item>
-                  <el-menu-item index="4-2">操作日志</el-menu-item>
-                  <el-menu-item index="4-3">角色管理</el-menu-item>
-                  <el-menu-item index="4-4">管理员管理</el-menu-item>
-                  <el-menu-item index="4-5">SEO设置</el-menu-item>
-                </el-submenu>
-                <el-menu-item index="5"><a href="javascript:;"><i class="el-icon-tickets"></i>操作说明</a></el-menu-item>
+                <el-menu-item index="/manage/message/">
+                  <i class="el-icon-chat-dot-square"></i>操作说明
+                </el-menu-item>
               </el-menu>
             </el-col>
             <el-col :span="2" style="text-align: right;">
@@ -419,11 +419,6 @@
     text-align: center;
   }
 
-  .el-button {
-    min-width: 100px;
-  }
-
-
   ul.el-menu-demo.el-menu--horizontal.el-menu {
     min-width: 1000px;
   }
@@ -437,6 +432,11 @@
     line-height: 40px;
     text-align: right;
     padding-right: 20px;
+  }
+
+  .ind_content {
+    min-height: auto;
+    overflow: visible;
   }
 
 </style>
