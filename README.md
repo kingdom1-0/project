@@ -13,10 +13,6 @@ node public/db.js
 ```
 npm install
 ```
-## Project setup
-```
-npm install
-```
 
 ### Compiles and hot-reloads for development
 ```
