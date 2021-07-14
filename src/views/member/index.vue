@@ -24,7 +24,6 @@
     data() {
       return {
         swiperOption: {
-          loop: true,
           slidesPerView: 3,
           navigation: {
             nextEl: '.sw_riBu',

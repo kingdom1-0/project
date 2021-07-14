@@ -13,8 +13,10 @@
             <el-button type="primary" @click="redact(selectData)"><span class="iconfont icon-bianji"></span>编辑
             </el-button>
           </el-tooltip>
-          <el-button type="success" @click="redactOption('top',true)"><span class="iconfont icon-zhiding"></span>置顶
-          </el-button>
+          <el-tooltip class="item" effect="dark" content="数据在页面最先显示" placement="bottom">
+            <el-button type="success" @click="redactOption('top',true)"><span class="iconfont icon-zhiding"></span>置顶
+            </el-button>
+          </el-tooltip>
           <el-button type="success" @click="redactOption('top',false)"><span
               class="iconfont icon-quxiaozhiding"></span>取消置顶
           </el-button>
@@ -32,7 +34,7 @@
           </el-tooltip>
         </div>
         <div class="seek_block">
-          <el-input v-model="seek" class="seek_input"></el-input>
+          <el-input v-model="seek" class="seek_input" @change="seekFun()"></el-input>
           <el-button type="success" @click="seekFun()"><span class="iconfont icon-chaxun"></span>查询</el-button>
         </div>
         <div class="clear"></div>
@@ -102,13 +104,18 @@
       this.refreshData(); //get对应id参数数据
     },
     methods: {
-      seekFun() {
+      seekFun() { //搜索
         var _this = this;
-        console.log(this.seek)
-        console.log(this.thisTable[this.thisPa - 1]);
-        this.thisTable[this.thisPa - 1].filter((item) => {
-          return item.title.indexOf(_this.seek)
-        })
+
+        function seekInto() {
+          if (_this.seek.length > 0) {
+            var da = _this.tableData.filter((item) => {
+              return item.title.includes(_this.seek)
+            })
+            _this.tableData = da;
+          }
+        }
+        this.refreshData(seekInto); //刷新搜索数据
       },
       pageFilter(val) { //分页操作
         this.thisPa = val
@@ -120,13 +127,14 @@
         return row.top == value;
       },
       thisTableFun() { //列表数据分页拆分
+
         this.thisTable = [];
         for (var i = 0; i < Math.ceil(this.tableData.length / 10); i++) {
           this.thisTable.push(this.tableData.slice(10 * i, 10 * i + 10));
         }
         console.log(this.thisTable)
       },
-      refreshData: function () { //刷新列表数据
+      refreshData: function (seekInto) { //刷新列表数据
         var _this = this;
         this.$http.get(this.id).then(function (res) { //字符串转换布尔值 
           _this.tableData = res.data;
@@ -134,9 +142,13 @@
             item.issue = Boolean(parseInt(item.issue));
             item.top = Boolean(parseInt(item.top));
           })
-          console.log(_this.tableData)
+          if (seekInto) { //搜索刷新
+            seekInto();
+          }
+          _this.tableData.sort(); //响应式数据          
           _this.thisTableFun(); //列表数据分页拆分
           _this.thisPa = 1; //返回第一分页
+
         })
       },
       closeCompile: function (bo) { //关闭编辑
@@ -147,14 +159,9 @@
       },
       thisDate() { //返回当前时间
         var date = new Date();
-        var month = date.getMonth() + 1;
-        var day = date.getDate()
-        if (month < 10) {
-          month = "0" + month;
-        }
-        if (day < 10) {
-          day = "0" + day;
-        }
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0') //使用ES6 padStart(2,'0') 为日期强制两位数，少于两位数前面加0
+
         return date.getFullYear() + "-" + month + "-" + day + " " + date
           .getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
       },

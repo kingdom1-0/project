@@ -9,7 +9,7 @@
   export default {
     data() {
       return {
-        img: "http://zsxhcococity.szvi.com/UpFiles/I/2020-09/106373535238089864221219966.png"
+        img: ""
       }
     },
     created: function () {

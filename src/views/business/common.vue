@@ -7,9 +7,9 @@
         </div>
         <div class="com_conBlock">
             <div class="bus_ul">
-                <router-link to="/business/" class="bus_li">楼层导视</router-link>
-                <router-link to="/business/brand" class="bus_li">品牌展示</router-link>
-                <router-link to="/business/merchant" class="bus_li">商家介绍</router-link>
+                <router-link :to="item.href" :class="{bus_li:true,'current':n==active}" v-for="(item,n) in nav"
+                    :key="item.id">{{item.name}}
+                </router-link>
                 <div class="clear"></div>
             </div>
             <transition name="fad">
@@ -26,7 +26,21 @@
     export default {
         data() {
             return {
-                shNum: false
+                shNum: false,
+                active: 0,
+                nav: [{
+                    id: 1,
+                    name: '楼层导视',
+                    href: '/business/'
+                }, {
+                    id: 2,
+                    name: '品牌展示',
+                    href: '/business/brand'
+                }, {
+                    id: 3,
+                    name: '商家介绍',
+                    href: '/business/merchant'
+                }]
             }
         },
         methods: {
@@ -42,11 +56,28 @@
             },
             showDa: function (val) {
                 this.shNum = val;
+            },
+            navActive: function () {
+                var href = location.href;
+                if (href.includes("/business/brand")) {
+                    this.active = 1;
+                } else if (href.includes("/business/merchant")) {
+                    this.active = 2;
+                } else {
+                    this.active = 0;
+                }
             }
-
+        },
+        created() {
+            this.navActive();
         },
         components: {
             alertContent
+        },
+        watch: {
+            $route() {
+                this.navActive();
+            }
         }
     }
 

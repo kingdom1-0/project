@@ -7,8 +7,8 @@
         </div>
         <div class="com_conBlock">
             <div class="bus_ul">
-                <router-link to="/activity" class="bus_li">活动资讯</router-link>
-                <router-link to="/activity/review" class="bus_li"><span @click="initCh">活动回顾</span>
+                <router-link :to="item.href" :class="{bus_li:true,current:n==active}" v-for="(item,n) in nav"
+                    :key="item.id">{{item.name}}
                 </router-link>
                 <div class="clear"></div>
             </div>
@@ -23,13 +23,42 @@
 <script>
     import newsContent from "../components/news.vue"
     export default {
+        data: function () {
+            return {
+                nav: [{
+                    id: 1,
+                    name: '活动资讯',
+                    href: '/activity/'
+                }, {
+                    id: 2,
+                    name: '活动回顾',
+                    href: '/activity/review'
+                }]
+            }
+        },
         methods: {
             initCh: function () {
                 this.$refs.child.bo = false //通过ref操作子组件
+            },
+            navActive: function () {
+                var href = location.href;
+                if (href.includes("/activity/review")) {
+                    this.active = 1;
+                } else {
+                    this.active = 0;
+                }
             }
+        },
+        created() {
+            this.navActive();
         },
         components: {
             newsContent
+        },
+        watch: {
+            $route() {
+                this.navActive();
+            }
         }
     }
 

@@ -72,7 +72,8 @@
                 this.le = i;
             },
             storeFilers: function (s) { //店铺筛选
-                var bo = (s.class == this.sort || this.sort == "全部分类") && (s.pId - 1 == this.fl || this.fl == -1) &&
+                var bo = (s.class.indexOf(this.sort) >= 0 || this.sort == "全部分类") && (s.pId - 1 == this.fl || this
+                        .fl == -1) &&
                     (s.le == this.le || this.le == "全部")
                 return bo
             },
@@ -91,23 +92,28 @@
         },
         mounted() {
             let _this = this;
-            this.$http.get("floor").then(function (re) { //get楼层
+            _this.$http.get("floor").then(function (re) { //楼层
                 _this.flDa = re.data;
-            }).catch(function (err) {
-                console.log(err)
             })
 
-            this.$http.get("sort").then(function (re) { //get分类
+            _this.$http.get("sort").then(function (re) { //分类
                 _this.sortDa = re.data;
-            }).catch(function (err) {
-                console.log(err)
+            })
+            async function getData() {
+                var store = await _this.$http.get("store");
+                return store
+            }
+            getData().then((re) => { //店铺
+                _this.store = re.data;
+                console.log(_this.store)
+                var id = parseInt(location.href.split("id=")[1]) || 0;
+                console.log(id)
+                _this.showStore(_this.store.find((item) => {
+                    return item.id == id;
+                }))
             })
 
-            this.$http.get("store").then(function (re) { //get店铺数据
-                _this.store = re.data;
-            }).catch(function (err) {
-                console.log(err)
-            })
+
         }
     }
 

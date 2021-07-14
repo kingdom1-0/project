@@ -83,11 +83,9 @@
     },
     mounted() {
       let _this = this;
-      this.$http.get("news").then(function (res) {
+      this.$http.get("news").then((res) => {
         _this.newList = res.data;
-        _this.calendar = res.news[0];
-      }).catch(function (err) {
-        console.log(err)
+        console.log(res.data)
       })
     },
     destroyed: function () { //实例销毁后调用

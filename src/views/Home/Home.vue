@@ -25,7 +25,7 @@
                                         <div class="indHo_liBl" v-for="li in b.ul" :key="li.id">
                                             <div class="indHo_img"><img :src="li.img" /></div>
                                             <div class="indHo_teBl">
-                                                <div class="indHo_teTi">{{li.ti}}</div>
+                                                <div class="indHo_teTi">{{li.title}}</div>
                                                 <router-link :to="li.moHref" class="indHo_more">查看详情</router-link>
                                             </div>
                                             <div class="clear"></div>
@@ -87,21 +87,20 @@
                                 <div class="indC1_InBl">
                                     <div class="indC_liBl" v-for="(st,n) in store" :key="st.id">
                                         <div class="indC_InBlock" :style="{top:oddBack(n)+'px'}">
-                                            <a href="/business/merchant?on=2" class="indC_top" v-for="s in st"
-                                                :key="s.id">
-                                                <div class="indC_bg" :style="{backgroundImage:'url('+s.bgImg+')'}">
+                                            <a :href="s.href" class="indC_top" v-for="s in st" :key="s.id">
+                                                <div class="indC_bg" :style="{backgroundImage:'url('+s.images+')'}">
                                                 </div>
                                                 <div class="indC_InBl">
-                                                    <div class="indC_logo"><img :src="s.logo" /></div>
+                                                    <div class="indC_logo"><img :src="s.img" /></div>
                                                     <div class="indC1_teBl">
-                                                        <div class="indC1_name">{{s.ti}}</div>
-                                                        <div class="indC1_num">店铺号：{{s.num}} </div>
+                                                        <div class="indC1_name">{{s.title}}</div>
+                                                        <div class="indC1_num">店铺号：{{s.store}} </div>
                                                     </div>
                                                     <div class="clear"></div>
                                                 </div>
                                                 <div class="indC1_bl">
                                                     <div class="indC1_logoBl">
-                                                        <img :src="s.logo" />
+                                                        <img :src="s.img" />
                                                     </div>
                                                 </div>
                                             </a>
@@ -127,8 +126,8 @@
                                 <a :href="n.href" class="indD_liBl" v-for="n in news" :key="n.id">
                                     <div class="indD_InBl">
                                         <div class="indD_img"><img :src="n.img" /></div>
-                                        <div class="indD_ti">{{n.ti}}</div>
-                                        <div class="indD_te" v-html="n.te"></div>
+                                        <div class="indD_ti">{{n.title}}</div>
+                                        <div class="indD_te" v-html="n.text"></div>
                                         <div class="indD_more">查看详情</div>
                                     </div>
                                 </a>
@@ -155,177 +154,33 @@
     export default {
         data() {
             return {
-                info: null,
-                banner: [],
-                business: [],
-                brand: [{
+                banner: [], //banner图
+                brand: [{ //品牌索引
                         bgImg: "/images/2_1.png",
                         ti: "零售",
                         eTi: "retail",
                         more: "更多购物",
                         moHref: "/business",
-                        ul: [{
-                                img: "/images/3_5.png",
-                                ti: "H&M1",
-                                moHref: "/business/brand?on=2"
-                            },
-                            {
-                                img: "/images/3_5.png",
-                                ti: "H&M2",
-                                moHref: "/business/brand?on=2"
-                            },
-                            {
-                                img: "/images/3_5.png",
-                                ti: "H&M3",
-                                moHref: "/business/brand?on=2"
-                            }
-                        ]
+                        ul: []
                     },
                     {
                         bgImg: "/images/2_2.jpg",
                         ti: "餐饮",
                         eTi: "Restaurant",
                         more: "更多美食",
-                        moHref: "/business",
-                        ul: [{
-                                img: require("../../images/3_5.png"),
-                                ti: "H&M1",
-                                moHref: "/business/brand?on=2"
-                            },
-                            {
-                                img: require("../../images/3_5.png"),
-                                ti: "H&M2",
-                                moHref: "/business/brand?on=2"
-                            },
-                            {
-                                img: require("../../images/3_5.png"),
-                                ti: "H&M3",
-                                moHref: "/business/brand?on=2"
-                            }
-                        ]
+                        moHref: "/business"
                     },
                     {
                         bgImg: "/images/2_3.jpg",
                         ti: "娱乐",
                         eTi: "entertainment",
                         more: "更多娱乐",
-                        moHref: "/business",
-                        ul: [{
-                                img: require("../../images/3_5.png"),
-                                ti: "H&M1",
-                                moHref: "/business/brand?on=2"
-                            },
-                            {
-                                img: require("../../images/3_5.png"),
-                                ti: "H&M2",
-                                moHref: "/business/brand?on=2"
-                            },
-                            {
-                                img: require("../../images/3_5.png"),
-                                ti: "H&M3",
-                                moHref: "/business/brand?on=2"
-                            }
-                        ]
+                        moHref: "/business"
                     }
                 ],
-                store: [
-                    [{
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        },
-                        {
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        },
-                        {
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        },
-                        {
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        }
-                    ],
-                    [{
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        },
-                        {
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        }
-                    ],
-                    [{
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        },
-                        {
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        },
-                        {
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        },
-                        {
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        }
-                    ],
-                    [{
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        },
-                        {
-                            bgImg: require("../../images/c2_3.jpg"),
-                            logo: require("../../images/c2_2.jpg"),
-                            ti: "阿迪达斯",
-                            num: "B1C-001"
-                        }
-                    ]
-                ],
-                news: [{
-                        href: "javascript:;",
-                        img: require("../../images/3_4.jpg"),
-                        ti: "双11立减111元，快来普宁...",
-                        te: '<p>双11就快到啦！</p><p>你们的购物车是不是已经塞得满满的了~~</p>'
-                    },
-                    {
-                        href: "javascript:;",
-                        img: require("../../images/3_4.jpg"),
-                        ti: "双11立减111元，快来普宁...",
-                        te: '<p>双11就快到啦！</p><p>你们的购物车是不是已经塞得满满的了~~</p>'
-                    },
-                    {
-                        href: "javascript:;",
-                        img: require("../../images/3_4.jpg"),
-                        ti: "双11立减111元，快来普宁...",
-                        te: '<p>双11就快到啦！</p><p>你们的购物车是不是已经塞得满满的了~~</p>'
-                    }
-                ],
-                swiperOptionh: {},
+                store: [],
+                news: [], //最新资讯
+                swiperOptionh: {}, //banner
                 swiperOptionv: {
                     effect: 'slide',
                     speed: 800,
@@ -363,8 +218,6 @@
             },
             imageProgress(instance, image) { //判断images加载完成
                 image.isLoaded ? 'loaded' : 'broken';
-                //const result = image.isLoaded ? 'loaded' : 'broken';
-                //console.log( 'image is ' + result + ' for ' + image.img.src );
                 this.newsCenter()
             },
             showFooter: function (e) {
@@ -397,8 +250,46 @@
                 console.log(error)
             })
 
+            this.$http.get('store').then((res) => { //品牌索引                 
+                _this.brand.forEach((value) => {
+                    value.ul = res.data.filter((item) => {
+                        item.moHref = "/business/brand?id=" + item.id;
+                        return item.class.indexOf(value.ti) >= 0
+                    })
+                    value.ul = value.ul.slice(0, 3)
+                })
 
-            this.swiperOptionh = { //把swiper放入created中,解决this冲突
+                var da = res.data.filter((item) => {
+                    return item.class.indexOf("主力店") >= 0;
+                })
+                da.forEach((item, n) => {
+                    var i = 0;
+                    if (n < 4) {
+                        i = 0
+                    } else if (n >= 4 && n < 6) {
+                        i = 1
+                    } else if (n >= 6 && n < 10) {
+                        i = 2;
+                    } else if (n >= 10 ** n < 12) {
+                        i = 3
+                    } else(
+                        i = 4
+                    )
+                    item.href = "/#/business/brand?id=" + item.id;
+                    _this.store.push([]);
+                    _this.store[i].push(item);
+                })
+                console.log(_this.store)
+            })
+
+            this.$http.get("news").then((res) => { //最新资讯
+                _this.news = res.data.slice(0, 3);
+                _this.news.forEach(function (item) {
+                    item.href = '/#/activity/?id=' + item.id
+                })
+            })
+
+            this.swiperOptionh = { //放created中,解决this冲突
                 direction: 'vertical',
                 mousewheel: true,
                 pagination: {

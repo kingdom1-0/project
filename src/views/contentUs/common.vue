@@ -5,11 +5,8 @@
         </div>
         <div class="com_conBlock">
             <div class="bus_ul">
-                <router-link to="/contentUs" class="bus_li">项目简介</router-link>
-                <router-link to="/contentUs/traffic" class="bus_li">交通指南</router-link>
-                <router-link to="/contentUs/attract" class="bus_li">招商租赁</router-link>
-                <router-link to="/contentUs/site" class="bus_li">场地合作</router-link>
-                <router-link to="/contentUs/contactUs" class="bus_li">联系我们</router-link>
+                <router-link :to="item.href" :class="{bus_li:true,current:n==active}" v-for="(item,n) in nav"
+                    :key="item.id">{{item.name}}</router-link>
                 <div class="clear"></div>
             </div>
             <transition name="fad">
@@ -26,16 +23,59 @@
     export default {
         data() {
             return {
-                shNum: false
+                shNum: false,
+                nav: [{
+                    id: 1,
+                    name: '项目简介',
+                    href: '/contentUs/'
+                }, {
+                    id: 2,
+                    name: '交通指南',
+                    href: '/contentUs/traffic'
+                }, {
+                    id: 3,
+                    name: '招商租赁',
+                    href: '/contentUs/attract'
+                }, {
+                    id: 4,
+                    name: '场地合作',
+                    href: '/contentUs/site'
+                }, {
+                    id: 5,
+                    name: '联系我们',
+                    href: '/contentUs/contactUs'
+                }]
             }
         },
         methods: {
             showDa: function (val) { //显示弹出层
                 this.shNum = val;
+            },
+            navActive: function () {
+                var href = location.href;
+                if (href.includes("/contentUs/traffic")) {
+                    this.active = 1;
+                } else if (href.includes("/contentUs/attract")) {
+                    this.active = 2;
+                } else if (href.includes("/contentUs/site")) {
+                    this.active = 3;
+                } else if (href.includes("/contentUs/contactUs")) {
+                    this.active = 4;
+                } else {
+                    this.active = 0;
+                }
             }
         },
         components: { //调用组件
             newsContent
+        },
+        created() {
+            this.navActive();
+        },
+        watch: {
+            $route() {
+                this.navActive();
+            }
         }
     }
 

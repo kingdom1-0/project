@@ -6,11 +6,9 @@
         </div>
         <div class="com_conBlock">
             <div class="bus_ul">
-                <router-link to="/member" class="bus_li">会员活动</router-link>
-                <router-link to="/member/join" class="bus_li">加入会员</router-link>
-                <router-link to="/member/notice" class="bus_li">会员须知</router-link>
-                <router-link to="/member/conversion" class="bus_li">积分兑换</router-link>
-                <router-link to="/member/message" class="bus_li">留言板</router-link>
+                <router-link :to="item.href" :class="{bus_li:true,current:active==n}" v-for="(item,n) in nav"
+                    :key="item.id">{{item.name}}
+                </router-link>
                 <div class="clear"></div>
             </div>
             <transition name="fad">
@@ -27,16 +25,59 @@
     export default {
         data() {
             return {
-                shNum: false
+                shNum: false,
+                nav: [{
+                    id: 1,
+                    name: '会员活动',
+                    href: '/member/'
+                }, {
+                    id: 2,
+                    name: '加入会员',
+                    href: '/member/join'
+                }, {
+                    id: 3,
+                    name: '会员须知',
+                    href: '/member/notice'
+                }, {
+                    id: 4,
+                    name: '积分兑换',
+                    href: '/member/conversion'
+                }, {
+                    id: 5,
+                    name: '留言板',
+                    href: '/member/message'
+                }]
             }
         },
         methods: {
             showDa: function (val) { //显示弹出层
                 this.shNum = val;
+            },
+            navActive: function () {
+                var href = location.href;
+                if (href.includes("/member/join")) {
+                    this.active = 1;
+                } else if (href.includes("/member/notice")) {
+                    this.active = 2;
+                } else if (href.includes("/member/conversion")) {
+                    this.active = 3;
+                } else if (href.includes("/member/message")) {
+                    this.active = 4;
+                } else {
+                    this.active = 0;
+                }
             }
         },
         components: { //调用组件
             newsContent
+        },
+        created() {
+            this.navActive();
+        },
+        watch: {
+            $route() {
+                this.navActive();
+            }
         }
     }
 

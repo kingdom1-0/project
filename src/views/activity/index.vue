@@ -3,7 +3,7 @@
     <div class="bus_conBlock">
       <swiper class="swiper" :options="swiperOption">
         <swiper-slide v-for="(li,i) in newList" :key="li.id">
-          <a href="javascript:;" class="act_block Inn_button" @click="showBlock(i)">
+          <a href="javascript:;" class="act_block Inn_button" @click.stop="showBlock(i)">
             <div class="act_img"> <img :src="li.img"> </div>
             <div class="act_teBlock">
               <div class="act_date">
@@ -32,7 +32,6 @@
     data() {
       return {
         swiperOption: {
-          loop: true,
           slidesPerView: 4,
           navigation: {
             nextEl: '.sw_riBu',
@@ -49,20 +48,27 @@
           on: true,
           data: this.newList[i]
         })
-      },
-      getNews() {
-        let _this = this;
-        this.$http.get('news') //axios
-          .then(function (res) {
-            _this.newList = res.data
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
       }
     },
     mounted() {
-      this.getNews();
+      let _this = this;
+      var id = parseInt(location.href.split("id=")[1]) || 0;
+
+      async function getData() {
+        var news = await _this.$http.get('news');
+        return news;
+      }
+      getData().then(function (res) {
+        _this.newList = res.data;
+
+        if (id > 0) {
+          var n = _this.newList.findIndex((item) => {
+            return item.id == id;
+          })
+          _this.showBlock(n);
+        }
+      })
+
     }
   }
 

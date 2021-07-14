@@ -1,7 +1,8 @@
 <template>
-  <div class="man_content">
-    <div class="log_content" v-if="shOn">
-      <div class="log_bg">
+  <div>
+    <!-- 登录 -->
+    <div class="log_content" v-if="shOn" :style="{height:wHeight+'px'}">
+      <div class="log_bg" :style="{height:wHeight+'px'}">
         <iframe src="canvas.html"></iframe>
       </div>
       <div class="log_conBlock">
@@ -26,56 +27,8 @@
         </el-form>
       </div>
     </div>
-    <div class="man_body" v-if="!shOn">
-      <el-container>
-        <el-header>
-          <el-row :gutter="20">
-            <el-col :span="22">
-              <el-menu class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff"
-                active-text-color="#409EFF" router>
-                <img class="logo" src="../../images/logo.png" />
-                <el-submenu index="/manage/">
-                  <template slot="title"><i class="el-icon-chat-dot-square"></i>首页</template>
-                  <el-menu-item index="/manage/">系统信息</el-menu-item>
-                  <el-menu-item disabled>统计流量</el-menu-item>
-                </el-submenu>
-                <el-menu-item index="/manage/content/banner">
-                  <i class="el-icon-document-copy"></i>内容管理
-                </el-menu-item>
-                <el-menu-item index="/manage/message/message">
-                  <i class="el-icon-chat-dot-square"></i>留言管理
-                </el-menu-item>
-                <el-submenu index="/manage/message/">
-                  <template slot="title"><i class="el-icon-chat-dot-square"></i>系统设置</template>
-                  <el-menu-item index="/manage/message/">登陆日志</el-menu-item>
-                  <el-menu-item index="/manage/message/">操作日志</el-menu-item>
-                  <el-menu-item index="/manage/message/">角色管理</el-menu-item>
-                  <el-menu-item index="/manage/message/">管理员管理</el-menu-item>
-                  <el-menu-item index="/manage/message/">SEO设置</el-menu-item>
-                </el-submenu>
-                <el-menu-item index="/manage/message/">
-                  <i class="el-icon-chat-dot-square"></i>操作说明
-                </el-menu-item>
-              </el-menu>
-            </el-col>
-            <el-col :span="2" style="text-align: right;">
-              <el-dropdown @command="logout">
-                <span class="el-dropdown-link">
-                  <i class="el-icon-s-custom" style="margin-right: 10px;"></i>{{form.username}}
-                </span>
-                <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item command="reset">修改密码</el-dropdown-item>
-                  <el-dropdown-item command="out">退出</el-dropdown-item>
-                </el-dropdown-menu>
-              </el-dropdown>
-            </el-col>
-          </el-row>
-        </el-header>
-        <el-container>
-          <router-view></router-view>
-        </el-container>
-      </el-container>
-    </div>
+    <!-- 登录 -->
+    <!-- 修改密码 -->
     <el-dialog title="修改密码" :visible.sync="resetPassword" center width="600px">
       <el-form ref="setRef" :model="setForm" :rules="setRules">
         <el-row>
@@ -109,14 +62,67 @@
             </el-form-item>
           </el-col>
         </el-row>
-
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="resetPassword = false">取 消</el-button>
         <el-button type="primary" @click="resPass()">确 定</el-button>
       </span>
     </el-dialog>
-
+    <!-- 修改密码 -->
+    <div class="man_content">
+      <div class="man_body" v-if="!shOn">
+        <el-container>
+          <el-header>
+            <el-row :gutter="20">
+              <el-col :span="22">
+                <el-menu class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff"
+                  active-text-color="#409EFF" router :default-active="activeIndex">
+                  <img class="logo" src="../../images/logo.png" />
+                  <el-submenu index="1">
+                    <template slot="title"><i class="el-icon-chat-dot-square"></i>后台首页</template>
+                    <el-menu-item index="/manage/">系统信息</el-menu-item>
+                    <el-menu-item><a href="https://uweb.umeng.com/v1/login.php?siteid=1279263413" target="_block"
+                        class="el_a">统计流量</a>
+                    </el-menu-item>
+                  </el-submenu>
+                  <el-menu-item index="/manage/content/banner">
+                    <i class="el-icon-document-copy"></i>内容管理
+                  </el-menu-item>
+                  <el-menu-item index="/manage/message/message">
+                    <i class="el-icon-chat-dot-square"></i>留言管理
+                  </el-menu-item>
+                  <el-submenu index="4">
+                    <template slot="title"><i class="el-icon-chat-dot-square"></i>系统设置</template>
+                    <el-menu-item index="/manage/message/">登陆日志</el-menu-item>
+                    <el-menu-item index="/manage/message/">操作日志</el-menu-item>
+                    <el-menu-item index="/manage/message/">角色管理</el-menu-item>
+                    <el-menu-item index="/manage/message/">管理员管理</el-menu-item>
+                    <el-menu-item index="/manage/message/">SEO设置</el-menu-item>
+                  </el-submenu>
+                  <el-menu-item index="/manage/message/">
+                    <i class="el-icon-chat-dot-square"></i>操作说明
+                  </el-menu-item>
+                </el-menu>
+              </el-col>
+              <el-col :span="2" style="text-align: right;">
+                <el-dropdown @command="logout">
+                  <span class="el-dropdown-link">
+                    <i class="el-icon-s-custom" style="margin-right: 10px;"></i>{{form.username}}
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="reset">修改密码</el-dropdown-item>
+                    <el-dropdown-item command="out">退出</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </el-col>
+            </el-row>
+          </el-header>
+          <el-container>
+            <router-view></router-view>
+          </el-container>
+        </el-container>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -125,6 +131,8 @@
   export default {
     data() {
       return {
+        activeIndex: '/manage/',
+        wHeight: 600,
         //这是登录表单的数据绑定对象
         form: {
           username: "admin",
@@ -226,7 +234,7 @@
             this.open1(res.meta.message);
             window.sessionStorage.setItem("token", res.token);
             this.shOn = false; //显示后台管理系统
-            //this.$router.push('/manage/Home')            
+            this.$router.push('/manage/')
           }
         })
       },
@@ -289,12 +297,30 @@
       // axios.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
       //   config.headers.Authorization = window.sessionStorage.getItem("token") //挂载token
       //   return config //最后必需
-      // })
+      // })          
     },
     mounted: function () {
       if (sessionStorage.token != undefined) { //判断token值，显示后台管理系统
         this.shOn = false;
       }
+      var _this = this;
+      _this.wHeight = window.innerHeight
+      window.addEventListener("resize", function () { //全屏自适应
+        return (() => {
+          if (_this.showOn) {
+            setTimeout(function () {
+              _this.wHeight = window.innerHeight
+            }, 300)
+          }
+        })();
+      });
+
+      //一级导航初始选定
+      var hash = location.hash.slice(1);
+      if (hash.includes("manage/content")) {
+        hash = "/manage/content/banner"
+      }
+      this.activeIndex = hash;
     }
   }
 
@@ -377,6 +403,7 @@
     left: 0px;
     width: 100%;
     height: 100%;
+    overflow: hidden;
   }
 
   .log_bg iframe {
@@ -391,7 +418,7 @@
   }
 
   .log_conBlock {
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     width: 400px;
@@ -437,6 +464,18 @@
   .ind_content {
     min-height: auto;
     overflow: visible;
+  }
+
+  .el_a {
+    color: #fff;
+  }
+
+  .el-submenu.is-active .el-submenu__title span.title {
+    color: #409EFF;
+  }
+
+  .el-menu {
+    transform: all 0.3s ease;
   }
 
 </style>

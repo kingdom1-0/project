@@ -4,7 +4,8 @@
             <a href="/" class="he_logo"><img src="../../images/2.png" /></a>
             <div class="he_ulBl">
 
-                <div class="he_liBl" v-for="(nav,n) in navData" @mouseenter="showNav(n)" @mouseleave="hideNav" :key="n">
+                <div :class="{he_liBl:true,active:n==active}" v-for="(nav,n) in navData" @mouseenter="showNav(n)"
+                    @mouseleave="hideNav" :key="n">
                     <router-link :to="nav.location" class="he_a"><span>{{nav.title}}</span></router-link>
                     <transition name="fade">
                         <div class="heN_ul" v-show="navBo == n">
@@ -58,6 +59,7 @@
             return {
                 navBo: 20,
                 navBg: false,
+                active: 0,
                 navData: [{
                     title: "首页",
                     location: "/"
@@ -113,7 +115,7 @@
                         }
                     ]
                 }, {
-                    title: "项目简介",
+                    title: "关于我们",
                     location: "/contentUs/",
                     children: [{
                             title: "项目简介",
@@ -139,8 +141,7 @@
             }
         },
         created: function () {
-            //记录编程导航
-            //this.this.$route.params
+
         },
         methods: {
             showNav: function (n) {
@@ -150,6 +151,27 @@
             hideNav: function () {
                 this.navBo = 20;
                 this.navBg = false;
+            },
+            navActive: function () {
+                var _this = this;
+                var href = location.href;
+                //一级导航激活
+                if (href.includes("/business/")) {
+                    _this.active = 1;
+                } else if (href.includes("/activity/")) {
+                    _this.active = 2;
+                } else if (href.includes("/member/")) {
+                    _this.active = 3;
+                } else if (href.includes("/contentUs/")) {
+                    _this.active = 4;
+                } else {
+                    _this.active = 0;
+                }
+            }
+        },
+        watch: {
+            $route() {
+                this.navActive();
             }
         }
     }

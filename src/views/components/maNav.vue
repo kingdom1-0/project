@@ -1,10 +1,10 @@
 <!-- 导航 -->
 <template>
     <!-- unfold参数 控制导航收放 -->
-    <el-aside class="nav_bl" :width="unfold?(200+''):(64+'')">
-        <el-menu unique-opened default-active="2" class="el-menu-vertical-demo" background-color="#545c64"
-            text-color="#fff" active-text-color="rgb(64, 158, 255)" :collapse="unfold" :collapse-transition="false"
-            router>
+    <el-aside class="nav_bl" :width="unfold?(64+'px'):(200+'px')">
+        <el-menu unique-opened class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff"
+            active-text-color="rgb(64, 158, 255)" :collapse="unfold" :default-active="activeIndex"
+            :collapse-transition="true" router>
             <div class="bu_unfold" @click="unfold = !unfold"><i class="el-icon-s-unfold"></i></div>
             <!-- 二级导航 -->
             <div v-for="item in menulist" :key="item.id">
@@ -26,6 +26,7 @@
     export default {
         data() {
             return {
+                activeIndex: "/manage/content/banner",
                 menulist: [{
                         id: 1,
                         authName: "首页(banner)",
@@ -79,7 +80,38 @@
                                 path: "conversion"
                             }
                         ]
-                    }
+                    },
+                    {
+                        id: 5,
+                        authName: "关于我们",
+                        path: "news",
+                        children: [{
+                                id: "5_1",
+                                authName: "项目简介",
+                                path: "synopsis"
+                            },
+                            {
+                                id: "5_2",
+                                authName: "交通指南",
+                                path: "traffic"
+                            },
+                            {
+                                id: "5_3",
+                                authName: "招商租赁",
+                                path: "attract"
+                            },
+                            {
+                                id: "5_4",
+                                authName: "场地合作",
+                                path: "site"
+                            },
+                            {
+                                id: "5_5",
+                                authName: "联系我们",
+                                path: "contact"
+                            }
+                        ]
+                    },
                 ],
                 icoList: { //左侧图标
                     1: 'el-icon-user',
@@ -91,10 +123,19 @@
                 unfold: false
             }
         },
-        created: function () {
-
+        mounted: function () {
+            var hash = location.hash.split("/");
+            hash = hash[hash.length - 1]
+            this.activeIndex = hash
         }
 
     }
 
 </script>
+<style>
+    .el-menu-vertical-demo:not(.el-menu--collapse) {
+        width: 200px;
+        min-height: 400px;
+    }
+
+</style>
