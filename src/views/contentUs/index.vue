@@ -12,7 +12,6 @@
             </div>
             <div class="con_imgBl">
               <img :src="da.img">
-
             </div>
           </div>
           <div class="con_textBlock">
