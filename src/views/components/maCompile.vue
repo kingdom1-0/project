@@ -37,10 +37,13 @@
                     <el-input v-model="thData.area"></el-input>
                 </el-tooltip>
             </el-form-item>
-            <el-form-item label="内容" v-show="typeof(thData.value) != 'undefined'">
+            <el-form-item label="内容" v-if="typeof(thData.value) != 'undefined'">
                 <vue-neditor-wrap v-model="thData.value" :config="myConfig" :destroy="false"></vue-neditor-wrap>
             </el-form-item>
-            <el-form-item label="主图" v-show="typeof(thData.img) != 'undefined'">
+            <el-form-item label="地图" v-if="typeof(thData.value2) != 'undefined'">
+                <vue-neditor-wrap v-model="thData.value2" :config="myConfig" :destroy="true"></vue-neditor-wrap>
+            </el-form-item>
+            <el-form-item label="主图" v-if="typeof(thData.img) != 'undefined'">
                 <el-upload class="avatar-uploader" action="http://127.0.0.1:2101/api/v1/file_upload"
                     :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
                     <img v-if="thData.img" :src="thData.img" class="avatar">
@@ -251,6 +254,12 @@
                 this.thData.top = Boolean(this.thData.top);
                 if (typeof (this.thData.class) == "string") { //多选按钮
                     this.thData.class = this.thData.class.split(",")
+                }
+                if (typeof (this.thData.value) != 'undefined' && this.thData.value == null) {
+                    this.thData.value = '';
+                }
+                if (typeof (this.thData.value2) != 'undefined' && this.thData.value2 == null) {
+                    this.thData.value2 = '';
                 }
                 //多图字符串转数组       
                 this.fileList = []; //清空多图缓存

@@ -15,7 +15,7 @@
                     <div class="clear"></div>
                 </div>
             </div>
-            <div class="tra_img"><img :src="da.img" /></div>
+            <div class="tra_img" v-html="da.value2"></div>
             <div class="clear"></div>
         </div>
     </div>

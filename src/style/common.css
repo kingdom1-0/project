@@ -2411,9 +2411,9 @@ img.b3_1 {
     border: 1px solid #529c71;
     border-radius: 200px;
     text-align: center;
-    font-size: 16px;
+    font-size: 14px;
     padding: 8px 0;
-    margin: 30px auto;
+    margin: 20px auto;
     margin-bottom: 50px;
     margin-bottom: 0;
 }
@@ -2483,18 +2483,6 @@ img.b3_1 {
     height: 42px;
 }
 
-.co_li img {
-    display: inline-block;
-    margin-right: 12px;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-}
-
-.co_li span {
-    top: 7px;
-    position: relative;
-}
 
 img.b5_6 {
     position: absolute;
@@ -3595,4 +3583,54 @@ a.bus_aBl {
 
 .site_phone p {
     line-height: 1.8em;
+}
+
+.co_ul img {
+    display: inline-block;
+    margin-right: 12px;
+    float: left;
+    padding: 0;
+    margin-bottom: 25px;
+}
+
+.co_ul strong {
+    font-weight: 500;
+    top: 8px;
+    position: relative;
+}
+
+.co_ul td {
+    margin-bottom: 40px;
+}
+
+@keyframes am01 {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+img.b5_6 {
+    animation: am01 5s linear infinite;
+}
+
+@keyframes am02 {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.com_bgImg {
+    animation: am02 15s ease-in-out infinite;
 }
