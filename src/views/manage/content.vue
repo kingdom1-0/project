@@ -30,7 +30,7 @@
             </el-button>
           </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除的数据无法找回，如不明确删除，建议待发布" placement="bottom">
-            <el-button type="danger" @click="deleteDa()"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
+            <el-button type="danger" @click="openDelete()"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
           </el-tooltip>
         </div>
         <div class="seek_block">
@@ -104,6 +104,17 @@
       this.refreshData(); //get对应id参数数据
     },
     methods: {
+      selectHint() { //最少勾选一条数据
+        if (this.selectData.length < 1) {
+          this.$message({
+            message: '请勾选数据！',
+            type: 'error'
+          })
+          return false;
+        } else {
+          return true
+        }
+      },
       seekFun() { //搜索
         var _this = this;
 
@@ -163,7 +174,8 @@
         var day = date.getDate().toString().padStart(2, '0') //使用ES6 padStart(2,'0') 为日期强制两位数，少于两位数前面加0
 
         return date.getFullYear() + "-" + month + "-" + day + " " + date
-          .getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+          .getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0') + ":" + date
+          .getSeconds().toString().padStart(2, '0');
       },
       addDate() { //添加数据     
         var _this = this;
@@ -197,9 +209,12 @@
           this.alData = da;
           this.dialogVisible = true;
         }
-        if (te.indexOf("Array") > 0) {
+        if (te.indexOf("Array") > 0 && this.selectHint()) {
           if (da.length > 1) {
-            alert("一次只能编辑一条数据！");
+            this.$message({
+              message: '一次只能编辑一条数据！',
+              type: 'error'
+            })
           } else {
             this.alData = da[0]
             this.dialogVisible = true;
@@ -207,18 +222,40 @@
         }
       },
       redactOption(op, val) { //置顶、取消置顶、发布、待发布
-        this.selectData.forEach((item) => {
-          var thDate = this.tableData.find((age) => {
-            return age.id == item.id
-          });
-          thDate[op] = val;
-          this.loading = true;
-          this.$http.put(this.$route.params.id, thDate).then((res) => {
-            if (res.status == "200") {
-              this.loading = false;
-            }
+        if (this.selectHint()) {
+          this.selectData.forEach((item) => {
+            var thDate = this.tableData.find((age) => {
+              return age.id == item.id
+            });
+            thDate[op] = val;
+            this.loading = true;
+            this.$http.put(this.$route.params.id, thDate).then((res) => {
+              if (res.status == "200") {
+                this.loading = false;
+              }
+            })
           })
-        })
+        }
+      },
+      openDelete() { //提示删除
+        if (this.selectHint()) {
+          this.$confirm('删除的数据无法找回，是否删除？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.deleteDa();
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        }
       },
       deleteDa() { //批量删除
         this.selectData.forEach((item) => {

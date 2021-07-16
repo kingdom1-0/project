@@ -5,7 +5,7 @@
         <swiper class="swiper" :options="swiperOption">
           <swiper-slide v-for="li in newList" :key="li.id">
             <div class="join_block">
-              <div class="join_img"><img class="img_node" src="../../images/9_7.png"></div>
+              <div class="join_img"><img class="img_node" src="/images/9_7.png"></div>
               <div class="join_teBl">
                 <div class="join_ti">{{li.ti}}</div>
                 <div class="join_vip"><img v-if="li.img" :src="li.img"></div>

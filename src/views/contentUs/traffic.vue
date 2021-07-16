@@ -3,14 +3,14 @@
         <div class="tra_content">
             <div class="tra_ulBl">
                 <div class="tra_liBl">
-                    <div class="tra_ico"><img src="../../images/b4_3.png"></div>
+                    <div class="tra_ico"><img src="/images/b4_3.png"></div>
                     <div class="tra_te">
                         {{da.title}}
                     </div>
                     <div class="clear"></div>
                 </div>
                 <div class="tra_liBl">
-                    <div class="tra_ico"><img src="../../images/b4_4.png"></div>
+                    <div class="tra_ico"><img src="/images/b4_4.png"></div>
                     <div class="tra_te" v-html="da.value"></div>
                     <div class="clear"></div>
                 </div>

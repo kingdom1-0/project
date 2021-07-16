@@ -13,6 +13,8 @@ import "./style/font/iconfont.css" //阿里巴巴图标库
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
+//加载显示
+import NProgress from 'nprogress';
 
 //swiper组件库
 import vueSwiper from "vue-awesome-swiper"
@@ -27,6 +29,18 @@ Vue.prototype.ueditorURL = "http://127.0.0.1:2101/api/v1/ueditor"
 //配置请求的根路径
 axios.defaults.baseURL = "http://127.0.0.1:2101/api/v1/";
 Vue.prototype.$http = axios //方便所有组件直接使用 this.$http.get().then()
+
+// 添加请求拦截器
+axios.interceptors.request.use(function (config) {
+  NProgress.start();
+  return config;
+});
+
+// 添加响应拦截器
+axios.interceptors.response.use(function (response) {
+  NProgress.done();
+  return response;
+});
 
 Vue.config.productionTip = false
 new Vue({

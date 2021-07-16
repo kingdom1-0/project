@@ -3,7 +3,7 @@
     <div class="rev_content">
       <div class="rev_conBlock" v-show="!bo">
         <div class="rev_dataBlock">
-          <div class="rev_bgBl"><img src="../../images/c1_1.png" /></div>
+          <div class="rev_bgBl"><img src="/images/c1_1.png" /></div>
           <div class="revB_content">
             <el-calendar v-model="value">
             </el-calendar>
@@ -12,10 +12,10 @@
         <div class="rev_teBlock">
           <div class="rev_ti">活动精选</div>
           <div class="rev1_block">
-            <div class="rev1_img"><img :src="newList[0].img" /></div>
+            <div class="rev1_img"><img :src="newList[0] && newList[0].img" /></div>
             <div class="rev1_teBl">
-              <div class="rev_da">{{newList[0].date.split("-",2).join("-")}}</div>
-              <div class="rev_day">{{newList[0].date.split("-")[2].split(" ")[0]}}</div>
+              <div class="rev_da">{{newList[0] && newList[0].date.split("-",2).join("-")}}</div>
+              <div class="rev_day">{{newList[0] && newList[0].date.split("-")[2].split(" ")[0]}}</div>
             </div>
             <div class="clear"></div>
           </div>
@@ -98,7 +98,6 @@
 </script>
 <style>
   .el-calendar {
-    background: url();
     padding-top: 20px;
   }
 

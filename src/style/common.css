@@ -413,10 +413,6 @@ body {
     display: block;
 }
 
-.king:after {
-    background: url() no-repeat center;
-}
-
 /*css animate */
 
 
@@ -467,26 +463,26 @@ a.he_li {
     display: block;
     width: 40px;
     height: 40px;
-    background: url(../images/3.png) no-repeat center;
+    background: url(/images/3.png) no-repeat center;
     border: 1px solid #fff;
     border-radius: 200px;
     position: relative;
 }
 
 a.he_li.li_2 {
-    background: url(../images/4.png) no-repeat center;
+    background: url(/images/4.png) no-repeat center;
 }
 
 a.he_li.li_3 {
-    background: url(../images/5.png) no-repeat center;
+    background: url(/images/5.png) no-repeat center;
 }
 
 a.he_li.li_4 {
-    background: url(../images/6.png) no-repeat center;
+    background: url(/images/6.png) no-repeat center;
 }
 
 a.he_li.li_5 {
-    background: url(../images/7.png) no-repeat center;
+    background: url(/images/7.png) no-repeat center;
 }
 
 .ind_content {
@@ -600,7 +596,7 @@ span.swiper-pagination-bullet.swiper-pagination-bullet-active {
 }
 
 .indHo_ulBl {
-    background: url(../images/3_8.jpg) no-repeat center;
+    background: url(/images/3_8.jpg) no-repeat center;
     box-shadow: 0px 0px 6px 0;
     background-size: cover;
     padding-bottom: 2px;
@@ -719,7 +715,7 @@ a.indHo_aBl {
     left: 0px;
     width: 100%;
     height: 100%;
-    background: url(../images/8.png);
+    background: url(/images/8.png);
     opacity: 0;
 }
 
@@ -872,7 +868,7 @@ a.indHo_aBl {
 .indC_ico {
     width: 100%;
     height: 20px;
-    background: url(../images/3_3.png) no-repeat center;
+    background: url(/images/3_3.png) no-repeat center;
 }
 
 .indC_num {
@@ -880,11 +876,11 @@ a.indHo_aBl {
 }
 
 .indC_ico.ico_2 {
-    background: url(../images/3_31.png) no-repeat center;
+    background: url(/images/3_31.png) no-repeat center;
 }
 
 .indC_ico.ico_3 {
-    background: url(../images/3_32.png) no-repeat center;
+    background: url(/images/3_32.png) no-repeat center;
 }
 
 .indC_top:hover .indC_InBl {
@@ -1175,7 +1171,7 @@ a.heN_li {
 a.bus_li {
     width: 145px;
     height: 61px;
-    background: url(../images/4_2.png);
+    background: url(/images/4_2.png);
     display: inline-block;
     line-height: 61px;
     font-size: 18px;
@@ -1188,7 +1184,7 @@ a.bus_li.cur,
 a.bus_li:hover,
 a.bus_li.active.router-link-exact-active,
 a.bus_li.current {
-    background: url(../images/4_3.png);
+    background: url(/images/4_3.png);
     color: #fff;
 }
 
@@ -1240,7 +1236,7 @@ a.bus_aBl {
     position: relative;
     width: 50px;
     height: 50px;
-    background: url(../images/4_5.png) no-repeat center;
+    background: url(/images/4_5.png) no-repeat center;
     float: left;
     cursor: pointer;
     border-radius: 200px;
@@ -1250,7 +1246,7 @@ a.bus_aBl {
     position: relative;
     width: 50px;
     height: 50px;
-    background: url(../images/4_6.png) no-repeat center;
+    background: url(/images/4_6.png) no-repeat center;
     float: right;
     cursor: pointer;
     border-radius: 200px;
@@ -1296,7 +1292,7 @@ a.bus_aBl {
     left: 0px;
     width: 100%;
     height: 100%;
-    background: url(../images/5_2.png);
+    background: url(/images/5_2.png);
 }
 
 .alt_conBlock {
@@ -1318,7 +1314,7 @@ a.bus_aBl {
     top: -60px;
     width: 60px;
     height: 60px;
-    background: url(../images/5_1.png) no-repeat center;
+    background: url(/images/5_1.png) no-repeat center;
     cursor: pointer;
 }
 
@@ -1426,7 +1422,6 @@ select.bra_select {
     top: 0px;
     width: 180px;
     height: 46px;
-    background: url();
     padding-left: 12px;
     border: 1px solid #dcdcdc;
     color: #999;
@@ -1706,7 +1701,7 @@ a.busI_li:hover {
     bottom: -13px;
     width: 22px;
     height: 13px;
-    background: url(../images/6_5.png) no-repeat center;
+    background: url(/images/6_5.png) no-repeat center;
     left: 50%;
     margin-left: -11px;
 }
@@ -1818,7 +1813,7 @@ img.b6_7 {
     top: 5px;
     height: 16px;
     width: 32px;
-    background: url(../images/8_2.png) no-repeat right;
+    background: url(/images/8_2.png) no-repeat right;
     display: none;
 }
 
@@ -1980,14 +1975,14 @@ img.b1_2 {
     bottom: 0px;
     width: 40px;
     height: 90px;
-    background: url(../images/9_6.png) no-repeat 16px 68px;
+    background: url(/images/9_6.png) no-repeat 16px 68px;
     left: 50%;
     margin-left: -20px;
 }
 
 
 .mem_conBlock:hover .mem_ico {
-    background: url(../images/9_5.png) no-repeat bottom;
+    background: url(/images/9_5.png) no-repeat bottom;
 }
 
 .mem_conBlock:hover {
@@ -2048,7 +2043,7 @@ img.b1_2 {
     top: 50%;
     width: 60px;
     height: 60px;
-    background: url(../images/9_8.png) no-repeat center;
+    background: url(/images/9_8.png) no-repeat center;
     z-index: 90;
     cursor: pointer;
 }
@@ -2059,7 +2054,7 @@ img.b1_2 {
     top: 50%;
     width: 60px;
     height: 60px;
-    background: url(../images/9_9.png) no-repeat center;
+    background: url(/images/9_9.png) no-repeat center;
     z-index: 90;
     cursor: pointer;
 }
@@ -2106,7 +2101,7 @@ img.b1_2 {
     line-height: 40px;
     font-size: 16px;
     padding-left: 4%;
-    background: #539c71 url(../images/b2_1.jpg) no-repeat right;
+    background: #539c71 url(/images/b2_1.jpg) no-repeat right;
     width: 220px;
     color: #fff;
     letter-spacing: 1px;
@@ -2142,7 +2137,7 @@ input.mes_input {
     top: 13px;
     width: 10px;
     height: 10px;
-    background: url(../images/b2_2.png) center;
+    background: url(/images/b2_2.png) center;
 }
 
 .mes_teBl .mes_ico {
@@ -2339,7 +2334,7 @@ img.b3_1 {
 }
 
 .com_bgImg.bgImg_2 {
-    background: url(../images/b4_1.jpg) no-repeat center;
+    background: url(/images/b4_1.jpg) no-repeat center;
     background-size: cover;
 }
 
@@ -2393,7 +2388,7 @@ img.b3_1 {
 }
 
 .com_bgImg.bgImg_3 {
-    background: url(../images/b3_5.jpg) no-repeat center;
+    background: url(/images/b3_5.jpg) no-repeat center;
     background-size: cover;
 }
 
@@ -2435,7 +2430,7 @@ img.b3_1 {
 }
 
 .com_bgImg.bgImg_6 {
-    background: url(../images/b5_5.jpg) no-repeat center;
+    background: url(/images/b5_5.jpg) no-repeat center;
     background-size: cover;
 }
 
@@ -2500,7 +2495,7 @@ img.b5_6 {
     color: #529c71;
 }
 
-/* .ind_baImg {background-image:url(../images/1.jpg);} */
+/* .ind_baImg {background-image:url(/images/1.jpg);} */
 
 .fadeDown-enter-active,
 .fadeDown-leave-active {
@@ -2575,7 +2570,7 @@ body .swiper-container-horizontal>.swiper-pagination-bullets .swiper-pagination-
     display: block;
     width: 100%;
     height: 10px;
-    background: url(../images/3_7.png) no-repeat bottom;
+    background: url(/images/3_7.png) no-repeat bottom;
     position: absolute;
     bottom: -18px;
     left: 0px;
@@ -2630,7 +2625,7 @@ a.indC_bottom:hover .indC_bg {
     width: 100%;
     height: 100%;
     z-index: 90;
-    background: url(../images/5_2.png);
+    background: url(/images/5_2.png);
 }
 
 .indC1_logoBl {
@@ -2640,7 +2635,7 @@ a.indC_bottom:hover .indC_bg {
     width: 70%;
     text-align: center;
     padding: 80px 0;
-    background: url(../images/c2_1.png) no-repeat center;
+    background: url(/images/c2_1.png) no-repeat center;
     background-size: 100%;
     margin-top: -120px;
 }
@@ -2862,7 +2857,7 @@ a.he_liBl.cur {
 
 .rev_dataBlock .layui-laydate .layui-this {
     background-color: #fff !important;
-    background: url(../images/c2_6.png) no-repeat center;
+    background: url(/images/c2_6.png) no-repeat center;
 }
 
 .rev_dataBlock i.layui-icon.laydate-icon.laydate-prev-y {
@@ -2899,7 +2894,7 @@ a.he_liBl.cur {
     background-size: 60px;
     height: 64px;
     line-height: 64px;
-    background: url(../images/c2_61.png) no-repeat center;
+    background: url(/images/c2_61.png) no-repeat center;
 }
 
 /* .rev_dataBlock:after { content: ""; display: block; width: 12px; height: 40px; background: #347365; position: absolute; top: 0px; left: 16%; border-radius: 200px; z-index: 90; }
@@ -2936,7 +2931,7 @@ a.he_liBl.cur {
     background-size: 72px;
     line-height: 64px;
     height: 64px;
-    background: url(../images/c2_61.png) no-repeat center;
+    background: url(/images/c2_61.png) no-repeat center;
 }
 
 .canvas_block {
@@ -3073,7 +3068,7 @@ a.indD_liBl:nth-child(1):hover .indD_InBl {
     position: relative;
     width: 50px;
     height: 50px;
-    background: url(../images/4_5.png) no-repeat center;
+    background: url(/images/4_5.png) no-repeat center;
     float: left;
     cursor: pointer;
     border-radius: 200px;
@@ -3083,7 +3078,7 @@ a.indD_liBl:nth-child(1):hover .indD_InBl {
     position: relative;
     width: 50px;
     height: 50px;
-    background: url(../images/4_6.png) no-repeat center;
+    background: url(/images/4_6.png) no-repeat center;
     float: right;
     cursor: pointer;
     border-radius: 200px;
@@ -3139,7 +3134,7 @@ a.indD_liBl:nth-child(1):hover .indD_InBl {
     right: 0px;
     top: 4%;
     width: 410px;
-    background: #fff url(../images/c1_3.png) no-repeat bottom;
+    background: #fff url(/images/c1_3.png) no-repeat bottom;
     border-top: 6px solid #529c71;
     height: 94%;
     background-size: 100%;
@@ -3417,7 +3412,7 @@ img.b9_4 {
 .att_teBl {
     position: relative;
     width: 150%;
-    background: url("../images/b3_6.png");
+    background: url("/images/b3_6.png");
     padding: 30px 60px 30px 180px;
     border-radius: 20px;
     font-size: 16px;

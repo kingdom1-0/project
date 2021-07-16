@@ -3,7 +3,7 @@
         <div class="fo_content">
             <div class="fo_conBlock">
                 <div class="fo_leftBl">
-                    <a href="javascript:;" class="fo_logo"><img src="../../images/3_6.png"></a>
+                    <a href="javascript:;" class="fo_logo"><img src="/images/3_6.png"></a>
                     <div class="fo_te">
                         <p>电话：0760-88227266</p>
                         <p>地址：中山市东区中山六路1号天奕星河COCO City</p>
@@ -58,7 +58,7 @@
                         微信扫一扫<br>
                         关注
                     </div>
-                    <div class="fo_wxImg"><img src="../../images/wx.png"></div>
+                    <div class="fo_wxImg"><img src="/images/wx.png"></div>
                 </div>
                 <div class="clear"></div>
             </div>

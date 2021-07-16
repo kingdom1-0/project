@@ -1,7 +1,7 @@
 <template>
     <div class="he_body">
         <div id="Header">
-            <a href="/" class="he_logo"><img src="../../images/2.png" /></a>
+            <a href="/" class="he_logo"><img src="/images/2.png" /></a>
             <div class="he_ulBl">
 
                 <div :class="{he_liBl:true,active:n==active}" v-for="(nav,n) in navData" @mouseenter="showNav(n)"
@@ -26,7 +26,7 @@
                     </div>
                 </a>
                 <a href="javascript:;" class="he_li li_5">
-                    <div class="wx_img"><img src="../../images/wx.png" /></div>
+                    <div class="wx_img"><img src="/images/wx.png" /></div>
                 </a>
                 <a href="javascript:;" class="he_li li_6">
                     <div class="he_seek">

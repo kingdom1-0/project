@@ -73,13 +73,13 @@
                                         <div class="indB_ti">主力店铺</div>
                                         <div class="indB_en">THE MAIN STORE</div>
                                     </div>
-                                    <div class="b2_4"><img class="layer" data-depth="2" src="../../images/c2_4.png" />
+                                    <div class="b2_4"><img class="layer" data-depth="2" src="/images/c2_4.png" />
                                     </div>
-                                    <div class="b2_41"><img class="layer" data-depth="1" src="../../images/c2_41.png" />
+                                    <div class="b2_41"><img class="layer" data-depth="1" src="/images/c2_41.png" />
                                     </div>
-                                    <div class="b2_42"><img class="layer" data-depth="1" src="../../images/c2_42.png" />
+                                    <div class="b2_42"><img class="layer" data-depth="1" src="/images/c2_42.png" />
                                     </div>
-                                    <div class="b2_43"><img class="layer" data-depth="2" src="../../images/c2_43.png" />
+                                    <div class="b2_43"><img class="layer" data-depth="2" src="/images/c2_43.png" />
                                     </div>
                                 </div>
                             </div>

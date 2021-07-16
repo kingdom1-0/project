@@ -45,7 +45,7 @@ var apiLo = "/api/v1/"
 
 //数据库查询
 const dataArray = [];
-const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'join', 'notice', 'banner', 'login', 'conversion', 'message', 'synopsis', 'traffic', 'attract', 'attract', 'site', 'contact']; //做个数组封装下简单的get API(对应上面dataArray数据)
+const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'join', 'notice', 'banner', 'login', 'conversion', 'message', 'synopsis', 'traffic', 'attract', 'attract', 'site', 'contact', 'loginfo']; //做个数组封装下简单的get API(对应上面dataArray数据)
 
 /*配置数据库*/
 var sqlConfig = {
@@ -175,7 +175,7 @@ function addData(item) {
         if (thDa.length > 0) {
             thisId = (thDa[0].id + 1); //id加1
         } else {
-            thisId = 0;
+            thisId = 1;
         }
         for (var key in da) { //sql字段拼接
             if (key == "id") {
@@ -227,7 +227,7 @@ function deleteData(item) {
 //表操作遍历
 apiArray.forEach((item) => {
     getQuery(item) //数据读取（查）
-    if (item != "login") { //登录用户数据修改单独处理
+    if (item != "login") { //登录用户数据单独处理
         putData(item); //改
         deleteData(item); //删
         addData(item); //增
@@ -246,26 +246,52 @@ app.post(apiLo + 'login', function (req, res) { //建立数据接口
         dataArray[apiArray.indexOf("login")]  //数据库用户数据
         对比数据返回登陆结果
     */
-    dataArray[apiArray.indexOf("login")].forEach(function (item) {
+
+    var logDa = dataArray[apiArray.indexOf("login")] //数据库用户数据
+    var logAr = [
+        [], //记录登录成功与否（成功存1，不成功存0）
+        [], //记录用户名是否存在
+        [] //记录密码是否正确
+    ];
+    logDa.forEach(function (item) {
         if (reqBody.username == item.username && reqBody.password == item.password) {
-            resData.meta = {
-                "status": "200",
-                "message": "用户登录成功"
-            };
-            resData.token = item.token
-        } else if (reqBody.username != item.username) {
-            resData.meta = {
-                "status": "400",
-                "message": "用户不存在"
-            };
-        } else if (reqBody.password != item.password) {
-            resData.meta = {
-                "status": "401",
-                "message": "密码错误"
-            };
+            logAr[0].push(1)
+        } else {
+            logAr[0].push(0)
+        }
+        if (reqBody.username == item.username) {
+            logAr[1].push(1)
+            if (reqBody.password == item.password) { //只有用户名正确，才判断密码是否正确
+                logAr[2].push(1)
+            } else {
+                logAr[2].push(0)
+            }
+        } else {
+            logAr[1].push(0)
         }
     })
+    if (logAr[0].includes(1)) {
+        resData.meta = {
+            "status": "200",
+            "message": "用户登录成功"
+        };
+        resData.token = logDa[logAr[0].indexOf(1)].token
+    } else if (!logAr[1].includes(1)) {
+        resData.meta = {
+            "status": "400",
+            "message": "用户名不存在"
+        };
+    } else if (!logAr[2].includes(1)) {
+        resData.meta = {
+            "status": "400",
+            "message": "密码错误"
+        };
+    }
     res.json(resData); //以json形式发送响应数据
+
+
+
+
 });
 
 //修改密码数据接口

@@ -5,7 +5,7 @@
       <el-row></el-row>
       <el-row>
         <el-tooltip class="item" effect="dark" content="删除的数据无法找回，如不明确删除，建议待发布" placement="bottom">
-          <el-button type="danger" @click="deleteDa()"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
+          <el-button type="danger" @click="openDelete()"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="导出Excel表格" placement="bottom">
           <el-button type="primary" @click="exportExcel"><span class="iconfont icon-fabu"></span>导出</el-button>
@@ -61,6 +61,7 @@
     props: ['id', 'arg'], //router props传参(取参)
     data() {
       return {
+        axiosTable: 'message', //操作的数据库表名
         thisPa: 1, //当前页
         loading: false, //加载中        
         input: '', //标题搜索
@@ -75,7 +76,18 @@
       this.refreshData(); //get对应id参数数据
     },
     methods: {
-      issueFilter(value, row) { //发布筛选
+      selectHint() { //最少勾选一条数据
+        if (this.selectData.length < 1) {
+          this.$message({
+            message: '请勾选数据！',
+            type: 'error'
+          })
+          return false;
+        } else {
+          return true
+        }
+      },
+      issueFilter(value, row) { //状态筛选
         return row.state == value;
       },
       pageFilter(val) { //分页操作
@@ -90,7 +102,7 @@
       },
       refreshData: function () { //刷新列表数据
         var _this = this;
-        this.$http.get(this.$route.params.id).then(function (res) { //字符串转换布尔值 
+        this.$http.get(this.axiosTable).then(function (res) { //字符串转换布尔值 
           _this.tableData = res.data;
           _this.tableData.forEach((item) => {
             if (item.state == null) {
@@ -124,9 +136,30 @@
           }
         }
       },
+      openDelete() { //提示删除
+        if (this.selectHint()) {
+          this.$confirm('删除的数据无法找回，是否删除？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+            this.deleteDa();
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        }
+
+      },
       deleteDa() { //批量删除
         this.selectData.forEach((item) => {
-          this.$http.delete(this.$route.params.id, {
+          this.$http.delete(this.axiosTable, {
             params: {
               id: item.id //对应ID删除
             }

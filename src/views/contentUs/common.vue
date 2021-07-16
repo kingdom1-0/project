@@ -1,7 +1,7 @@
 <template>
     <div class="com_content">
         <div class="com_bgImg bgImg_6">
-            <img class="b5_6" src="../../images/b5_6.png">
+            <img class="b5_6" src="/images/b5_6.png">
         </div>
         <div class="com_conBlock">
             <div class="bus_ul">

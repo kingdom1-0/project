@@ -1,9 +1,9 @@
 <template>
     <div class="com_content">
         <div class="com_bgImg bgImg_1">
-            <img class="b6_1" src="../../images/6_1.png" />
-            <img class="b6_2" src="../../images/6_2.png" />
-            <img class="b6_3" src="../../images/6_3.png" />
+            <img class="b6_1" src="/images/6_1.png" />
+            <img class="b6_2" src="/images/6_2.png" />
+            <img class="b6_3" src="/images/6_3.png" />
         </div>
         <div class="com_conBlock">
             <div class="bus_ul">

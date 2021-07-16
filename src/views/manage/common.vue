@@ -6,7 +6,7 @@
         <iframe src="canvas.html"></iframe>
       </div>
       <div class="log_conBlock">
-        <div class="log_logo"><img src="../../images/logo.png" /></div>
+        <div class="log_logo"><img src="/images/logo.png" /></div>
         <el-form ref="formRef" :model="form" :rules="rules">
           <!-- 用户名 -->
           <el-form-item prop="username">
@@ -22,7 +22,6 @@
           <el-form-item class="bu_block">
             <el-button type="primary" @click="logIn">登 录</el-button>
             <el-button type="info" @click="reset">重 置</el-button>
-            <!-- <el-button type="info" @click="register">注 册</el-button> -->
           </el-form-item>
         </el-form>
       </div>
@@ -77,7 +76,7 @@
               <el-col :span="22">
                 <el-menu class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff"
                   active-text-color="#409EFF" router :default-active="activeIndex">
-                  <img class="logo" src="../../images/logo.png" />
+                  <img class="logo" src="/images/logo.png" />
                   <el-submenu index="1">
                     <template slot="title"><i class="el-icon-chat-dot-square"></i>后台首页</template>
                     <el-menu-item index="/manage/">系统信息</el-menu-item>
@@ -88,18 +87,18 @@
                   <el-menu-item index="/manage/content/banner">
                     <i class="el-icon-document-copy"></i>内容管理
                   </el-menu-item>
-                  <el-menu-item index="/manage/message/message">
+                  <el-menu-item index="/manage/message/">
                     <i class="el-icon-chat-dot-square"></i>留言管理
                   </el-menu-item>
                   <el-submenu index="4">
                     <template slot="title"><i class="el-icon-chat-dot-square"></i>系统设置</template>
-                    <el-menu-item index="/manage/message/">登陆日志</el-menu-item>
-                    <el-menu-item index="/manage/message/">操作日志</el-menu-item>
-                    <el-menu-item index="/manage/message/">角色管理</el-menu-item>
-                    <el-menu-item index="/manage/message/">管理员管理</el-menu-item>
-                    <el-menu-item index="/manage/message/">SEO设置</el-menu-item>
+                    <el-menu-item index="/manage/logInfo">登陆日志</el-menu-item>
+                    <el-menu-item index="">操作日志</el-menu-item>
+                    <el-menu-item index="">角色管理</el-menu-item>
+                    <el-menu-item index="">管理员管理</el-menu-item>
+                    <el-menu-item index="">SEO设置</el-menu-item>
                   </el-submenu>
-                  <el-menu-item index="/manage/message/">
+                  <el-menu-item index="">
                     <i class="el-icon-chat-dot-square"></i>操作说明
                   </el-menu-item>
                 </el-menu>
@@ -218,8 +217,31 @@
       }
     },
     methods: {
+      thisDate() { //返回当前时间
+        var date = new Date();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0');
+        var day = date.getDate().toString().padStart(2, '0') //使用ES6 padStart(2,'0') 为日期强制两位数，少于两位数前面加0
+
+        return date.getFullYear() + "-" + month + "-" + day + " " + date
+          .getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0') + ":" + date
+          .getSeconds().toString().padStart(2, '0');
+      },
+      loginfo(n) { //记录登陆数据
+        const ip = '192.168.18.186';
+        const state = n;
+        const name = this.form.username;
+        const date = this.thisDate();
+        var logDa = {
+          state,
+          name,
+          ip,
+          date
+        }
+        this.$http.post("loginfo", logDa);
+      },
       //点击提交，预验证
       logIn() {
+        var _this = this;
         this.$refs.formRef.validate(async value => { //表单预验证
           if (!value) {
             return;
@@ -230,16 +252,17 @@
           } = await this.$http.post("login", this.form)
           if (res.meta.status != 200) { //响应状态
             this.open4(res.meta.message);
+            _this.loginfo(0);
           } else {
             this.open1(res.meta.message);
             window.sessionStorage.setItem("token", res.token);
             this.shOn = false; //显示后台管理系统
+            this.state = 1;
+            _this.loginfo(1);
             this.$router.push('/manage/')
           }
+
         })
-      },
-      consolelog() {
-        alert(2)
       },
       resPass() {
         this.$refs.setRef.validate(async value => { //表单预验证
@@ -272,9 +295,6 @@
           this.setForm.password = "";
           this.setForm.setPassword = "";
         }
-      },
-      register() {
-        console.log("注册")
       },
       reset() { //表单重置
         this.$refs.formRef.resetFields();

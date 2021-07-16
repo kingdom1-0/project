@@ -110,8 +110,12 @@ const routes = [{
         })
       },
       {
-        path: 'message/:id',
+        path: 'message',
         component: () => import('../views/manage/message.vue'),
+      },
+      {
+        path: 'logInfo',
+        component: () => import('../views/manage/logInfo.vue'),
       }
     ],
     beforeEnter: (to, from, next) => {

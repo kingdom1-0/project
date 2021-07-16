@@ -78,6 +78,7 @@
                 return bo
             },
             showStore(s) { //显示店铺详细信息
+                console.log(s)
                 bus.$emit('data', {
                     showDa: true,
                     id: s.id,
@@ -103,14 +104,15 @@
                 var store = await _this.$http.get("store");
                 return store
             }
+
             getData().then((re) => { //店铺
                 _this.store = re.data;
-                console.log(_this.store)
                 var id = parseInt(location.href.split("id=")[1]) || 0;
-                console.log(id)
-                _this.showStore(_this.store.find((item) => {
-                    return item.id == id;
-                }))
+                if (location.href.includes("id=")) {
+                    _this.showStore(_this.store.find((item) => {
+                        return item.id == id;
+                    }))
+                }
             })
 
 

@@ -3,35 +3,35 @@
     <el-dialog :title="thData.hasOwnProperty('add')?'添加':'编辑 '+thData.title" :visible="show" width="30%"
         :before-close="closeCompile" :fullscreen="true" :modal="false">
         <el-form :model="thData" :rules="rules" ref="thData" label-width="120px" class="demo-thData">
-            <el-form-item label="所属楼层" prop="pId" v-show="typeof(thData.pId) != 'undefined'">
+            <el-form-item label="所属楼层" prop="pId" v-if="typeof(thData.pId) != 'undefined'">
                 <el-radio v-model="thData.pId" :label="fl.title | toNum" v-for="fl in floor" :key="fl.id">
                     {{fl.title}}
                 </el-radio>
             </el-form-item>
-            <el-form-item label="所属类别" prop="class" v-show="typeof(thData.class) != 'undefined'">
+            <el-form-item label="所属类别" prop="class" v-if="typeof(thData.class) != 'undefined'">
                 <el-checkbox-group v-model="thData.class">
                     <el-checkbox :label="item.title" v-for="item in classDa" :key="item.id">
                         {{item.title}}
                     </el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="字母索引" prop="en" v-show="typeof(thData.en) != 'undefined'">
+            <el-form-item label="字母索引" prop="en" v-if="typeof(thData.en) != 'undefined'">
                 <el-radio v-model="thData.en" :label="item" v-for="(item,n) in enDa" :key="n">{{item}}
                 </el-radio>
             </el-form-item>
             <el-form-item label="标题" prop="title">
                 <el-input v-model="thData.title"></el-input>
             </el-form-item>
-            <el-form-item label="英文标题" prop="enTitle" v-show="typeof(thData.enTitle) != 'undefined'">
+            <el-form-item label="英文标题" prop="enTitle" v-if="typeof(thData.enTitle) != 'undefined'">
                 <el-input v-model="thData.enTitle"></el-input>
             </el-form-item>
-            <el-form-item label="简介" prop="text" v-show="typeof(thData.text) != 'undefined'">
+            <el-form-item label="简介" prop="text" v-if="typeof(thData.text) != 'undefined'">
                 <el-input v-model="thData.text"></el-input>
             </el-form-item>
-            <el-form-item label="店铺位置" prop="store" v-show="typeof(thData.store) != 'undefined'">
+            <el-form-item label="店铺位置" prop="store" v-if="typeof(thData.store) != 'undefined'">
                 <el-input v-model="thData.store"></el-input>
             </el-form-item>
-            <el-form-item label="矩形热区" prop="area" v-show="typeof(thData.area) != 'undefined'">
+            <el-form-item label="矩形热区" prop="area" v-if="typeof(thData.area) != 'undefined'">
                 <el-tooltip class="item" effect="dark" content="在图片里画矩形热区对应top,left,width,height，数据格式(0,0,0,0)"
                     placement="bottom-start">
                     <el-input v-model="thData.area"></el-input>
@@ -51,7 +51,7 @@
                     <div slot="tip" class="el-upload__tip">对应页面单图，只能上传jpg/png文件，且不超过500kb,</div>
                 </el-upload>
             </el-form-item>
-            <el-form-item label="配图" v-show="typeof(thData.images) != 'undefined'">
+            <el-form-item label="配图" v-if="typeof(thData.images) != 'undefined'">
                 <el-upload class="upload-demo" action="http://127.0.0.1:2101/api/v1/file_upload"
                     :on-success="imagesAvatarSuccess" :on-remove="handleRemove" :limit="6" accept=".jpg, .jpeg, .png"
                     :before-upload="beforeAvatarUpload" :file-list="fileList" list-type="picture-card">
