@@ -485,6 +485,10 @@ a.he_li.li_5 {
     background: url(/images/7.png) no-repeat center;
 }
 
+a.he_li.li_6 {
+    background: url(/images/9.png) no-repeat center;
+}
+
 .ind_content {
     position: relative;
     overflow: hidden;
@@ -3628,4 +3632,8 @@ img.b5_6 {
 
 .com_bgImg {
     animation: am02 15s ease-in-out infinite;
+}
+
+p img {
+    display: inline;
 }

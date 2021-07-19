@@ -13,7 +13,7 @@
                 <div class="fo_rightBl">
                     <div class="fo_ulBl">
                         <div class="fo_liBl">
-                            <router-link to="./" class="fo_ti">首 页</router-link>
+                            <router-link to="../" class="fo_ti">首 页</router-link>
                         </div>
                         <div class="fo_liBl">
                             <router-link to="/business/" class="fo_ti">品牌指引</router-link>
@@ -65,13 +65,9 @@
             <div class="fo_boBlock">
                 <div class="fo_boLe">
                     <span class="fo_t1">深圳市星河商用置业股份有限公司所有</span>
-                    <a href="javascript:;" id="fo_a1">开放时间</a> <span>/</span>
-                    <a href="/contentUs/traffic">广场定位器</a> <span>/</span>
-                    <a href="javascript:;" id="fo_a3">停车信息</a> <span>/</span>
-                    <a href="/member/message">意见反馈</a>
                 </div>
                 <div class="fo_boRi">
-                    <a href="/contentUs/contactUs">联系我们</a> <span>/</span>
+                    <router-link to="/contentUs/contactUs">联系我们</router-link> <span>/</span>
                     <a href="http://beian.miit.gov.cn" target="_blank">备案号</a> <span>/</span>
                     <div href="javascript:;" class="foa_bl">
                         友情链接

@@ -53,6 +53,7 @@
     mounted() {
       let _this = this;
       var id = parseInt(location.href.split("id=")[1]) || 0;
+      var href = location.href;
 
       async function getData() {
         var news = await _this.$http.get('news');
@@ -60,7 +61,13 @@
       }
       getData().then(function (res) {
         _this.newList = res.data;
-
+        if (href.includes('t=')) {
+          console.log(res.data)
+          console.log(href.split("t=")[1])
+          _this.newList = res.data.filter(item => {
+            return item.title.includes(href.split("t=")[1])
+          })
+        }
         if (id > 0) {
           var n = _this.newList.findIndex((item) => {
             return item.id == id;

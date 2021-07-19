@@ -15,6 +15,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 //加载显示
 import NProgress from 'nprogress';
+import 'nprogress/nprogress.css'
 
 //swiper组件库
 import vueSwiper from "vue-awesome-swiper"

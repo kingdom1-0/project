@@ -22,7 +22,7 @@
                 <router-link to="/member/" class="he_li li_2"></router-link>
                 <a href="javascript:;" class="he_li li_3">
                     <div class="he_seek">
-                        <input type="text" placeholder="请输入搜索内容" />
+                        <input type="text" v-model="seek" placeholder="请输入搜索内容" @keydown.enter="seekFun()" />
                     </div>
                 </a>
                 <a href="javascript:;" class="he_li li_5">
@@ -57,6 +57,7 @@
     export default {
         data: function () {
             return {
+                seek: '',
                 navBo: 20,
                 navBg: false,
                 active: 0,
@@ -166,6 +167,11 @@
                     _this.active = 4;
                 } else {
                     _this.active = 0;
+                }
+            },
+            seekFun() { // 搜索
+                if (this.seek.length > 0) {
+                    this.$router.push("/activity/?t=" + this.seek)
                 }
             }
         },
