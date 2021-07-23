@@ -2,6 +2,10 @@ import Vue from 'vue' // 引入vue
 import VueRouter from 'vue-router'
 Vue.use(VueRouter) // 挂载vueRouter插件
 
+const activity = () => import( /* webpackChunkName: "activity-news-review"*/ '../views/activity/common.vue') //注释部分指定分组打包
+const news = () => import( /* webpackChunkName: "activity-news-review"*/ '../views/activity/index.vue')
+const review = () => import( /* webpackChunkName: "activity-news-review"*/ '../views/activity/review.vue')
+
 const routes = [{
     path: '/',
     component: () => import("../views/Home/Home.vue"), //路由懒加载
@@ -12,15 +16,15 @@ const routes = [{
   },
   {
     path: '/activity',
-    component: () => import("../views/activity/common.vue"),
+    component: activity,
     children: [ //嵌套路由
       {
         path: '/',
-        component: () => import("../views/activity/index.vue")
+        component: news
       },
       {
         path: 'review',
-        component: () => import("../views/activity/review.vue"),
+        component: review,
         name: 'review' //命名路由
       }
     ]
