@@ -93,7 +93,7 @@
                   <el-submenu index="4">
                     <template slot="title"><i class="el-icon-chat-dot-square"></i>系统设置</template>
                     <el-menu-item index="/manage/logInfo">登陆日志</el-menu-item>
-                    <el-menu-item index="">操作日志</el-menu-item>
+                    <el-menu-item index="/manage/opLog">操作日志</el-menu-item>
                     <el-menu-item index="">角色管理</el-menu-item>
                     <el-menu-item index="">管理员管理</el-menu-item>
                     <el-menu-item index="">SEO设置</el-menu-item>
@@ -256,6 +256,7 @@
           } else {
             this.open1(res.meta.message);
             window.sessionStorage.setItem("token", res.token);
+            window.sessionStorage.setItem("username", this.form.username);
             this.shOn = false; //显示后台管理系统
             this.state = 1;
             _this.loginfo(1);

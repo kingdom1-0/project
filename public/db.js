@@ -45,7 +45,7 @@ var apiLo = "/api/v1/"
 
 //数据库查询
 const dataArray = [];
-const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'join', 'notice', 'banner', 'login', 'conversion', 'message', 'synopsis', 'traffic', 'attract', 'attract', 'site', 'contact', 'loginfo']; //做个数组封装下简单的get API(对应上面dataArray数据)
+const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'join', 'notice', 'banner', 'login', 'conversion', 'message', 'synopsis', 'traffic', 'attract', 'attract', 'site', 'contact', 'loginfo', 'oplog']; //做个数组封装下简单的get API(对应上面dataArray数据)
 
 /*配置数据库*/
 var sqlConfig = {

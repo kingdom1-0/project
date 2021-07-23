@@ -171,7 +171,7 @@
             },
             seekFun() { // 搜索
                 if (this.seek.length > 0) {
-                    this.$router.push("/activity/?t=" + this.seek)
+                    this.$router.push(encodeURI("/activity/?t=" + this.seek))
                 }
             }
         },

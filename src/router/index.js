@@ -120,6 +120,10 @@ const routes = [{
       {
         path: 'logInfo',
         component: () => import('../views/manage/logInfo.vue'),
+      },
+      {
+        path: 'opLog',
+        component: () => import('../views/manage/opLog.vue'),
       }
     ],
     beforeEnter: (to, from, next) => {

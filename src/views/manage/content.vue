@@ -143,7 +143,7 @@
         for (var i = 0; i < Math.ceil(this.tableData.length / 10); i++) {
           this.thisTable.push(this.tableData.slice(10 * i, 10 * i + 10));
         }
-        console.log(this.thisTable)
+        //console.log(this.thisTable)
       },
       refreshData: function (seekInto) { //刷新列表数据
         var _this = this;
@@ -197,7 +197,7 @@
               da[key] = null;
             }
           })
-          console.log(da)
+          //console.log(da)
           this.alData = da;
           this.dialogVisible = true;
         })

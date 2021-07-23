@@ -178,6 +178,10 @@
                 this.thData = {};
                 this.$emit("refresh") //刷新数据列表
             },
+            oplogInfo() {
+                //this.$http.put('oplog',{username:})    
+                console.log("kkk")
+            },
             submitForm(formName, add) { //提交表单                
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
@@ -201,13 +205,16 @@
                         }
 
                         if (!add) { //编辑提交
+                            //console.log(this.thData)
                             this.$http.put(this.$route.params.id, this.thData).then((res) => { //编辑数据提交
                                 if (res.status == '200') {
                                     this.$message({ //修改成功提示
                                         message: '编辑成功',
                                         type: 'success'
                                     });
-                                    this.closeCompile(); //关闭编辑页                                   
+                                    this
+                                        .closeCompile(); //关闭编辑页                                           
+                                    this.oplogInfo();
                                 }
                             })
                         } else { //新增提交
@@ -219,6 +226,7 @@
                                         type: 'success'
                                     });
                                     this.closeCompile(); //关闭编辑页
+                                    this.oplogInfo();
                                 }
                             })
                         }

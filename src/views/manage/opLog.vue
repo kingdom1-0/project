@@ -23,15 +23,12 @@
                     :highlight-current-row="true" style="width: 100%" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="100" align="center">
                     </el-table-column>
-                    <el-table-column prop="name" label="用户名" align="center" sortable :filters="nameDa"
+                    <el-table-column prop="name" label="用户名" align="center" width="300" sortable :filters="nameDa"
                         :filter-method="nameFilter">
                     </el-table-column>
-                    <el-table-column prop="ip" label="登录IP" align="center">
+                    <el-table-column prop="text" label="操作信息">
                     </el-table-column>
-                    <el-table-column prop="state" label="登录状态" align="center" sortable
-                        :filters="[{text: '成功', value: '1'}, {text: '失败', value: '0'}]" :filter-method="stateFilter">
-                    </el-table-column>
-                    <el-table-column prop="date" label="登录时间" align="center" sortable>
+                    <el-table-column prop="date" label="操作时间" align="center" sortable>
                         <template slot-scope="scope">{{ scope.row.date }}</template>
                     </el-table-column>
                 </el-table>
@@ -53,7 +50,13 @@
         data() {
             return {
                 axiosTable: 'loginfo', //操作的数据库表名
-                nameDa: [],
+                nameDa: [{
+                    text: 'admin',
+                    value: 'admin'
+                }, {
+                    text: 'kingdom',
+                    value: 'kingdom'
+                }],
                 seek: "", //搜索框值
                 thisPa: 1, //当前页
                 loading: false, //加载中        
@@ -68,17 +71,6 @@
         },
         created() {
             this.refreshData(); //get对应id参数数据
-            this.$http.get("login").then((res) => {
-                console.log(res.data)
-                res.data.forEach((item) => {
-                    this.nameDa.push({
-                        text: item.username,
-                        value: item.username
-                    })
-                })
-
-
-            })
         },
         methods: {
             selectHint() { //最少勾选一条数据
@@ -108,11 +100,8 @@
                 }
                 this.refreshData(seekInto); //刷新搜索数据
             },
-            stateFilter(value, row) { //状态筛选
-                return row.state == value;
-            },
             nameFilter(value, row) { //置顶筛选
-                //console.log(row.name == value)
+                console.log(row.name == value)
                 return row.name == value;
             },
             pageFilter(val) { //分页操作
@@ -124,12 +113,12 @@
                 for (var i = 0; i < Math.ceil(this.tableData.length / 10); i++) {
                     this.thisTable.push(this.tableData.slice(10 * i, 10 * i + 10));
                 }
-                //console.log(this.thisTable)
+                console.log(this.thisTable)
             },
             refreshData: function (seekInto) { //刷新列表数据
                 var _this = this;
                 this.$http.get(_this.axiosTable).then(function (res) { //字符串转换布尔值 
-                    //console.log(res.data)
+                    console.log(res.data)
                     _this.tableData = res.data;
                     _this.tableData.forEach((item) => {
                         item.issue = Boolean(parseInt(item.issue));
