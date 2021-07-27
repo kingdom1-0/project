@@ -61,7 +61,7 @@
     }
 
 </script>
-<style>
+<style scoped>
     td:nth-child(1n) {
         text-align: right;
     }

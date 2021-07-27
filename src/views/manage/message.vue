@@ -49,7 +49,7 @@
   </el-container>
 </template>
 <script>
-  import maMessage from '../components/maMessage.vue'
+  import maMessage from './components/message.vue'
   // 引入导出Excel表格依赖
   import FileSaver from "file-saver";
   import XLSX from "xlsx";
@@ -203,7 +203,7 @@
   }
 
 </script>
-<style>
+<style scoped>
   span.iconfont {
     margin-right: 6px;
   }

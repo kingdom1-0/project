@@ -74,7 +74,6 @@
             submitForm(formName) { //提交表单                
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        console.log(this.alData)
                         this.$http.put(this.$route.params.id, this.alData).then((res) => { //编辑数据提交
                             if (res.status == '200') {
                                 this.$message({ //修改成功提示
@@ -109,7 +108,7 @@
     }
 
 </script>
-<style>
+<style scoped>
     .el-form-item__label {
         padding-right: 40px;
     }

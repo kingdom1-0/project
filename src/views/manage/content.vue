@@ -76,8 +76,13 @@
   </el-container>
 </template>
 <script>
-  import maNav from '../components/maNav.vue'
-  import maCompile from '../components/maCompile.vue'
+  import maNav from './components/nav.vue'
+  import maCompile from './components/compile.vue'
+  import {
+    thisDate, //返回当前时间
+    oplogInfo
+  } from './js/common.js' //公共JS
+
   export default {
     components: {
       maNav,
@@ -168,17 +173,7 @@
       handleSelectionChange(val) { //表单change事件
         this.selectData = val;
       },
-      thisDate() { //返回当前时间
-        var date = new Date();
-        var month = (date.getMonth() + 1).toString().padStart(2, '0');
-        var day = date.getDate().toString().padStart(2, '0') //使用ES6 padStart(2,'0') 为日期强制两位数，少于两位数前面加0
-
-        return date.getFullYear() + "-" + month + "-" + day + " " + date
-          .getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0') + ":" + date
-          .getSeconds().toString().padStart(2, '0');
-      },
       addDate() { //添加数据     
-        var _this = this;
         this.$http.get(this.id + "Head").then((res) => { //读取列名显示对应的数据项
           var da = {
             add: true
@@ -192,7 +187,7 @@
             } else if (key == "issue") { //默认发布
               da[key] = 1;
             } else if (key == "date") { //默认当前时间
-              da[key] = _this.thisDate()
+              da[key] = thisDate()
             } else {
               da[key] = null;
             }
@@ -222,8 +217,20 @@
         }
       },
       redactOption(op, val) { //置顶、取消置顶、发布、待发布
+        const tiAr = [];
+        let text = '';
+        if (op == 'top' && val) {
+          text = "置顶:"
+        } else if (op == 'top' && !val) {
+          text = "取消置顶："
+        } else if (op == 'issue' && val) {
+          text = "发布："
+        } else if (op == 'issue' && !val) {
+          text = "待发布："
+        }
         if (this.selectHint()) {
           this.selectData.forEach((item) => {
+            tiAr.push(item.title)
             var thDate = this.tableData.find((age) => {
               return age.id == item.id
             });
@@ -231,6 +238,7 @@
             this.loading = true;
             this.$http.put(this.$route.params.id, thDate).then((res) => {
               if (res.status == "200") {
+                oplogInfo(tiAr, text)
                 this.loading = false;
               }
             })
@@ -258,13 +266,16 @@
         }
       },
       deleteDa() { //批量删除
+        const tiAr = [];
         this.selectData.forEach((item) => {
+          tiAr.push(item.title);
           this.$http.delete(this.$route.params.id, {
             params: {
               id: item.id //对应ID删除
             }
           }).then((res) => {
             if (res.status == "200") {
+              oplogInfo(tiAr, '删除内容：')
               this.refreshData(); //刷新数据列表
             }
           })
@@ -279,7 +290,7 @@
   }
 
 </script>
-<style>
+<style scoped>
   .el-row {
     min-height: 20px;
   }

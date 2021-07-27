@@ -114,11 +114,11 @@
                     },
                 ],
                 icoList: { //左侧图标
-                    1: 'el-icon-user',
-                    2: 'el-icon-help',
-                    3: 'el-icon-goods',
-                    4: 'el-icon-tickets',
-                    5: 'el-icon-notebook-2',
+                    1: 'iconfont icon-xiantiao-shouye',
+                    2: 'iconfont icon-31pinpai',
+                    3: 'iconfont icon-huodong',
+                    4: 'iconfont icon-huiyuan_',
+                    5: 'iconfont icon-guanyuwomen',
                 },
                 unfold: false
             }
@@ -132,10 +132,15 @@
     }
 
 </script>
-<style>
+<style scoped>
     .el-menu-vertical-demo:not(.el-menu--collapse) {
         width: 200px;
         min-height: 400px;
+    }
+
+    .iconfont {
+        margin-right: 6px;
+        font-size: 18px;
     }
 
 </style>

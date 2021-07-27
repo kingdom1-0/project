@@ -23,7 +23,7 @@
                     :highlight-current-row="true" style="width: 100%" @selection-change="handleSelectionChange">
                     <el-table-column type="selection" width="100" align="center">
                     </el-table-column>
-                    <el-table-column prop="name" label="用户名" align="center" width="300" sortable :filters="nameDa"
+                    <el-table-column prop="username" label="用户名" align="center" width="300" sortable :filters="nameDa"
                         :filter-method="nameFilter">
                     </el-table-column>
                     <el-table-column prop="text" label="操作信息">
@@ -49,7 +49,7 @@
         props: ['id', 'arg'], //router props传参(取参)
         data() {
             return {
-                axiosTable: 'loginfo', //操作的数据库表名
+                axiosTable: 'oplog', //操作的数据库表名
                 nameDa: [{
                     text: 'admin',
                     value: 'admin'
@@ -93,7 +93,7 @@
                 function seekInto() {
                     if (_this.seek.length > 0) {
                         var da = _this.tableData.filter((item) => {
-                            return item.name.includes(_this.seek)
+                            return item.text.includes(_this.seek)
                         })
                         _this.tableData = da;
                     }
@@ -120,10 +120,6 @@
                 this.$http.get(_this.axiosTable).then(function (res) { //字符串转换布尔值 
                     console.log(res.data)
                     _this.tableData = res.data;
-                    _this.tableData.forEach((item) => {
-                        item.issue = Boolean(parseInt(item.issue));
-                        item.top = Boolean(parseInt(item.top));
-                    })
                     if (seekInto) { //搜索刷新
                         seekInto();
                     }
@@ -170,7 +166,7 @@
     }
 
 </script>
-<style>
+<style scoped>
     .el-row {
         min-height: 20px;
     }

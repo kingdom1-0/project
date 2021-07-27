@@ -124,6 +124,10 @@ const routes = [{
       {
         path: 'opLog',
         component: () => import('../views/manage/opLog.vue'),
+      },
+      {
+        path: 'explain',
+        component: () => import('../views/manage/explain.vue'),
       }
     ],
     beforeEnter: (to, from, next) => {

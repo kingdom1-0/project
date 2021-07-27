@@ -78,7 +78,7 @@
                   active-text-color="#409EFF" router :default-active="activeIndex">
                   <img class="logo" src="/images/logo.png" />
                   <el-submenu index="1">
-                    <template slot="title"><i class="el-icon-chat-dot-square"></i>后台首页</template>
+                    <template slot="title"><i class="iconfont icon-xiantiao-shouye"></i>后台首页</template>
                     <el-menu-item index="/manage/">系统信息</el-menu-item>
                     <el-menu-item><a href="https://uweb.umeng.com/v1/login.php?siteid=1279263413" target="_block"
                         class="el_a">统计流量</a>
@@ -91,15 +91,19 @@
                     <i class="el-icon-chat-dot-square"></i>留言管理
                   </el-menu-item>
                   <el-submenu index="4">
-                    <template slot="title"><i class="el-icon-chat-dot-square"></i>系统设置</template>
+                    <template slot="title"><i class="el-icon-setting"></i>系统设置</template>
                     <el-menu-item index="/manage/logInfo">登陆日志</el-menu-item>
                     <el-menu-item index="/manage/opLog">操作日志</el-menu-item>
                     <el-menu-item index="">角色管理</el-menu-item>
                     <el-menu-item index="">管理员管理</el-menu-item>
                     <el-menu-item index="">SEO设置</el-menu-item>
                   </el-submenu>
-                  <el-menu-item index="">
-                    <i class="el-icon-chat-dot-square"></i>操作说明
+                  <el-menu-item index="/manage/explain">
+                    <i class="iconfont icon-shuoming"></i>操作说明
+                  </el-menu-item>
+                  <el-menu-item>
+                    <a href="https://gitee.com/kingdom10/vue_web" target="_block"><i
+                        class="iconfont icon-wailian"></i>外链</a>
                   </el-menu-item>
                 </el-menu>
               </el-col>
@@ -126,7 +130,10 @@
 </template>
 
 <script>
-  //import axios from 'axios'
+  import {
+    thisDate
+  } from './js/common.js'
+
   export default {
     data() {
       return {
@@ -217,20 +224,11 @@
       }
     },
     methods: {
-      thisDate() { //返回当前时间
-        var date = new Date();
-        var month = (date.getMonth() + 1).toString().padStart(2, '0');
-        var day = date.getDate().toString().padStart(2, '0') //使用ES6 padStart(2,'0') 为日期强制两位数，少于两位数前面加0
-
-        return date.getFullYear() + "-" + month + "-" + day + " " + date
-          .getHours().toString().padStart(2, '0') + ":" + date.getMinutes().toString().padStart(2, '0') + ":" + date
-          .getSeconds().toString().padStart(2, '0');
-      },
       loginfo(n) { //记录登陆数据
         const ip = '192.168.18.186';
         const state = n;
         const name = this.form.username;
-        const date = this.thisDate();
+        const date = thisDate();
         var logDa = {
           state,
           name,
@@ -346,7 +344,7 @@
   }
 
 </script>
-<style>
+<style scoped>
   .el-header {
     background-color: #545c64;
     color: #333;
@@ -471,11 +469,6 @@
     min-width: 1000px;
   }
 
-  .el-submenu__title i,
-  .el-menu-item i {
-    color: #fff;
-  }
-
   .user_te {
     line-height: 40px;
     text-align: right;
@@ -497,6 +490,14 @@
 
   .el-menu {
     transform: all 0.3s ease;
+  }
+
+  .el-header a {
+    padding: 20px 0;
+  }
+
+  i.iconfont {
+    margin-right: 6px;
   }
 
 </style>

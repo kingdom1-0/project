@@ -94,6 +94,9 @@
 
 <script>
     import VueNeditorWrap from 'vue-neditor-wrap'
+    import {
+        oplogInfo //记录操作日志
+    } from '../js/common.js' //调用公共js
     export default {
         components: {
             VueNeditorWrap
@@ -178,10 +181,6 @@
                 this.thData = {};
                 this.$emit("refresh") //刷新数据列表
             },
-            oplogInfo() {
-                //this.$http.put('oplog',{username:})    
-                console.log("kkk")
-            },
             submitForm(formName, add) { //提交表单                
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
@@ -205,7 +204,7 @@
                         }
 
                         if (!add) { //编辑提交
-                            //console.log(this.thData)
+                            oplogInfo(this.thData.title, '编辑内容：');
                             this.$http.put(this.$route.params.id, this.thData).then((res) => { //编辑数据提交
                                 if (res.status == '200') {
                                     this.$message({ //修改成功提示
@@ -213,8 +212,7 @@
                                         type: 'success'
                                     });
                                     this
-                                        .closeCompile(); //关闭编辑页                                           
-                                    this.oplogInfo();
+                                        .closeCompile(); //关闭编辑页  
                                 }
                             })
                         } else { //新增提交
@@ -225,8 +223,8 @@
                                         message: '新增成功',
                                         type: 'success'
                                     });
-                                    this.closeCompile(); //关闭编辑页
-                                    this.oplogInfo();
+                                    oplogInfo(this.thData.title, '新增内容：');
+                                    this.closeCompile(); //关闭编辑页                                    
                                 }
                             })
                         }
@@ -299,7 +297,7 @@
     }
 
 </script>
-<style>
+<style scoped>
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
         border-radius: 6px;

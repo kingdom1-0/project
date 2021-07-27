@@ -181,7 +181,7 @@
     }
 
 </script>
-<style>
+<style scoped>
     .el-row {
         min-height: 20px;
     }
