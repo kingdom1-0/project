@@ -45,7 +45,7 @@
     },
     created() {
       var _this = this;
-      this.$http.get("join").then(function (re) {
+      this.$http.get("joinUs").then(function (re) {
         _this.newList = re.data;
       }).catch(function (err) {
         console.log(err);

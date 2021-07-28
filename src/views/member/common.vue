@@ -33,7 +33,7 @@
                 }, {
                     id: 2,
                     name: '加入会员',
-                    href: '/member/join'
+                    href: '/member/joinUs'
                 }, {
                     id: 3,
                     name: '会员须知',
@@ -55,7 +55,7 @@
             },
             navActive: function () {
                 var href = location.href;
-                if (href.includes("/member/join")) {
+                if (href.includes("/member/joinUs")) {
                     this.active = 1;
                 } else if (href.includes("/member/notice")) {
                     this.active = 2;

@@ -100,7 +100,7 @@
                             location: "/member/"
                         }, {
                             title: "加入会员",
-                            location: "/member/join"
+                            location: "/member/joinUs"
                         },
                         {
                             title: "会员须知",

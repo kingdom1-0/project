@@ -47,5 +47,8 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store, //把 store 的实例注入所有的子组件(this.$store)
-  render: h => h(App)
+  render: h => h(App),
+  mounted() {
+    document.dispatchEvent(new Event('render-event'))
+  },
 }).$mount('#app')

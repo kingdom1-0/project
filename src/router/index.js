@@ -54,8 +54,8 @@ const routes = [{
         component: () => import("../views/member/index.vue")
       },
       {
-        path: 'join',
-        component: () => import("../views/member/join.vue")
+        path: 'joinUs',
+        component: () => import("../views/member/joinUs.vue")
       },
       {
         path: 'notice',
@@ -143,6 +143,7 @@ const routes = [{
 
 const router = new VueRouter({
   linkActiveClass: "active", //定义路由激活类名
+  base: process.env.BASE_URL,
   routes,
   //  scrollBehavior (){//滚动行为
   //    return {x:0,y:0}     

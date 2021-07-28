@@ -41,14 +41,14 @@ app.use(bodyParser.urlencoded({ //表单请求
 }))
 
 //版本号
-var apiLo = "/api/v1/"
+const apiLo = "/api/v1/"
 
 //数据库查询
 const dataArray = [];
-const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'join', 'notice', 'banner', 'login', 'conversion', 'message', 'synopsis', 'traffic', 'attract', 'attract', 'site', 'contact', 'loginfo', 'oplog']; //做个数组封装下简单的get API(对应上面dataArray数据)
+const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'notice', 'banner', 'login', 'conversion', 'message', 'synopsis', 'traffic', 'attract', 'attract', 'site', 'contact', 'loginfo', 'oplog', 'joinUs']; //做个数组封装下简单的get API(对应上面dataArray数据)
 
 /*配置数据库*/
-var sqlConfig = {
+const sqlConfig = {
     host: 'localhost', //主机地址
     user: 'king10',
     password: '@kingdom10',
@@ -79,7 +79,7 @@ reconn();
 
 /* 表数据查询 */
 function getQuery(item) {
-    conn.query('SELECT * FROM bu_' + item, function (err, rows) { //读取数据库
+    conn.query('SELECT * FROM ' + item, function (err, rows) { //读取数据库
         if (err) throw err;
         let data = JSON.parse(JSON.stringify(rows)).sort((a, b) => { //数据排序规则
             a = new Date(a.date).getTime();
@@ -102,19 +102,19 @@ apiArray.forEach(function (item, n) {
     });
 })
 
-var syData = require("./systemData"); //在systemData.js读取系统信息
+const systemInfo = new(require("./systemData")); //在systemData.js读取系统信息
 const {
     Agent
 } = require('http');
 app.get(apiLo + "system", function (req, res) { // 返回系统信息
     res.status(200),
-        res.json(syData);
+        res.json(systemInfo);
 })
 
 /* 列名查询 */
 apiArray.forEach(function (item) {
     app.get(apiLo + item + 'Head', function (req, res) { //建立数据接口
-        conn.query('SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME="bu_' + item + '"', function (err, rows) { //读取数据库
+        conn.query('SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_NAME="' + item + '"', function (err, rows) { //读取数据库
             if (err) {
                 console.log(err.message);
                 return;
@@ -134,7 +134,7 @@ function putData(item) {
         let te = "";
         let idT = "";
         let daAr = [];
-        for (var key in da) { //sql字段拼接
+        for (let key in da) { //sql字段拼接
             if (key == "id") {
                 idT = " id=?"
             } else {
@@ -145,8 +145,8 @@ function putData(item) {
         daAr.push(da.id);
 
         //UPDATE websites SET name = ?,url = ? WHERE Id = ?       daAr   [name,url,id]
-        console.log('UPDATE bu_' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT)
-        conn.query('UPDATE bu_' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT, daAr, function (err) { //修改指定数据
+        console.log('UPDATE ' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT)
+        conn.query('UPDATE ' + item + ' SET ' + te.slice(1) + ' WHERE ' + idT, daAr, function (err) { //修改指定数据
             if (err) {
                 console.log(err.message);
                 return;
@@ -177,7 +177,7 @@ function addData(item) {
         } else {
             thisId = 1;
         }
-        for (var key in da) { //sql字段拼接
+        for (let key in da) { //sql字段拼接
             if (key == "id") {
                 idT = " id"
             } else {
@@ -192,9 +192,9 @@ function addData(item) {
         te = idT + te;
         te2 = thisId + te2;
         //'INSERT INTO websites(Id,name,url,alexa,country) VALUES(0,?,?,?,?)'
-        console.log('INSERT INTO bu_' + item + '(' + te + ' )  VALUES(' + te2 + ')')
+        console.log('INSERT INTO ' + item + '(' + te + ' )  VALUES(' + te2 + ')')
         console.log(daAr)
-        conn.query('INSERT INTO bu_' + item + '(' + te + ' )  VALUES(' + te2 + ')', daAr, function (err) { //修改指定数据
+        conn.query('INSERT INTO ' + item + '(' + te + ' )  VALUES(' + te2 + ')', daAr, function (err) { //修改指定数据
             if (err) {
                 console.log(err.message);
                 return;
@@ -211,8 +211,8 @@ function deleteData(item) {
         const da = req.query; //请求数据
 
         //DELETE FROM websites where id=6
-        console.log('DELETE FROM bu_' + item + ' WHERE id= ' + da.id)
-        conn.query('DELETE FROM bu_' + item + ' WHERE id= ' + da.id, function (err) { //修改指定数据
+        console.log('DELETE FROM ' + item + ' WHERE id= ' + da.id)
+        conn.query('DELETE FROM ' + item + ' WHERE id= ' + da.id, function (err) { //修改指定数据
             if (err) {
                 console.log(err.message);
                 return;
@@ -247,8 +247,8 @@ app.post(apiLo + 'login', function (req, res) { //建立数据接口
         对比数据返回登陆结果
     */
 
-    var logDa = dataArray[apiArray.indexOf("login")] //数据库用户数据
-    var logAr = [
+    const logDa = dataArray[apiArray.indexOf("login")] //数据库用户数据
+    const logAr = [
         [], //记录登录成功与否（成功存1，不成功存0）
         [], //记录用户名是否存在
         [] //记录密码是否正确
@@ -304,8 +304,8 @@ app.put(apiLo + 'login', function (req, res) { //建立数据接口
     */
     dataArray[apiArray.indexOf("login")].forEach(function (item) {
         if (reqBody.username == item.username && reqBody.password == item.password) {
-            var modSql = 'UPDATE bu_login SET password = ? WHERE username = ?';
-            var modSqlParams = [reqBody.setPassword, reqBody.username];
+            const modSql = 'UPDATE login SET password = ? WHERE username = ?';
+            const modSqlParams = [reqBody.setPassword, reqBody.username];
             conn.query(modSql, modSqlParams, function (err) { //修改指定用户密码
                 if (err) {
                     console.log(err.message);
@@ -337,8 +337,8 @@ app.put(apiLo + 'login', function (req, res) { //建立数据接口
 let response;
 app.post(apiLo + 'file_upload', multipartMiddleware, function (req, res) { //文件上传
     console.log(req.files.file); //上传文件信息
-    var r = new Date().getTime(); //定文件唯一路径
-    var des_file = "/serves/images/" + r + req.files.file.originalFilename; //文件存放相对路径
+    const r = new Date().getTime(); //定文件唯一路径
+    const des_file = "/serves/images/" + r + req.files.file.originalFilename; //文件存放相对路径
     fs.readFile(req.files.file.path, function (err, data) {
         fs.writeFile(__dirname + des_file, data, function (err) { //_dirname （写入需绝对路径，把相对路径转换成绝对路径）
             if (err) {
@@ -356,7 +356,7 @@ app.post(apiLo + 'file_upload', multipartMiddleware, function (req, res) { //文
 })
 
 /* neditor编辑器 */
-var buf = new Buffer.alloc(3000);
+let buf = new Buffer.alloc(3000);
 fs.open(__dirname + '/ueConfig.json', 'r+', function (err, fd) { //打开ueditor配置文件
     if (err) {
         return console.error(err);
@@ -368,7 +368,7 @@ fs.open(__dirname + '/ueConfig.json', 'r+', function (err, fd) { //打开ueditor
         }
         //console.log(bytes + "  字节被读取");
         app.get(apiLo + 'ueditor', function (req, res) { //文件上传          
-            var daOb = JSON.parse(buf.slice(0, bytes).toString())
+            const daOb = JSON.parse(buf.slice(0, bytes).toString())
             res.jsonp(daOb); //传送JSONP响应
         })
     });
@@ -380,8 +380,8 @@ app.post(apiLo + 'ueditor', multipartMiddleware, function (req, res) { //文件�
     //if (action == 'uploadimage' || action == 'uploadvideo' || action == 'uploadfile') { //图片/视频/附件上传判断  
     console.log(req.is())
     console.log(req.files.upfile)
-    var r = new Date().getTime(); //定文件唯一路径
-    var des_file = "/serves/images/" + r + req.files.upfile.originalFilename; //文件存放相对路径
+    const r = new Date().getTime(); //定文件唯一路径
+    const des_file = "/serves/images/" + r + req.files.upfile.originalFilename; //文件存放相对路径
     fs.readFile(req.files.upfile.path, function (err, data) {
         fs.writeFile(__dirname + des_file, data, function (err) { //_dirname （写入需绝对路径，把相对路径转换成绝对路径）
             if (err) {
