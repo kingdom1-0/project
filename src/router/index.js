@@ -128,7 +128,12 @@ const routes = [{
       {
         path: 'explain',
         component: () => import('../views/manage/explain.vue'),
+      },
+      {
+        path: 'role',
+        component: () => import('../views/manage/role.vue'),
       }
+      
     ],
     beforeEnter: (to, from, next) => {
       document.getElementsByTagName("html")[0].className = "manage";

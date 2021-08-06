@@ -28,8 +28,8 @@
             }
         },
         mounted() {
-            this.$http.get("traffic").then((res) => {
-                this.da = res.data[0];
+            this.$http.get('traffic').then((res) => {
+                this.da = res.data[0]
             })
         }
     }

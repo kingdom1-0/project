@@ -20,14 +20,14 @@
     export default {
         methods: {
             closeAlert: function () {
-                this.$store.commit('showNews', { //解发vuex突变
+                this.$store.commit('showNews', { // 解发vuex突变
                     on: false
                 })
             }
         },
         computed: {
             newsVal() {
-                return this.$store.state.newsData; //获取vuex数据（通过计算属性缓存，实时响应）
+                return this.$store.state.newsData // 获取vuex数据（通过计算属性缓存，实时响应）
             }
         }
     }

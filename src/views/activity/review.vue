@@ -67,7 +67,7 @@
         },
         newList: [],
         calendar: {
-          date: ""
+          date: ''
         },
         bo: false,
         value: new Date()
@@ -75,22 +75,22 @@
     },
     methods: {
       showBlock(i) {
-        this.$store.commit("showNews", { //vuex
+        this.$store.commit('showNews', { // vuex
           on: true,
           data: this.newList[i]
         })
       }
     },
     mounted() {
-      let _this = this;
-      this.$http.get("news").then((res) => {
-        _this.newList = res.data;
+      let _this = this
+      this.$http.get('news').then((res) => {
+        _this.newList = res.data
         console.log(res.data)
       })
     },
-    destroyed: function () { //实例销毁后调用
+    destroyed: function () { // 实例销毁后调用
       this.$nextTick(function () {
-        this.bo = false;
+        this.bo = false
       })
     }
   }

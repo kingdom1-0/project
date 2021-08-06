@@ -39,29 +39,29 @@
           }
         },
         info: null,
-        newList: [],
+        newList: []
       }
     },
     methods: {
       showBlock(i) {
-        this.$store.commit("showNews", { //vuex
+        this.$store.commit('showNews', { // vuex
           on: true,
           data: this.newList[i]
         })
       },
       initDate() {
-        let _this = this;
-        var id = parseInt(location.href.split("id=")[1]) || 0;
-        var href = decodeURI(location.href); //中文解码
+        let _this = this
+        var id = parseInt(location.href.split('id=')[1]) || 0
+        var href = decodeURI(location.href) // 中文解码
 
         async function getData() {
-          var news = await _this.$http.get('news');
-          return news;
+          var news = await _this.$http.get('news')
+          return news
         }
         getData().then(function (res) {
-          _this.newList = res.data;
+          _this.newList = res.data
           if (href.includes('t=')) {
-            var te = href.split("t=")[1]
+            var te = href.split('t=')[1]
             console.log(te)
             _this.newList = res.data.filter(item => {
               return item.title.includes(te)
@@ -69,19 +69,19 @@
           }
           if (id > 0) {
             var n = _this.newList.findIndex((item) => {
-              return item.id == id;
+              return item.id === id
             })
-            _this.showBlock(n);
+            _this.showBlock(n)
           }
         })
       }
     },
     mounted() {
-      this.initDate();
+      this.initDate()
     },
     watch: {
       $route() {
-        this.initDate();
+        this.initDate()
       }
     }
   }

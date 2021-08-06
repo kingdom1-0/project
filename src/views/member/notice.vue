@@ -38,16 +38,16 @@
       }
     },
     methods: {
-      showBlock() { //显示新闻组件
+      showBlock() { // 显示新闻组件
         this.$store.commit('showBlock')
       }
     },
     created() {
-      var _this = this;
-      this.$http.get("notice").then(function (re) {
-        _this.newList = re.data;
+      var _this = this
+      this.$http.get('notice').then(function (re) {
+        _this.newList = re.data
       }).catch(function (err) {
-        console.log(err);
+        console.log(err)
       })
     }
   }

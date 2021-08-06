@@ -36,7 +36,7 @@
       }
     },
     mounted: function () {
-      this.$http.get("synopsis").then((res) => {
+      this.$http.get('synopsis').then((res) => {
         this.da = res.data[0]
       })
     }

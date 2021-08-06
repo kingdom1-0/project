@@ -5,7 +5,7 @@
 </template>
 <script>
     export default {
-        props: ['id', 'arg'], //router props传参(取参)
+        props: ['id', 'arg'], // router props传参(取参)
         data() {
             return {
 

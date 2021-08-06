@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import alertContent from "../components/alert.vue"
+    import alertContent from '../components/alert.vue'
     export default {
         data() {
             return {
@@ -45,38 +45,37 @@
         },
         methods: {
             toBrand: function () {
-                //this.$router.push({ path: '/business/brand',query:{on:"2"}})  //编程式导航
+                // this.$router.push({ path: '/business/brand',query:{on:"2"}})  //编程式导航
                 this.$router.push({
                     name: 'brand',
                     params: {
-                        on: "2"
+                        on: '2'
                     }
-                }) //编程式动态导 
-
+                }) // 编程式动态导
             },
             showDa: function (val) {
-                this.shNum = val;
+                this.shNum = val
             },
             navActive: function () {
-                var href = location.href;
-                if (href.includes("/business/brand")) {
-                    this.active = 1;
-                } else if (href.includes("/business/merchant")) {
-                    this.active = 2;
+                var href = location.href
+                if (href.includes('/business/brand')) {
+                    this.active = 1
+                } else if (href.includes('/business/merchant')) {
+                    this.active = 2
                 } else {
-                    this.active = 0;
+                    this.active = 0
                 }
             }
         },
         created() {
-            this.navActive();
+            this.navActive()
         },
         components: {
             alertContent
         },
         watch: {
             $route() {
-                this.navActive();
+                this.navActive()
             }
         }
     }

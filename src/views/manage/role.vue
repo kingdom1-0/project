@@ -1,6 +1,5 @@
 <template>
   <el-container class="man_content">
-    <ma-nav></ma-nav>
     <!-- 数据列表 -->
     <el-main v-loading="loading">
       <el-row></el-row>
@@ -13,29 +12,9 @@
             <el-button type="primary" @click="redact(selectData)"><span class="iconfont icon-bianji"></span>编辑
             </el-button>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="数据在页面最先显示" placement="bottom">
-            <el-button type="success" @click="redactOption('top',true)"><span class="iconfont icon-zhiding"></span>置顶
-            </el-button>
-          </el-tooltip>
-          <el-button type="success" @click="redactOption('top',false)"><span
-              class="iconfont icon-quxiaozhiding"></span>取消置顶
-          </el-button>
-          <el-tooltip class="item" effect="dark" content="只有发布的数据，在会显示在网站" placement="bottom">
-            <el-button type="success" @click="redactOption('issue',true)"><span class="iconfont icon-fabu"></span>发布
-            </el-button>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="内容不在网站显示，但存储于数据库" placement="bottom">
-            <el-button type="success" @click="redactOption('issue',false)"><span
-                class="iconfont icon-daifabu"></span>待发布
-            </el-button>
-          </el-tooltip>
           <el-tooltip class="item" effect="dark" content="删除的数据无法找回，如不明确删除，建议待发布" placement="bottom">
             <el-button type="danger" @click="openDelete()"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
           </el-tooltip>
-        </div>
-        <div class="seek_block">
-          <el-input v-model="seek" class="seek_input" @change="seekFun()"></el-input>
-          <el-button type="success" @click="seekFun()"><span class="iconfont icon-chaxun"></span>查询</el-button>
         </div>
         <div class="clear"></div>
       </el-row>
@@ -46,19 +25,13 @@
           @row-dblclick="redact">
           <el-table-column type="selection" width="100" align="center">
           </el-table-column>
-          <el-table-column prop="title" label="标题" show-overflow-tooltip align="left" sortable>
+          <el-table-column prop="username" label="角色名" show-overflow-tooltip align="left" sortable>
           </el-table-column>
-          <el-table-column prop="sort" label="排序" width="120" align="center" sortable>
+          <el-table-column prop="sort" label="菜单权限" align="center" sortable>
           </el-table-column>
-          <el-table-column prop="issue" label="发布" width="120" align="center" sortable
-            :filters="[{text: '已发布', value: 1}, {text: '待发布', value: 0}]" :filter-method="issueFilter">
-            <span class="iconfont el-icon-check" slot-scope="scope" v-show="scope.row.issue"></span>
+          <el-table-column prop="sort" label="内容管理权限" align="center" sortable>
           </el-table-column>
-          <el-table-column prop="top" label="置顶" width="120" align="center" sortable
-            :filters="[{text: '置顶', value: 1}, {text: '末置顶', value: 0}]" :filter-method="topFilter">
-            <span class="iconfont el-icon-check" slot-scope="scope" v-show="scope.row.top"></span>
-          </el-table-column>
-          <el-table-column prop="date" label="创建时间" width="200" align="center" sortable>
+          <el-table-column prop="date" label="创建时间" align="center" sortable>
             <template slot-scope="scope">{{ scope.row.date }}</template>
           </el-table-column>
         </el-table>
@@ -76,7 +49,6 @@
   </el-container>
 </template>
 <script>
-  import maNav from './components/nav.vue'
   import maCompile from './components/compile.vue'
   import {
     thisDate, // 返回当前时间
@@ -85,13 +57,13 @@
 
   export default {
     components: {
-      maNav,
       maCompile
     },
     props: ['id', 'arg'], // router props传参(取参)
     data() {
       return {
         seek: '',
+        table: 'login', // 数据库表名
         thisPa: 1, // 当前页
         loading: false, // 加载中
         input: '', // 标题搜索
@@ -120,27 +92,8 @@
           return true
         }
       },
-      seekFun() { // 搜索
-        var _this = this
-
-        function seekInto() {
-          if (_this.seek.length > 0) {
-            var da = _this.tableData.filter((item) => {
-              return item.title.includes(_this.seek)
-            })
-            _this.tableData = da
-          }
-        }
-        this.refreshData(seekInto) // 刷新搜索数据
-      },
       pageFilter(val) { // 分页操作
         this.thisPa = val
-      },
-      issueFilter(value, row) { // 发布筛选
-        return row.issue == value
-      },
-      topFilter(value, row) { // 置顶筛选
-        return row.top == value
       },
       thisTableFun() { // 列表数据分页拆分
         this.thisTable = []
@@ -151,7 +104,7 @@
       },
       refreshData: function (seekInto) { // 刷新列表数据
         var _this = this
-        this.$http.get(this.id).then(function (res) { // 字符串转换布尔值
+        this.$http.get(this.table).then(function (res) { // 字符串转换布尔值
           _this.tableData = res.data
           _this.tableData.forEach((item) => {
             item.issue = Boolean(parseInt(item.issue))
@@ -172,7 +125,7 @@
         this.selectData = val
       },
       addDate() { // 添加数据
-        this.$http.get(this.id + 'Head').then((res) => { // 读取列名显示对应的数据项
+        this.$http.get(this.table + 'Head').then((res) => { // 读取列名显示对应的数据项
           var da = {
             add: true
           }
@@ -214,35 +167,6 @@
           }
         }
       },
-      redactOption(op, val) { // 置顶、取消置顶、发布、待发布
-        const tiAr = []
-        let text = ''
-        if (op == 'top' && val) {
-          text = '置顶:'
-        } else if (op == 'top' && !val) {
-          text = '取消置顶：'
-        } else if (op == 'issue' && val) {
-          text = '发布：'
-        } else if (op == 'issue' && !val) {
-          text = '待发布：'
-        }
-        if (this.selectHint()) {
-          this.selectData.forEach((item) => {
-            tiAr.push(item.title)
-            var thDate = this.tableData.find((age) => {
-              return age.id == item.id
-            })
-            thDate[op] = val
-            this.loading = true
-            this.$http.put(this.$route.params.id, thDate).then((res) => {
-              if (res.status == '200') {
-                oplogInfo(tiAr, text)
-                this.loading = false
-              }
-            })
-          })
-        }
-      },
       openDelete() { // 提示删除
         if (this.selectHint()) {
           this.$confirm('删除的数据无法找回，是否删除？', '提示', {
@@ -266,8 +190,8 @@
       deleteDa() { // 批量删除
         const tiAr = []
         this.selectData.forEach((item) => {
-          tiAr.push(item.title)
-          this.$http.delete(this.$route.params.id, {
+          tiAr.push(item.username)
+          this.$http.delete(this.table, {
             params: {
               id: item.id // 对应ID删除
             }

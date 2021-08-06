@@ -49,35 +49,35 @@
 </template>
 
 <script>
-    import bus from "../event/index"
+    import bus from '../event/index'
     export default {
         data() {
             return {
-                sort: '全部分类', //分类筛选(v-moedl)
-                fl: -1, //楼层
-                le: "全部", //字母
-                enDa: ["全部", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-                    "S", "T", "U", "V", "W", "X", "Y", "Z" //字母
+                sort: '全部分类', // 分类筛选(v-moedl)
+                fl: -1, // 楼层
+                le: '全部', // 字母
+                enDa: ['全部', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+                    'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' // 字母
                 ],
-                sortDa: [], //分类数据
-                flDa: [], //楼层数据
-                store: [] //店铺数据
+                sortDa: [], // 分类数据
+                flDa: [], // 楼层数据
+                store: [] // 店铺数据
             }
         },
         methods: {
-            floorFilters: function (i) { //楼层筛选
-                this.fl = i;
+            floorFilters: function (i) { // 楼层筛选
+                this.fl = i
             },
-            leFilters: function (i) { //楼层筛选
-                this.le = i;
+            leFilters: function (i) { // 楼层筛选
+                this.le = i
             },
-            storeFilers: function (s) { //店铺筛选
-                var bo = (s.class.indexOf(this.sort) >= 0 || this.sort == "全部分类") && (s.pId - 1 == this.fl || this
-                        .fl == -1) &&
-                    (s.le == this.le || this.le == "全部")
+            storeFilers: function (s) { // 店铺筛选
+                var bo = (s.class.indexOf(this.sort) >= 0 || this.sort === '全部分类') && (s.pId - 1 === this.fl || this
+                        .fl === -1)
+                    && (s.le === this.le || this.le === '全部')
                 return bo
             },
-            showStore(s) { //显示店铺详细信息
+            showStore(s) { // 显示店铺详细信息
                 console.log(s)
                 bus.$emit('data', {
                     showDa: true,
@@ -87,35 +87,33 @@
                     lo: s.store,
                     sort: s.calss,
                     text: s.value,
-                    images: s.images.split(",")
+                    images: s.images.split(',')
                 })
             }
         },
         mounted() {
-            let _this = this;
-            _this.$http.get("floor").then(function (re) { //楼层
-                _this.flDa = re.data;
+            let _this = this
+            _this.$http.get('floor').then(function (re) { // 楼层
+                _this.flDa = re.data
             })
 
-            _this.$http.get("sort").then(function (re) { //分类
-                _this.sortDa = re.data;
+            _this.$http.get('sort').then(function (re) { // 分类
+                _this.sortDa = re.data
             })
             async function getData() {
-                var store = await _this.$http.get("store");
+                var store = await _this.$http.get('store')
                 return store
             }
 
-            getData().then((re) => { //店铺
-                _this.store = re.data;
-                var id = parseInt(location.href.split("id=")[1]) || 0;
-                if (location.href.includes("id=")) {
+            getData().then((re) => { // 店铺
+                _this.store = re.data
+                var id = parseInt(location.href.split('id=')[1]) || 0
+                if (location.href.includes('id=')) {
                     _this.showStore(_this.store.find((item) => {
-                        return item.id == id;
+                        return item.id === id
                     }))
                 }
             })
-
-
         }
     }
 

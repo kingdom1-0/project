@@ -98,7 +98,6 @@ acronym {
 a {
     text-decoration: none;
     outline: none;
-    blr: expression(this.onFocus=this.blur());
     color: #666;
     /* display: block; */
 }

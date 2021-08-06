@@ -41,7 +41,7 @@
 
 </template>
 <script>
-    import bus from "../event/index" //事件总线
+    import bus from '../event/index' // 事件总线
     export default {
         data() {
             return {
@@ -58,23 +58,23 @@
                     }
                 },
                 store: {
-                    id: "",
-                    logo: "",
-                    ti: "",
-                    lo: "",
-                    sort: "",
+                    id: '',
+                    logo: '',
+                    ti: '',
+                    lo: '',
+                    sort: '',
                     text: '',
                     images: []
                 }
             }
         },
         mounted() {
-            //事件总线数据接收
+            // 事件总线数据接收
             bus.$on('data', val => {
-                this.sh = val.showDa; //显示开送
-                this.store = val //弹出块相关数据
+                this.sh = val.showDa // 显示开送
+                this.store = val // 弹出块相关数据
                 console.log(this.store)
-                if (this.store.images.length < 2) { //多图少于2个时隐藏点点
+                if (this.store.images.length < 2) { // 多图少于2个时隐藏点点
                     this.show = false
                 } else {
                     this.show = true
@@ -83,7 +83,7 @@
         },
         methods: {
             closeAlert: function () {
-                this.sh = false;
+                this.sh = false
             }
         }
     }

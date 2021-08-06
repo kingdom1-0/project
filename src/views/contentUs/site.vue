@@ -30,9 +30,9 @@
       }
     },
     mounted() {
-      this.$http.get("site").then((res) => {
-        this.da = res.data[0];
-        this.da.images = this.da.images.split(",")
+      this.$http.get('site').then((res) => {
+        this.da = res.data[0]
+        this.da.images = this.da.images.split(',')
         console.log(this.da)
       })
     }

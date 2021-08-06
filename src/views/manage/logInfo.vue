@@ -49,26 +49,26 @@
 </template>
 <script>
     export default {
-        props: ['id', 'arg'], //router props传参(取参)
+        props: ['id', 'arg'], // router props传参(取参)
         data() {
             return {
-                axiosTable: 'loginfo', //操作的数据库表名
+                axiosTable: 'loginfo', // 操作的数据库表名
                 nameDa: [],
-                seek: "", //搜索框值
-                thisPa: 1, //当前页
-                loading: false, //加载中        
-                input: '', //标题搜索
-                tableData: [{}], //列表的数据
-                thisTable: [], //分页列表的数据
-                valTable: [], //当前显示列表的数据 
-                selectData: [], //多选选中的数据
-                dialogVisible: false, //编辑页开关
-                alData: {} //传入编辑页数据
+                seek: '', // 搜索框值
+                thisPa: 1, // 当前页
+                loading: false, // 加载中
+                input: '', // 标题搜索
+                tableData: [{}], // 列表的数据
+                thisTable: [], // 分页列表的数据
+                valTable: [], // 当前显示列表的数据
+                selectData: [], // 多选选中的数据
+                dialogVisible: false, // 编辑页开关
+                alData: {} // 传入编辑页数据
             }
         },
         created() {
-            this.refreshData(); //get对应id参数数据
-            this.$http.get("login").then((res) => {
+            this.refreshData() // get对应id参数数据
+            this.$http.get('login').then((res) => {
                 console.log(res.data)
                 res.data.forEach((item) => {
                     this.nameDa.push({
@@ -76,75 +76,71 @@
                         value: item.username
                     })
                 })
-
-
             })
         },
         methods: {
-            selectHint() { //最少勾选一条数据
+            selectHint() { // 最少勾选一条数据
                 if (this.selectData.length < 1) {
                     this.$message({
                         message: '请勾选数据！',
                         type: 'error'
                     })
-                    return false;
+                    return false
                 } else {
                     return true
                 }
             },
-            handleSelectionChange(val) { //表单change事件
-                this.selectData = val;
+            handleSelectionChange(val) { // 表单change事件
+                this.selectData = val
             },
-            seekFun() { //搜索
-                var _this = this;
+            seekFun() { // 搜索
+                var _this = this
 
                 function seekInto() {
                     if (_this.seek.length > 0) {
                         var da = _this.tableData.filter((item) => {
                             return item.name.includes(_this.seek)
                         })
-                        _this.tableData = da;
+                        _this.tableData = da
                     }
                 }
-                this.refreshData(seekInto); //刷新搜索数据
+                this.refreshData(seekInto) // 刷新搜索数据
             },
-            stateFilter(value, row) { //状态筛选
-                return row.state == value;
+            stateFilter(value, row) { // 状态筛选
+                return row.state == value
             },
-            nameFilter(value, row) { //置顶筛选
-                //console.log(row.name == value)
-                return row.name == value;
+            nameFilter(value, row) { // 置顶筛选
+                // console.log(row.name == value)
+                return row.name == value
             },
-            pageFilter(val) { //分页操作
+            pageFilter(val) { // 分页操作
                 this.thisPa = val
             },
-            thisTableFun() { //列表数据分页拆分
-
-                this.thisTable = [];
+            thisTableFun() { // 列表数据分页拆分
+                this.thisTable = []
                 for (var i = 0; i < Math.ceil(this.tableData.length / 10); i++) {
-                    this.thisTable.push(this.tableData.slice(10 * i, 10 * i + 10));
+                    this.thisTable.push(this.tableData.slice(10 * i, 10 * i + 10))
                 }
-                //console.log(this.thisTable)
+                // console.log(this.thisTable)
             },
-            refreshData: function (seekInto) { //刷新列表数据
-                var _this = this;
-                this.$http.get(_this.axiosTable).then(function (res) { //字符串转换布尔值 
-                    //console.log(res.data)
-                    _this.tableData = res.data;
+            refreshData: function (seekInto) { // 刷新列表数据
+                var _this = this
+                this.$http.get(_this.axiosTable).then(function (res) { // 字符串转换布尔值
+                    // console.log(res.data)
+                    _this.tableData = res.data
                     _this.tableData.forEach((item) => {
-                        item.issue = Boolean(parseInt(item.issue));
-                        item.top = Boolean(parseInt(item.top));
+                        item.issue = Boolean(parseInt(item.issue))
+                        item.top = Boolean(parseInt(item.top))
                     })
-                    if (seekInto) { //搜索刷新
-                        seekInto();
+                    if (seekInto) { // 搜索刷新
+                        seekInto()
                     }
-                    _this.tableData.sort(); //响应式数据          
-                    _this.thisTableFun(); //列表数据分页拆分
-                    _this.thisPa = 1; //返回第一分页
-
+                    _this.tableData.sort() // 响应式数据
+                    _this.thisTableFun() // 列表数据分页拆分
+                    _this.thisPa = 1 // 返回第一分页
                 })
             },
-            openDelete() { //提示删除
+            openDelete() { // 提示删除
                 if (this.selectHint()) {
                     this.$confirm('删除的数据无法找回，是否删除？', '提示', {
                         confirmButtonText: '确定',
@@ -154,25 +150,25 @@
                         this.$message({
                             type: 'success',
                             message: '删除成功!'
-                        });
-                        this.deleteDa();
+                        })
+                        this.deleteDa()
                     }).catch(() => {
                         this.$message({
                             type: 'info',
                             message: '已取消删除'
-                        });
-                    });
+                        })
+                    })
                 }
             },
-            deleteDa() { //批量删除
+            deleteDa() { // 批量删除
                 this.selectData.forEach((item) => {
                     this.$http.delete(this.axiosTable, {
                         params: {
-                            id: item.id //对应ID删除
+                            id: item.id // 对应ID删除
                         }
                     }).then((res) => {
-                        if (res.status == "200") {
-                            this.refreshData(); //刷新数据列表
+                        if (res.status == '200') {
+                            this.refreshData() // 刷新数据列表
                         }
                     })
                 })

@@ -31,25 +31,25 @@
           }
         },
         newList: [{
-          date: ""
+          date: ''
         }]
       }
     },
     methods: {
-      showBlock(i) { //显示新闻组件
-        this.$store.commit("showNews", { //vuex
+      showBlock(i) { // 显示新闻组件
+        this.$store.commit('showNews', { // vuex
           on: true,
           data: this.newList[i]
         })
       }
     },
     created() {
-      var _this = this;
-      this.$http.get("active").then(function (re) {
-        _this.newList = re.data;
+      var _this = this
+      this.$http.get('active').then(function (re) {
+        _this.newList = re.data
         console.log(re.data)
       }).catch(function (err) {
-        console.log(err);
+        console.log(err)
       })
     }
 

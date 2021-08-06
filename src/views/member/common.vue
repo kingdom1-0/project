@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import newsContent from "../components/news.vue" //引入新闻弹出组件
+    import newsContent from '../components/news.vue' // 引入新闻弹出组件
     export default {
         data() {
             return {
@@ -50,33 +50,33 @@
             }
         },
         methods: {
-            showDa: function (val) { //显示弹出层
-                this.shNum = val;
+            showDa: function (val) { // 显示弹出层
+                this.shNum = val
             },
             navActive: function () {
-                var href = location.href;
-                if (href.includes("/member/joinUs")) {
-                    this.active = 1;
-                } else if (href.includes("/member/notice")) {
-                    this.active = 2;
-                } else if (href.includes("/member/conversion")) {
-                    this.active = 3;
-                } else if (href.includes("/member/message")) {
-                    this.active = 4;
+                var href = location.href
+                if (href.includes('/member/joinUs')) {
+                    this.active = 1
+                } else if (href.includes('/member/notice')) {
+                    this.active = 2
+                } else if (href.includes('/member/conversion')) {
+                    this.active = 3
+                } else if (href.includes('/member/message')) {
+                    this.active = 4
                 } else {
-                    this.active = 0;
+                    this.active = 0
                 }
             }
         },
-        components: { //调用组件
+        components: { // 调用组件
             newsContent
         },
         created() {
-            this.navActive();
+            this.navActive()
         },
         watch: {
             $route() {
-                this.navActive();
+                this.navActive()
             }
         }
     }

@@ -25,8 +25,8 @@
       }
     },
     mounted() {
-      this.$http.get("attract").then((res) => {
-        this.da = res.data[0];
+      this.$http.get('attract').then((res) => {
+        this.da = res.data[0]
       })
     }
   }

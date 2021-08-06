@@ -24,7 +24,7 @@
   </div>
 </template>
 <script>
-  import bus from "../event/index" //事件总线
+  import bus from '../event/index' // 事件总线
   export default {
     data() {
       return {
@@ -39,7 +39,7 @@
       }
     },
     methods: {
-      showBlock(s) { //弹出店铺详情
+      showBlock(s) { // 弹出店铺详情
         bus.$emit('data', {
           showDa: true,
           id: s.id,
@@ -48,14 +48,14 @@
           lo: s.store,
           sort: s.class,
           text: s.value,
-          images: s.images.split(",")
+          images: s.images.split(',')
         })
       }
     },
     created() {
-      let _this = this;
-      this.$http.get("store").then(function (re) {
-        _this.store = re.data;
+      let _this = this
+      this.$http.get('store').then(function (re) {
+        _this.store = re.data
         console.log(re.data)
       }).catch(function (err) {
         console.log(err)

@@ -9,11 +9,11 @@
   export default {
     data() {
       return {
-        img: ""
+        img: ''
       }
     },
     created: function () {
-      this.$http.get("conversion").then((res) => {
+      this.$http.get('conversion').then((res) => {
         console.log(res.data)
         if (res.data.length > 0) {
           this.img = res.data[0].img

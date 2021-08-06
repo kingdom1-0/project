@@ -146,41 +146,40 @@
     </div>
 </template>
 
-
 <script>
-    import imagesLoaded from 'vue-images-loaded' //调用vue-images-loaded
-    import $ from "jquery"
+    import imagesLoaded from 'vue-images-loaded' // 调用vue-images-loaded
+    import $ from 'jquery'
 
     export default {
         data() {
             return {
-                banner: [], //banner图
-                brand: [{ //品牌索引
-                        bgImg: "/images/2_1.png",
-                        ti: "零售",
-                        eTi: "retail",
-                        more: "更多购物",
-                        moHref: "/business",
+                banner: [], // banner图
+                brand: [{ // 品牌索引
+                        bgImg: '/images/2_1.png',
+                        ti: '零售',
+                        eTi: 'retail',
+                        more: '更多购物',
+                        moHref: '/business',
                         ul: []
                     },
                     {
-                        bgImg: "/images/2_2.jpg",
-                        ti: "餐饮",
-                        eTi: "Restaurant",
-                        more: "更多美食",
-                        moHref: "/business"
+                        bgImg: '/images/2_2.jpg',
+                        ti: '餐饮',
+                        eTi: 'Restaurant',
+                        more: '更多美食',
+                        moHref: '/business'
                     },
                     {
-                        bgImg: "/images/2_3.jpg",
-                        ti: "娱乐",
-                        eTi: "entertainment",
-                        more: "更多娱乐",
-                        moHref: "/business"
+                        bgImg: '/images/2_3.jpg',
+                        ti: '娱乐',
+                        eTi: 'entertainment',
+                        more: '更多娱乐',
+                        moHref: '/business'
                     }
                 ],
                 store: [],
-                news: [], //最新资讯
-                swiperOptionh: {}, //banner
+                news: [], // 最新资讯
+                swiperOptionh: {}, // banner
                 swiperOptionv: {
                     effect: 'slide',
                     speed: 800,
@@ -195,7 +194,7 @@
                 marginTop: 250,
                 da: 0,
                 foBo: false,
-                moNum: 0 //上下移动的值            
+                moNum: 0 // 上下移动的值
             }
         },
         props: {
@@ -208,88 +207,90 @@
             imagesLoaded
         },
         watch: {
-            clDa: function () { //关闭页尾
+            clDa: function () { // 关闭页尾
                 this.foBo = this.clDa
             }
         },
         methods: {
-            newsCenter: function () { //新闻居中
-                this.marginTop = document.getElementsByClassName("indD_conBlock")[0].clientHeight / 2;
+            newsCenter: function () { // 新闻居中
+                this.marginTop = document.getElementsByClassName('indD_conBlock')[0].clientHeight / 2
             },
-            imageProgress(instance, image) { //判断images加载完成
-                image.isLoaded ? 'loaded' : 'broken';
+            imageProgress(instance, image) { // 判断images加载完成
+                image.isLoaded ? 'loaded' : 'broken'
                 this.newsCenter()
             },
             showFooter: function (e) {
-                if (new Date().getTime() - this.da > 500) { //滚轮操作判断
-                    this.da = new Date().getTime();
-                    var delta = -e.wheelDelta || e.detail; //firefox使用detail:下3上-3,其他浏览器使用wheelDelta:下-120上120//下滚
+                if (new Date().getTime() - this.da > 500) { // 滚轮操作判断
+                    this.da = new Date().getTime()
+                    var delta = -e.wheelDelta || e.detail // firefox使用detail:下3上-3,其他浏览器使用wheelDelta:下-120上120//下滚
                     if (delta > 0) {
-                        this.foBo = true;
+                        this.foBo = true
                     } else {
-                        this.foBo = false;
+                        this.foBo = false
                     }
-                    this.$emit("footerDa", this.foBo); //页尾显示参数
+                    this.$emit('footerDa', this.foBo) // 页尾显示参数
                 }
             },
             touMove: function (e) {
-                this.moNum = -e.clientY * 1.1;
+                this.moNum = -e.clientY * 1.1
             },
             oddBack: function (n) {
-                if (n % 2 == 0) {
+                if (n % 2 === 0) {
                     return this.moNum
                 }
             }
         },
         created() {
-            const _this = this;
+            const _this = this
 
-            this.$http.get('banner').then(function (res) { //banner    
+            this.$http.get('banner').then(function (res) { // banner
                 _this.banner = res.data
             }).catch(function (error) {
                 console.log(error)
             })
 
-            this.$http.get('store').then((res) => { //品牌索引                 
+            this.$http.get('store').then((res) => { // 品牌索引
                 _this.brand.forEach((value) => {
                     value.ul = res.data.filter((item) => {
-                        item.moHref = "/business/brand?id=" + item.id;
+                        item.moHref = '/business/brand?id=' + item.id
                         return item.class.indexOf(value.ti) >= 0
                     })
                     value.ul = value.ul.slice(0, 3)
                 })
 
                 var da = res.data.filter((item) => {
-                    return item.class.indexOf("主力店") >= 0;
+                    return item.class.indexOf('主力店') >= 0
                 })
                 da.forEach((item, n) => {
-                    var i = 0;
+                    var i = 0
                     if (n < 4) {
                         i = 0
                     } else if (n >= 4 && n < 6) {
                         i = 1
                     } else if (n >= 6 && n < 10) {
-                        i = 2;
+                        i = 2
                     } else if (n >= 10 ** n < 12) {
                         i = 3
-                    } else(
+                    } else {
+ (
                         i = 4
                     )
-                    item.href = "/#/business/brand?id=" + item.id;
-                    _this.store.push([]);
-                    _this.store[i].push(item);
+}
+                    item.href = '/#/business/brand?id=' + item.id
+                    _this.store.push([])
+                    _this.store[i].push(item)
                 })
                 console.log(_this.store)
             })
 
-            this.$http.get("news").then((res) => { //最新资讯
-                _this.news = res.data.slice(0, 3);
+            this.$http.get('news').then((res) => { // 最新资讯
+                _this.news = res.data.slice(0, 3)
                 _this.news.forEach(function (item) {
                     item.href = '/#/activity/?id=' + item.id
                 })
             })
 
-            this.swiperOptionh = { //放created中,解决this冲突
+            this.swiperOptionh = { // 放created中,解决this冲突
                 direction: 'vertical',
                 mousewheel: true,
                 pagination: {
@@ -298,25 +299,22 @@
                 },
                 on: {
                     transitionStart: function () {
-                        let m = this.activeIndex; //返回swiper索引
-                        if (m != 3) {
-                            _this.foBo = false;
+                        let m = this.activeIndex // 返回swiper索引
+                        if (m !== 3) {
+                            _this.foBo = false
                         }
-                    },
-                },
+                    }
+                }
             }
-
-
         },
         mounted() {
-            const _this = this;
-            window.onresize = function () { //窗口自适应
-                _this.newsCenter();
+            const _this = this
+            window.onresize = function () { // 窗口自适应
+                _this.newsCenter()
             }
-            $("body").on("click", function () {
-                //alert(0)
+            $('body').on('click', function () {
+                // alert(0)
             })
-
         }
     }
 

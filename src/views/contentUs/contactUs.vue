@@ -20,9 +20,9 @@
       }
     },
     mounted() {
-      this.$http("contact").then((res) => {
+      this.$http('contact').then((res) => {
         this.da = res.data[0]
-        console.log(this.da);
+        console.log(this.da)
       })
     }
   }

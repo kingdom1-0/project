@@ -51,92 +51,92 @@
 <script>
   import maMessage from './components/message.vue'
   // 引入导出Excel表格依赖
-  import FileSaver from "file-saver";
-  import XLSX from "xlsx";
+  import FileSaver from 'file-saver'
+  import XLSX from 'xlsx'
 
   export default {
     components: {
       maMessage
     },
-    props: ['id', 'arg'], //router props传参(取参)
+    props: ['id', 'arg'], // router props传参(取参)
     data() {
       return {
-        axiosTable: 'message', //操作的数据库表名
-        thisPa: 1, //当前页
-        loading: false, //加载中        
-        input: '', //标题搜索
-        tableData: [{}], //列表的数据
-        thisTable: [], //当前显示列表的数据（分页）
-        selectData: [], //多选选中的数据
-        dialogVisible: false, //编辑页开关
-        alData: {} //传入编辑页数据
+        axiosTable: 'message', // 操作的数据库表名
+        thisPa: 1, // 当前页
+        loading: false, // 加载中
+        input: '', // 标题搜索
+        tableData: [{}], // 列表的数据
+        thisTable: [], // 当前显示列表的数据（分页）
+        selectData: [], // 多选选中的数据
+        dialogVisible: false, // 编辑页开关
+        alData: {} // 传入编辑页数据
       }
     },
     created() {
-      this.refreshData(); //get对应id参数数据
+      this.refreshData() // get对应id参数数据
     },
     methods: {
-      selectHint() { //最少勾选一条数据
+      selectHint() { // 最少勾选一条数据
         if (this.selectData.length < 1) {
           this.$message({
             message: '请勾选数据！',
             type: 'error'
           })
-          return false;
+          return false
         } else {
           return true
         }
       },
-      issueFilter(value, row) { //状态筛选
-        return row.state == value;
+      issueFilter(value, row) { // 状态筛选
+        return row.state == value
       },
-      pageFilter(val) { //分页操作
+      pageFilter(val) { // 分页操作
         this.thisPa = val
       },
-      thisTableFun() { //列表数据分页拆分
-        this.thisTable = [];
+      thisTableFun() { // 列表数据分页拆分
+        this.thisTable = []
         for (var i = 0; i < Math.ceil(this.tableData.length / 10); i++) {
-          this.thisTable.push(this.tableData.slice(10 * i, 10 * i + 10));
+          this.thisTable.push(this.tableData.slice(10 * i, 10 * i + 10))
         }
-        //console.log(this.thisTable)
+        // console.log(this.thisTable)
       },
-      refreshData: function () { //刷新列表数据
-        var _this = this;
-        this.$http.get(this.axiosTable).then(function (res) { //字符串转换布尔值 
-          _this.tableData = res.data;
+      refreshData: function () { // 刷新列表数据
+        var _this = this
+        this.$http.get(this.axiosTable).then(function (res) { // 字符串转换布尔值
+          _this.tableData = res.data
           _this.tableData.forEach((item) => {
             if (item.state == null) {
-              item.state = "未阅";
+              item.state = '未阅'
             }
           })
           console.log(_this.tableData)
-          _this.thisTableFun(); //列表数据分页拆分
-          _this.thisPa = 1; //返回第一分页
+          _this.thisTableFun() // 列表数据分页拆分
+          _this.thisPa = 1 // 返回第一分页
         })
       },
-      closeCompile: function (bo) { //关闭编辑
-        this.dialogVisible = bo;
+      closeCompile: function (bo) { // 关闭编辑
+        this.dialogVisible = bo
       },
-      handleSelectionChange(val) { //表单change事件
-        this.selectData = val;
+      handleSelectionChange(val) { // 表单change事件
+        this.selectData = val
       },
-      redact(da) { //编辑
-        this.refreshData(); //刷新数据列表
-        var te = da.constructor.toString();
-        if (te.indexOf("Object") > 0) {
-          this.alData = da;
-          this.dialogVisible = true;
+      redact(da) { // 编辑
+        this.refreshData() // 刷新数据列表
+        var te = da.constructor.toString()
+        if (te.indexOf('Object') > 0) {
+          this.alData = da
+          this.dialogVisible = true
         }
-        if (te.indexOf("Array") > 0) {
+        if (te.indexOf('Array') > 0) {
           if (da.length > 1) {
-            alert("一次只能编辑一条数据！");
+            alert('一次只能编辑一条数据！')
           } else {
             this.alData = da[0]
-            this.dialogVisible = true;
+            this.dialogVisible = true
           }
         }
       },
-      openDelete() { //提示删除
+      openDelete() { // 提示删除
         if (this.selectHint()) {
           this.$confirm('删除的数据无法找回，是否删除？', '提示', {
             confirmButtonText: '确定',
@@ -146,58 +146,57 @@
             this.$message({
               type: 'success',
               message: '删除成功!'
-            });
-            this.deleteDa();
+            })
+            this.deleteDa()
           }).catch(() => {
             this.$message({
               type: 'info',
               message: '已取消删除'
-            });
-          });
+            })
+          })
         }
-
       },
-      deleteDa() { //批量删除
+      deleteDa() { // 批量删除
         this.selectData.forEach((item) => {
           this.$http.delete(this.axiosTable, {
             params: {
-              id: item.id //对应ID删除
+              id: item.id // 对应ID删除
             }
           }).then((res) => {
-            if (res.status == "200") {
-              this.refreshData(); //刷新数据列表
+            if (res.status == '200') {
+              this.refreshData() // 刷新数据列表
             }
           })
         })
       },
-      //定义导出Excel表格事件
+      // 定义导出Excel表格事件
       exportExcel() {
         /* 从表生成工作簿对象 */
-        var wb = XLSX.utils.table_to_book(document.querySelector("#out-table"), {
+        var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'), {
           raw: true
-        });
+        })
         /* 获取二进制字符串作为输出 */
         var wbout = XLSX.write(wb, {
-          bookType: "xlsx",
+          bookType: 'xlsx',
           bookSST: true,
-          type: "array"
-        });
+          type: 'array'
+        })
         try {
           FileSaver.saveAs(
-            //Blob 对象表示一个不可变、原始数据的类文件对象。
-            //Blob 表示的不一定是JavaScript原生格式的数据。
-            //File 接口基于Blob，继承了 blob 的功能并将其扩展使其支持用户系统上的文件。
-            //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
+            // Blob 对象表示一个不可变、原始数据的类文件对象。
+            // Blob 表示的不一定是JavaScript原生格式的数据。
+            // File 接口基于Blob，继承了 blob 的功能并将其扩展使其支持用户系统上的文件。
+            // 返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
             new Blob([wbout], {
-              type: "application/octet-stream"
+              type: 'application/octet-stream'
             }),
-            //设置导出文件名称
-            "sheetjs.xlsx"
-          );
+            // 设置导出文件名称
+            'sheetjs.xlsx'
+          )
         } catch (e) {
-          if (typeof console !== "undefined") console.log(e, wbout);
+          if (typeof console !== 'undefined') console.log(e, wbout)
         }
-        return wbout;
+        return wbout
       }
     }
   }

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import newsContent from "../components/news.vue"
+    import newsContent from '../components/news.vue'
     export default {
         data: function () {
             return {
@@ -38,26 +38,26 @@
         },
         methods: {
             initCh: function () {
-                this.$refs.child.bo = false //通过ref操作子组件
+                this.$refs.child.bo = false // 通过ref操作子组件
             },
             navActive: function () {
-                var href = location.href;
-                if (href.includes("/activity/review")) {
-                    this.active = 1;
+                var href = location.href
+                if (href.includes('/activity/review')) {
+                    this.active = 1
                 } else {
-                    this.active = 0;
+                    this.active = 0
                 }
             }
         },
         created() {
-            this.navActive();
+            this.navActive()
         },
         components: {
             newsContent
         },
         watch: {
             $route() {
-                this.navActive();
+                this.navActive()
             }
         }
     }

@@ -99,7 +99,7 @@
                 time: 0
             }
         },
-        props: { //父组件传值 
+        props: { // 父组件传值
             da: {
                 type: Boolean,
                 default: false
@@ -107,11 +107,11 @@
         },
         methods: {
             hideFotter: function (e) {
-                if (new Date().getTime() - this.time > 300) { //滚轮操作判断
-                    this.time = new Date().getTime();
-                    var delta = -e.wheelDelta || e.detail; //firefox使用detail:下3上-3,其他浏览器使用wheelDelta:下-120上120//下滚
+                if (new Date().getTime() - this.time > 300) { // 滚轮操作判断
+                    this.time = new Date().getTime()
+                    var delta = -e.wheelDelta || e.detail // firefox使用detail:下3上-3,其他浏览器使用wheelDelta:下-120上120//下滚
                     if (delta < 0) {
-                        this.$emit("closeDa", false); //传递关闭参数                       
+                        this.$emit('closeDa', false) // 传递关闭参数
                     }
                 }
             }

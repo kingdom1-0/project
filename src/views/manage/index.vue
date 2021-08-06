@@ -49,13 +49,13 @@
     export default {
         data() {
             return {
-                system: {} //系统信息
+                system: {} // 系统信息
             }
         },
         created() {
-            var _this = this;
-            this.$http.get("system").then(function (res) {
-                _this.system = res.data;
+            var _this = this
+            this.$http.get('system').then(function (res) {
+                _this.system = res.data
             })
         }
     }

@@ -50,46 +50,46 @@
     export default {
         data() {
             return {
-                name: "",
-                phone: "",
-                Email: "",
-                text: "",
-                verify: "",
-                verifyOn: ""
+                name: '',
+                phone: '',
+                Email: '',
+                text: '',
+                verify: '',
+                verifyOn: ''
             }
         },
         mounted: function () {
-            this.verifyFun();
+            this.verifyFun()
         },
         methods: {
-            thisDate() { //返回当前时间
-                var date = new Date();
-                var month = date.getMonth() + 1;
+            thisDate() { // 返回当前时间
+                var date = new Date()
+                var month = date.getMonth() + 1
                 var day = date.getDate()
                 if (month < 10) {
-                    month = "0" + month;
+                    month = '0' + month
                 }
                 if (day < 10) {
-                    day = "0" + day;
+                    day = '0' + day
                 }
-                return date.getFullYear() + "-" + month + "-" + day + " " + date
-                    .getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                return date.getFullYear() + '-' + month + '-' + day + ' ' + date
+                    .getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
             },
-            submit: function () { //提交         
-                var _this = this;
-                let phoneReg = new RegExp("^[1][3,4,5,7,8][0-9]{9}$");
+            submit: function () { // 提交
+                var _this = this
+                let phoneReg = new RegExp('^[1][3,4,5,7,8][0-9]{9}$')
                 let EmailReg = new RegExp(
-                    "^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$");
+                    '^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$')
                 if (this.name.length < 2 || this.name.length > 6) {
-                    alert("请输入正确的姓名！")
+                    alert('请输入正确的姓名！')
                 } else if (this.phone.length < 10 || !phoneReg.test(this.phone)) {
-                    alert("请输入正确的手机号！")
+                    alert('请输入正确的手机号！')
                 } else if (this.Email.length < 10 || !EmailReg.test(this.Email)) {
-                    alert("请输入正确的邮箱！")
+                    alert('请输入正确的邮箱！')
                 } else if (this.text.length < 2) {
-                    alert("请输入您的留言！")
-                } else if (this.verify != this.verifyOn) {
-                    alert("验证码错误!")
+                    alert('请输入您的留言！')
+                } else if (this.verify !== this.verifyOn) {
+                    alert('验证码错误!')
                 } else {
                     var data = {
                         name: this.name,
@@ -97,27 +97,27 @@
                         Email: this.Email,
                         text: this.text
                     }
-                    data.date = _this.thisDate();
+                    data.date = _this.thisDate()
                     this.$http.post('message', data).then((res) => {
-                        if (res.status == '200') {
-                            alert("已留言，我们将尽快回复你的问题！")
+                        if (res.status === '200') {
+                            alert('已留言，我们将尽快回复你的问题！')
                             _this.empty()
                         }
                     })
                 }
             },
             empty: function () {
-                this.name = "";
-                this.phone = "";
-                this.Email = "";
-                this.text = "";
-                this.verify = "";
+                this.name = ''
+                this.phone = ''
+                this.Email = ''
+                this.text = ''
+                this.verify = ''
             },
-            reset: function () { //重置
-                this.empty();
+            reset: function () { // 重置
+                this.empty()
             },
             verifyFun: function () {
-                this.verifyOn = parseInt(Math.random() * 10000);
+                this.verifyOn = parseInt(Math.random() * 10000)
                 console.log(this.verifyOn)
             }
         }

@@ -12,13 +12,13 @@
 <style>
 </style>
 <script>
-  import headerContent from "./views/components/Header.vue" //引入页头
-  import footerContent from "./views/components/Footer.vue" //引入页尾
+  import headerContent from './views/components/Header.vue' // 引入页头
+  import footerContent from './views/components/Footer.vue' // 引入页尾
 
   export default {
     data() {
       return {
-        windHeight: "auto", //屏幕高度
+        windHeight: 'auto', // 屏幕高度
         foBl: false,
         showOn: true
       }
@@ -28,34 +28,34 @@
         this.foBl = val
       },
       closeFooter: function (val) {
-        this.foBl = val;
+        this.foBl = val
       }
     },
     mounted: function () {
-      var _this = this;
-      window.addEventListener("resize", function () { //全屏自适应
+      var _this = this
+      window.addEventListener('resize', function () { // 全屏自适应
         return (() => {
           if (_this.showOn) {
             setTimeout(function () {
               _this.windHeight = window.innerHeight + 'px'
             }, 300)
           }
-        })();
-      });
+        })()
+      })
     },
-    components: { //注册
+    components: { // 注册
       headerContent,
       footerContent
     },
     watch: {
-      $route() { //监控路由
-        var _this = this;
-        var href = this.$route.path;
-        if (href.indexOf("/manage") > -1) { //后台控制面版去掉头尾公共块和全屏
-          _this.showOn = false;
-          _this.windHeight = "auto";
+      $route() { // 监控路由
+        var _this = this
+        var href = this.$route.path
+        if (href.indexOf('/manage') > -1) { // 后台控制面版去掉头尾公共块和全屏
+          _this.showOn = false
+          _this.windHeight = 'auto'
         } else {
-          _this.showOn = true;
+          _this.showOn = true
           this.windHeight = window.innerHeight + 'px'
         }
       }

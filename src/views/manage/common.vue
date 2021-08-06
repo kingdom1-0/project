@@ -94,7 +94,7 @@
                     <template slot="title"><i class="el-icon-setting"></i>系统设置</template>
                     <el-menu-item index="/manage/logInfo">登陆日志</el-menu-item>
                     <el-menu-item index="/manage/opLog">操作日志</el-menu-item>
-                    <el-menu-item index="">角色管理</el-menu-item>
+                    <el-menu-item index="/manage/role">角色管理</el-menu-item>
                     <el-menu-item index="">管理员管理</el-menu-item>
                     <el-menu-item index="">SEO设置</el-menu-item>
                   </el-submenu>
@@ -139,14 +139,14 @@
       return {
         activeIndex: '/manage/',
         wHeight: 600,
-        //这是登录表单的数据绑定对象
+        // 这是登录表单的数据绑定对象
         form: {
-          username: "admin",
-          password: '',
+          username: 'admin',
+          password: ''
         },
-        //这是表单的预验证规则对象
+        // 这是表单的预验证规则对象
         rules: {
-          username: [ //预验证用户名
+          username: [ // 预验证用户名
             {
               required: true,
               message: '请输入用户名',
@@ -159,7 +159,7 @@
               trigger: 'blur'
             }
           ],
-          password: [ //预验证密码
+          password: [ // 预验证密码
             {
               required: true,
               message: '请输入密码',
@@ -174,12 +174,12 @@
           ]
         },
         setForm: {
-          username: "admin",
+          username: 'admin',
           password: '',
           setPassword: ''
         },
         setRules: {
-          username: [ //预验证用户名
+          username: [ // 预验证用户名
             {
               required: true,
               message: '请输入用户名',
@@ -192,7 +192,7 @@
               trigger: 'blur'
             }
           ],
-          password: [ //预验证密码
+          password: [ // 预验证密码
             {
               required: true,
               message: '请输入密码',
@@ -205,7 +205,7 @@
               trigger: 'blur'
             }
           ],
-          setPassword: [ //预验证新密码
+          setPassword: [ // 预验证新密码
             {
               required: true,
               message: '请输入密码',
@@ -220,126 +220,125 @@
           ]
         },
         shOn: true,
-        resetPassword: false //重置密码
+        resetPassword: false // 重置密码
       }
     },
     methods: {
-      loginfo(n) { //记录登陆数据
-        const ip = '192.168.18.186';
-        const state = n;
-        const name = this.form.username;
-        const date = thisDate();
+      loginfo(n) { // 记录登陆数据
+        const ip = '192.168.18.186'
+        const state = n
+        const name = this.form.username
+        const date = thisDate()
         var logDa = {
           state,
           name,
           ip,
           date
         }
-        this.$http.post("loginfo", logDa);
+        this.$http.post('loginfo', logDa)
       },
-      //点击提交，预验证
+      // 点击提交，预验证
       logIn() {
-        var _this = this;
-        this.$refs.formRef.validate(async value => { //表单预验证
+        var _this = this
+        this.$refs.formRef.validate(async value => { // 表单预验证
           if (!value) {
-            return;
+            return
           }
-          //登陆验证          
+          // 登陆验证
           const {
             data: res
-          } = await this.$http.post("login", this.form)
-          if (res.meta.status != 200) { //响应状态
-            this.open4(res.meta.message);
-            _this.loginfo(0);
+          } = await this.$http.post('login', this.form)
+          if (res.meta.status != 200) { // 响应状态
+            this.open4(res.meta.message)
+            _this.loginfo(0)
           } else {
-            this.open1(res.meta.message);
-            window.sessionStorage.setItem("token", res.token);
-            window.sessionStorage.setItem("username", this.form.username);
-            this.shOn = false; //显示后台管理系统
-            this.state = 1;
-            _this.loginfo(1);
+            this.open1(res.meta.message)
+            window.sessionStorage.setItem('token', res.token)
+            window.sessionStorage.setItem('username', this.form.username)
+            this.shOn = false // 显示后台管理系统
+            this.state = 1
+            _this.loginfo(1)
             this.$router.push('/manage/')
           }
-
         })
       },
       resPass() {
-        this.$refs.setRef.validate(async value => { //表单预验证
+        this.$refs.setRef.validate(async value => { // 表单预验证
           if (!value) {
-            return;
+            return
           }
-          //登陆验证          
+          // 登陆验证
           const {
             data: res
-          } = await this.$http.put("login", this.setForm)
-          if (res.meta.status != 200) { //响应状态
-            this.open4(res.meta.message);
+          } = await this.$http.put('login', this.setForm)
+          if (res.meta.status != 200) { // 响应状态
+            this.open4(res.meta.message)
           } else {
-            this.open1(res.meta.message);
-            sessionStorage.removeItem("token");
-            this.$router.push('/manage/');
-            this.shOn = true;
-            this.resetPassword = false;
+            this.open1(res.meta.message)
+            sessionStorage.removeItem('token')
+            this.$router.push('/manage/')
+            this.shOn = true
+            this.resetPassword = false
           }
         })
       },
-      logout(command) { //登陆退出
+      logout(command) { // 登陆退出
         if (command == 'out') {
-          sessionStorage.removeItem("token");
-          this.$router.push('/manage/');
-          this.shOn = true;
+          sessionStorage.removeItem('token')
+          this.$router.push('/manage/')
+          this.shOn = true
         }
-        if (command == 'reset') { //修改密码
-          this.resetPassword = true;
-          this.setForm.password = "";
-          this.setForm.setPassword = "";
+        if (command == 'reset') { // 修改密码
+          this.resetPassword = true
+          this.setForm.password = ''
+          this.setForm.setPassword = ''
         }
       },
-      reset() { //表单重置
-        this.$refs.formRef.resetFields();
+      reset() { // 表单重置
+        this.$refs.formRef.resetFields()
       },
-      open1(val) { //消息提示(成功)
+      open1(val) { // 消息提示(成功)
         this.$notify({
           title: '成功',
           message: val,
-          type: 'success',
-        });
+          type: 'success'
+        })
       },
-      open4(val) { //消息提示(错误)
+      open4(val) { // 消息提示(错误)
         this.$notify.error({
           title: '错误',
-          message: val,
-        });
+          message: val
+        })
       }
     },
     created() {
       // axios.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
       //   config.headers.Authorization = window.sessionStorage.getItem("token") //挂载token
       //   return config //最后必需
-      // })          
+      // })
     },
     mounted: function () {
-      if (sessionStorage.token != undefined) { //判断token值，显示后台管理系统
-        this.shOn = false;
+      if (sessionStorage.token != undefined) { // 判断token值，显示后台管理系统
+        this.shOn = false
       }
-      var _this = this;
+      var _this = this
       _this.wHeight = window.innerHeight
-      window.addEventListener("resize", function () { //全屏自适应
+      window.addEventListener('resize', function () { // 全屏自适应
         return (() => {
           if (_this.showOn) {
             setTimeout(function () {
               _this.wHeight = window.innerHeight
             }, 300)
           }
-        })();
-      });
+        })()
+      })
 
-      //一级导航初始选定
-      var hash = location.hash.slice(1);
-      if (hash.includes("manage/content")) {
-        hash = "/manage/content/banner"
+      // 一级导航初始选定
+      var hash = location.hash.slice(1)
+      if (hash.includes('manage/content')) {
+        hash = '/manage/content/banner'
       }
-      this.activeIndex = hash;
+      this.activeIndex = hash
     }
   }
 

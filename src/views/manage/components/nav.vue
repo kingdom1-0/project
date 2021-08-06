@@ -26,105 +26,105 @@
     export default {
         data() {
             return {
-                activeIndex: "/manage/content/banner",
+                activeIndex: '/manage/content/banner',
                 menulist: [{
                         id: 1,
-                        authName: "首页(banner)",
-                        path: "banner"
-                    }, { //左侧菜单数据
+                        authName: '首页(banner)',
+                        path: 'banner'
+                    }, { // 左侧菜单数据
                         id: 2,
-                        authName: "品牌指引",
+                        authName: '品牌指引',
                         children: [{
-                                id: "1_1",
-                                authName: "楼层管理",
-                                path: "floor" // 路由参数
+                                id: '1_1',
+                                authName: '楼层管理',
+                                path: 'floor' // 路由参数
                             },
                             {
-                                id: "1_2",
-                                authName: "类别管理",
-                                path: "sort"
+                                id: '1_2',
+                                authName: '类别管理',
+                                path: 'sort'
                             },
                             {
-                                id: "1_3",
-                                authName: "品牌管理",
-                                path: "store"
+                                id: '1_3',
+                                authName: '品牌管理',
+                                path: 'store'
                             }
                         ]
                     },
                     {
                         id: 3,
-                        authName: "活动精选",
-                        path: "news"
+                        authName: '活动精选',
+                        path: 'news'
                     },
                     {
                         id: 4,
-                        authName: "会员天地",
+                        authName: '会员天地',
                         children: [{
-                                id: "3_1",
-                                authName: "会员活动",
-                                path: "active"
+                                id: '3_1',
+                                authName: '会员活动',
+                                path: 'active'
                             },
                             {
-                                id: "3_2",
-                                authName: "加入会员",
-                                path: "join"
+                                id: '3_2',
+                                authName: '加入会员',
+                                path: 'join'
                             },
                             {
-                                id: "3_3",
-                                authName: "会员须知",
-                                path: "notice"
+                                id: '3_3',
+                                authName: '会员须知',
+                                path: 'notice'
                             },
                             {
-                                id: "3_4",
-                                authName: "积分兑换",
-                                path: "conversion"
+                                id: '3_4',
+                                authName: '积分兑换',
+                                path: 'conversion'
                             }
                         ]
                     },
                     {
                         id: 5,
-                        authName: "关于我们",
-                        path: "news",
+                        authName: '关于我们',
+                        path: 'news',
                         children: [{
-                                id: "5_1",
-                                authName: "项目简介",
-                                path: "synopsis"
+                                id: '5_1',
+                                authName: '项目简介',
+                                path: 'synopsis'
                             },
                             {
-                                id: "5_2",
-                                authName: "交通指南",
-                                path: "traffic"
+                                id: '5_2',
+                                authName: '交通指南',
+                                path: 'traffic'
                             },
                             {
-                                id: "5_3",
-                                authName: "招商租赁",
-                                path: "attract"
+                                id: '5_3',
+                                authName: '招商租赁',
+                                path: 'attract'
                             },
                             {
-                                id: "5_4",
-                                authName: "场地合作",
-                                path: "site"
+                                id: '5_4',
+                                authName: '场地合作',
+                                path: 'site'
                             },
                             {
-                                id: "5_5",
-                                authName: "联系我们",
-                                path: "contact"
+                                id: '5_5',
+                                authName: '联系我们',
+                                path: 'contact'
                             }
                         ]
-                    },
+                    }
                 ],
-                icoList: { //左侧图标
+                icoList: { // 左侧图标
                     1: 'iconfont icon-xiantiao-shouye',
                     2: 'iconfont icon-31pinpai',
                     3: 'iconfont icon-huodong',
                     4: 'iconfont icon-huiyuan_',
-                    5: 'iconfont icon-guanyuwomen',
+                    5: 'iconfont icon-guanyuwomen'
                 },
                 unfold: false
             }
         },
         mounted: function () {
-            var hash = location.hash.split("/");
+            var hash = location.hash.split('/')
             hash = hash[hash.length - 1]
             this.activeIndex = hash
         }
