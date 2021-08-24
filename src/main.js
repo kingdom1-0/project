@@ -3,7 +3,12 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+import xss from 'xss';
+Vue.prototype.xss = xss;
 // import VueAxios from 'vue-axios'
+
+// import xss from 'xss';
+// Vue.prototype.xss = xss
 
 import './style/common.css' // 全局样式
 import './style/animate.min.css' // 预设css3库
@@ -46,9 +51,9 @@ axios.interceptors.response.use(function (response) {
 Vue.config.productionTip = false
 new Vue({
   router,
-  store, // 把 store 的实例注入所有的子组件(this.$store)
-  render: h => h(App),
+  store,
   mounted() {
     document.dispatchEvent(new Event('render-event'))
-  }
+  }, // 把 store 的实例注入所有的子组件(this.$store)
+  render: h => h(App)
 }).$mount('#app')

@@ -1,50 +1,94 @@
 <template>
-    <div class="bus_content me_top">
-        <div class="bus_conBlock">
-            <div class="mes_content">
-                <div class="mes_tiBl">
-                    <div class="mes_ti">会员留言建议</div>
-                </div>
-                <div class="mes_conBlock">
-                    <form id="form1">
-                        <div class="mes_block">
-                            <div class="mes_inputBl">
-                                <input type="text" class="mes_input" placeholder="姓 名" v-model="name">
-                                <div class="mes_ico"></div>
-                            </div>
-                            <div class="mes_inputBl">
-                                <input type="text" class="mes_input" placeholder="手 机" v-model="phone">
-                                <div class="mes_ico"></div>
-                            </div>
-                            <div class="mes_inputBl">
-                                <input type="text" class="mes_input" placeholder="邮 箱" v-model="Email">
-                                <div class="mes_ico"></div>
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="mes_teBl">
-                            <textarea placeholder="内容" class="mes_textarea" v-model="text"></textarea>
-                            <div class="mes_ico"></div>
-                        </div>
-                        <div class="mes_block">
-                            <div class="mes_div">
-                                <input type="text" class="mes_inputB" name="vercode" placeholder="验证码" v-model="verify">
-                                <div class="mes_ico"></div>
-                            </div>
-                            <div class="mes_bl">
-                                <div class="mes_img" @click="verifyFun()">{{verifyOn}}</div>
-                                <div class="mes_t">（看不清？点击验证码刷新）</div>
-                            </div>
-                        </div>
-                        <div class="mes_buttonBlock">
-                            <div class="mes_submit" @click="submit()">提 交</div>
-                            <div class="mes_reset" @click="reset()">重 置</div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  <div class="bus_content me_top">
+    <div class="bus_conBlock">
+      <div class="mes_content">
+        <div class="mes_tiBl">
+          <div class="mes_ti">
+            会员留言建议
+          </div>
         </div>
+        <div class="mes_conBlock">
+          <form id="form1">
+            <div class="mes_block">
+              <div class="mes_inputBl">
+                <input
+                  v-model="name"
+                  type="text"
+                  class="mes_input"
+                  placeholder="姓 名"
+                >
+                <div class="mes_ico" />
+              </div>
+              <div class="mes_inputBl">
+                <input
+                  v-model="phone"
+                  type="text"
+                  class="mes_input"
+                  placeholder="手 机"
+                >
+                <div class="mes_ico" />
+              </div>
+              <div class="mes_inputBl">
+                <input
+                  v-model="Email"
+                  type="text"
+                  class="mes_input"
+                  placeholder="邮 箱"
+                >
+                <div class="mes_ico" />
+              </div>
+              <div class="clear" />
+            </div>
+            <div class="mes_teBl">
+              <textarea
+                v-model="text"
+                placeholder="内容"
+                class="mes_textarea"
+              />
+              <div class="mes_ico" />
+            </div>
+            <div class="mes_block">
+              <div class="mes_div">
+                <input
+                  v-model="verify"
+                  type="text"
+                  class="mes_inputB"
+                  name="vercode"
+                  placeholder="验证码"
+                >
+                <div class="mes_ico" />
+              </div>
+              <div class="mes_bl">
+                <div
+                  class="mes_img"
+                  @click="verifyFun()"
+                >
+                  {{ verifyOn }}
+                </div>
+                <div class="mes_t">
+                  （看不清？点击验证码刷新）
+                </div>
+              </div>
+            </div>
+            <div class="mes_buttonBlock">
+              <div
+                class="mes_submit"
+                @click="submit()"
+              >
+                提 交
+              </div>
+              <div
+                class="mes_reset"
+                @click="reset()"
+              >
+                重 置
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 <script>
     export default {
@@ -118,7 +162,6 @@
             },
             verifyFun: function () {
                 this.verifyOn = parseInt(Math.random() * 10000)
-                console.log(this.verifyOn)
             }
         }
     }

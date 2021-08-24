@@ -2,50 +2,120 @@
   <el-container class="man_content">
     <!-- 数据列表 -->
     <el-main v-loading="loading">
-      <el-row></el-row>
+      <el-row />
       <el-row>
         <div class="button_ul">
-          <el-tooltip class="item" effect="dark" content="添加新数据" placement="bottom">
-            <el-button type="primary" @click="addDate()"><span class="iconfont icon-add-sy"></span>添加</el-button>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="一次只能单条编辑" placement="bottom">
-            <el-button type="primary" @click="redact(selectData)"><span class="iconfont icon-bianji"></span>编辑
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="添加新数据"
+            placement="bottom"
+          >
+            <el-button
+              type="primary"
+              @click="addDate()"
+            >
+              <span class="iconfont icon-add-sy" />添加
             </el-button>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="删除的数据无法找回，如不明确删除，建议待发布" placement="bottom">
-            <el-button type="danger" @click="openDelete()"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="一次只能单条编辑"
+            placement="bottom"
+          >
+            <el-button
+              type="primary"
+              @click="redact(selectData)"
+            >
+              <span class="iconfont icon-bianji" />编辑
+            </el-button>
+          </el-tooltip>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="删除的数据无法找回，如不明确删除，建议待发布"
+            placement="bottom"
+          >
+            <el-button
+              type="danger"
+              @click="openDelete()"
+            >
+              <span class="iconfont icon-shanchu" />批量删除
+            </el-button>
           </el-tooltip>
         </div>
-        <div class="clear"></div>
+        <div class="clear" />
       </el-row>
-      <el-row></el-row>
+      <el-row />
       <el-row>
-        <el-table ref="multipleTable" :data="thisTable[thisPa-1]" tooltip-effect="dark" :border="true"
-          :highlight-current-row="true" style="width: 100%" @selection-change="handleSelectionChange"
-          @row-dblclick="redact">
-          <el-table-column type="selection" width="100" align="center">
-          </el-table-column>
-          <el-table-column prop="username" label="角色名" show-overflow-tooltip align="left" sortable>
-          </el-table-column>
-          <el-table-column prop="sort" label="菜单权限" align="center" sortable>
-          </el-table-column>
-          <el-table-column prop="sort" label="内容管理权限" align="center" sortable>
-          </el-table-column>
-          <el-table-column prop="date" label="创建时间" align="center" sortable>
-            <template slot-scope="scope">{{ scope.row.date }}</template>
+        <el-table
+          ref="multipleTable"
+          :data="thisTable[thisPa-1]"
+          tooltip-effect="dark"
+          :border="true"
+          :highlight-current-row="true"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+          @row-dblclick="redact"
+        >
+          <el-table-column
+            type="selection"
+            width="100"
+            align="center"
+          />
+          <el-table-column
+            prop="username"
+            label="角色名"
+            show-overflow-tooltip
+            align="left"
+            sortable
+          />
+          <el-table-column
+            prop="sort"
+            label="菜单权限"
+            align="center"
+            sortable
+          />
+          <el-table-column
+            prop="sort"
+            label="内容管理权限"
+            align="center"
+            sortable
+          />
+          <el-table-column
+            prop="date"
+            label="创建时间"
+            align="center"
+            sortable
+          >
+            <template slot-scope="scope">
+              {{ scope.row.date }}
+            </template>
           </el-table-column>
         </el-table>
-        <el-row></el-row>
-        <el-row></el-row>
+        <el-row />
+        <el-row />
         <el-row>
           <!-- 分页 -->
-          <el-pagination background layout="prev, pager, next" v-if="tableData.length > 10" :total="tableData.length"
-            align="center" @current-change="pageFilter" :current-page="thisPa"></el-pagination>
+          <el-pagination
+            v-if="tableData.length > 10"
+            background
+            layout="prev, pager, next"
+            :total="tableData.length"
+            align="center"
+            :current-page="thisPa"
+            @current-change="pageFilter"
+          />
         </el-row>
       </el-row>
     </el-main>
-    <ma-compile :show="dialogVisible" :al-data="alData" @close-compile="closeCompile" @refresh="refreshData">
-    </ma-compile>
+    <ma-compile
+      :show="dialogVisible"
+      :al-data="alData"
+      @close-compile="closeCompile"
+      @refresh="refreshData"
+    />
   </el-container>
 </template>
 <script>
@@ -59,7 +129,6 @@
     components: {
       maCompile
     },
-    props: ['id', 'arg'], // router props传参(取参)
     data() {
       return {
         seek: '',
@@ -73,6 +142,11 @@
         selectData: [], // 多选选中的数据
         dialogVisible: false, // 编辑页开关
         alData: {} // 传入编辑页数据
+      }
+    },
+    watch: {
+      $route() {
+        this.refreshData() // 监控路由参数，对应axios数据
       }
     },
     created() {
@@ -202,11 +276,6 @@
             }
           })
         })
-      }
-    },
-    watch: {
-      $route() {
-        this.refreshData() // 监控路由参数，对应axios数据
       }
     }
   }

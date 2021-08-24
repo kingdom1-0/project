@@ -7,13 +7,17 @@
         </div>
       </div>
       <div class="att_teBlock">
-        <div class="att_ti">{{da.title}}</div>
+        <div class="att_ti">
+          {{ da.title }}
+        </div>
         <div class="att_teBl">
-          <div class="att_te" v-html="da.value">
-          </div>
+          <div
+            class="att_te"
+            v-html="da.value"
+          />
         </div>
       </div>
-      <div class="clear"></div>
+      <div class="clear" />
     </div>
   </div>
 </template>

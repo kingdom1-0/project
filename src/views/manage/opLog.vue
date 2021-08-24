@@ -1,52 +1,99 @@
 <template>
-    <el-container class="man_content">
-        <!-- 数据列表 -->
-        <el-main v-loading="loading">
-            <el-row></el-row>
-            <el-row>
-                <div class="button_ul">
-                    <el-tooltip class="item" effect="dark" content="删除的数据无法找回，如不明确删除，建议待发布" placement="bottom">
-                        <el-button type="danger" @click="openDelete()"><span class="iconfont icon-shanchu"></span>批量删除
-                        </el-button>
-                    </el-tooltip>
-                </div>
-                <div class="seek_block">
-                    <el-input v-model="seek" class="seek_input" @change="seekFun()"></el-input>
-                    <el-button type="success" @click="seekFun()"><span class="iconfont icon-chaxun"></span>查询
-                    </el-button>
-                </div>
-                <div class="clear"></div>
-            </el-row>
-            <el-row></el-row>
-            <el-row>
-                <el-table ref="multipleTable" :data="thisTable[thisPa-1]" tooltip-effect="dark" :border="true"
-                    :highlight-current-row="true" style="width: 100%" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" width="100" align="center">
-                    </el-table-column>
-                    <el-table-column prop="username" label="用户名" align="center" width="300" sortable :filters="nameDa"
-                        :filter-method="nameFilter">
-                    </el-table-column>
-                    <el-table-column prop="text" label="操作信息">
-                    </el-table-column>
-                    <el-table-column prop="date" label="操作时间" align="center" sortable>
-                        <template slot-scope="scope">{{ scope.row.date }}</template>
-                    </el-table-column>
-                </el-table>
-                <el-row></el-row>
-                <el-row></el-row>
-                <el-row>
-                    <!-- 分页 -->
-                    <el-pagination background layout="prev, pager, next" v-if="tableData.length > 10"
-                        :total="tableData.length" align="center" @current-change="pageFilter" :current-page="thisPa">
-                    </el-pagination>
-                </el-row>
-            </el-row>
-        </el-main>
-    </el-container>
+  <el-container class="man_content">
+    <!-- 数据列表 -->
+    <el-main v-loading="loading">
+      <el-row />
+      <el-row>
+        <div class="button_ul">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="删除的数据无法找回，如不明确删除，建议待发布"
+            placement="bottom"
+          >
+            <el-button
+              type="danger"
+              @click="openDelete()"
+            >
+              <span class="iconfont icon-shanchu" />批量删除
+            </el-button>
+          </el-tooltip>
+        </div>
+        <div class="seek_block">
+          <el-input
+            v-model="seek"
+            class="seek_input"
+            @change="seekFun()"
+          />
+          <el-button
+            type="success"
+            @click="seekFun()"
+          >
+            <span class="iconfont icon-chaxun" />查询
+          </el-button>
+        </div>
+        <div class="clear" />
+      </el-row>
+      <el-row />
+      <el-row>
+        <el-table
+          ref="multipleTable"
+          :data="thisTable[thisPa-1]"
+          tooltip-effect="dark"
+          :border="true"
+          :highlight-current-row="true"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+        >
+          <el-table-column
+            type="selection"
+            width="100"
+            align="center"
+          />
+          <el-table-column
+            prop="username"
+            label="用户名"
+            align="center"
+            width="300"
+            sortable
+            :filters="nameDa"
+            :filter-method="nameFilter"
+          />
+          <el-table-column
+            prop="text"
+            label="操作信息"
+          />
+          <el-table-column
+            prop="date"
+            label="操作时间"
+            align="center"
+            sortable
+          >
+            <template slot-scope="scope">
+              {{ scope.row.date }}
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-row />
+        <el-row />
+        <el-row>
+          <!-- 分页 -->
+          <el-pagination
+            v-if="tableData.length > 10"
+            background
+            layout="prev, pager, next"
+            :total="tableData.length"
+            align="center"
+            :current-page="thisPa"
+            @current-change="pageFilter"
+          />
+        </el-row>
+      </el-row>
+    </el-main>
+  </el-container>
 </template>
 <script>
     export default {
-        props: ['id', 'arg'], // router props传参(取参)
         data() {
             return {
                 axiosTable: 'oplog', // 操作的数据库表名
@@ -101,7 +148,6 @@
                 this.refreshData(seekInto) // 刷新搜索数据
             },
             nameFilter(value, row) { // 置顶筛选
-                console.log(row.name == value)
                 return row.name == value
             },
             pageFilter(val) { // 分页操作
@@ -112,12 +158,10 @@
                 for (var i = 0; i < Math.ceil(this.tableData.length / 10); i++) {
                     this.thisTable.push(this.tableData.slice(10 * i, 10 * i + 10))
                 }
-                console.log(this.thisTable)
             },
             refreshData: function (seekInto) { // 刷新列表数据
                 var _this = this
                 this.$http.get(_this.axiosTable).then(function (res) { // 字符串转换布尔值
-                    console.log(res.data)
                     _this.tableData = res.data
                     if (seekInto) { // 搜索刷新
                         seekInto()

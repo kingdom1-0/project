@@ -1,95 +1,259 @@
 <template>
-    <!-- 数据修改模块 -->
-    <el-dialog :title="thData.hasOwnProperty('add')?'添加':'编辑 '+thData.title" :visible="show" width="30%"
-        :before-close="closeCompile" :fullscreen="true" :modal="false">
-        <el-form :model="thData" :rules="rules" ref="thData" label-width="120px" class="demo-thData">
-            <el-form-item label="所属楼层" prop="pId" v-if="typeof(thData.pId) != 'undefined'">
-                <el-radio v-model="thData.pId" :label="fl.title | toNum" v-for="fl in floor" :key="fl.id">
-                    {{fl.title}}
-                </el-radio>
-            </el-form-item>
-            <el-form-item label="所属类别" prop="class" v-if="typeof(thData.class) != 'undefined'">
-                <el-checkbox-group v-model="thData.class">
-                    <el-checkbox :label="item.title" v-for="item in classDa" :key="item.id">
-                        {{item.title}}
-                    </el-checkbox>
-                </el-checkbox-group>
-            </el-form-item>
-            <el-form-item label="字母索引" prop="en" v-if="typeof(thData.en) != 'undefined'">
-                <el-radio v-model="thData.en" :label="item" v-for="(item,n) in enDa" :key="n">{{item}}
-                </el-radio>
-            </el-form-item>
-            <el-form-item label="标题" prop="title">
-                <el-input v-model="thData.title"></el-input>
-            </el-form-item>
-            <el-form-item label="英文标题" prop="enTitle" v-if="typeof(thData.enTitle) != 'undefined'">
-                <el-input v-model="thData.enTitle"></el-input>
-            </el-form-item>
-            <el-form-item label="简介" prop="text" v-if="typeof(thData.text) != 'undefined'">
-                <el-input v-model="thData.text"></el-input>
-            </el-form-item>
-            <el-form-item label="店铺位置" prop="store" v-if="typeof(thData.store) != 'undefined'">
-                <el-input v-model="thData.store"></el-input>
-            </el-form-item>
-            <el-form-item label="矩形热区" prop="area" v-if="typeof(thData.area) != 'undefined'">
-                <el-tooltip class="item" effect="dark" content="在图片里画矩形热区对应top,left,width,height，数据格式(0,0,0,0)"
-                    placement="bottom-start">
-                    <el-input v-model="thData.area"></el-input>
-                </el-tooltip>
-            </el-form-item>
-            <el-form-item label="内容" v-if="typeof(thData.value) != 'undefined'">
-                <vue-neditor-wrap v-model="thData.value" :config="myConfig" :destroy="false"></vue-neditor-wrap>
-            </el-form-item>
-            <el-form-item label="地图" v-if="typeof(thData.value2) != 'undefined'">
-                <vue-neditor-wrap v-model="thData.value2" :config="myConfig" :destroy="true"></vue-neditor-wrap>
-            </el-form-item>
-            <el-form-item label="主图" v-if="typeof(thData.img) != 'undefined'">
-                <el-upload class="avatar-uploader" action="http://127.0.0.1:2101/api/v1/file_upload"
-                    :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                    <img v-if="thData.img" :src="thData.img" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    <div slot="tip" class="el-upload__tip">对应页面单图，只能上传jpg/png文件，且不超过500kb,</div>
-                </el-upload>
-            </el-form-item>
-            <el-form-item label="配图" v-if="typeof(thData.images) != 'undefined'">
-                <el-upload class="upload-demo" action="http://127.0.0.1:2101/api/v1/file_upload"
-                    :on-success="imagesAvatarSuccess" :on-remove="handleRemove" :limit="6" accept=".jpg, .jpeg, .png"
-                    :before-upload="beforeAvatarUpload" :file-list="fileList" list-type="picture-card">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">对应页面多图，只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>
-            </el-form-item>
-            <el-form-item label="是否发布" prop="issue">
-                <el-tooltip class="item" effect="dark" content="发布则数据页面可见" placement="bottom">
-                    <el-switch v-model="thData.issue"></el-switch>
-                </el-tooltip>
-            </el-form-item>
-            <el-form-item label="是否置顶" prop="top">
-                <el-tooltip class="item" effect="dark" content="把数据顶到最先显示" placement="bottom">
-                    <el-switch v-model="thData.top"></el-switch>
-                </el-tooltip>
-            </el-form-item>
-            <el-form-item label="数字排序" prop="sort">
-                <el-tooltip class="item" effect="dark" content="数字超高，数据越显示于前" placement="bottom">
-                    <el-input-number v-model="thData.sort" :min="1" :max="100" label="描述文字"></el-input-number>
-                </el-tooltip>
-            </el-form-item>
-            <el-form-item label="发布时间" prop="date">
-                <el-tooltip class="item" effect="dark" content="时间越新，数据越显示于前" placement="bottom">
-                    <el-date-picker v-model="thData.date" type="datetime" placeholder="选择日期时间"
-                        value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
-                </el-tooltip>
-            </el-form-item>
-            <el-form-item>
-                排序条件：置顶 》 数字排序（升序，0不参与排序） 》 发布时间（倒序）
-            </el-form-item>
-        </el-form>
+  <!-- 数据修改模块 -->
+  <el-dialog
+    :title="thData.hasOwnProperty('add')?'添加':'编辑 '+thData.title"
+    :visible="show"
+    width="30%"
+    :before-close="closeCompile"
+    :fullscreen="true"
+    :modal="false"
+  >
+    <el-form
+      ref="thData"
+      :model="thData"
+      :rules="rules"
+      label-width="120px"
+      class="demo-thData"
+    >
+      <el-form-item
+        v-if="typeof(thData.pId) != 'undefined'"
+        label="所属楼层"
+        prop="pId"
+      >
+        <el-radio
+          v-for="fl in floor"
+          :key="fl.id"
+          v-model="thData.pId"
+          :label="fl.title | toNum"
+        >
+          {{ fl.title }}
+        </el-radio>
+      </el-form-item>
+      <el-form-item
+        v-if="typeof(thData.class) != 'undefined'"
+        label="所属类别"
+        prop="class"
+      >
+        <el-checkbox-group v-model="thData.class">
+          <el-checkbox
+            v-for="item in classDa"
+            :key="item.id"
+            :label="item.title"
+          >
+            {{ item.title }}
+          </el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+      <el-form-item
+        v-if="typeof(thData.en) != 'undefined'"
+        label="字母索引"
+        prop="en"
+      >
+        <el-radio
+          v-for="(item,n) in enDa"
+          :key="n"
+          v-model="thData.en"
+          :label="item"
+        >
+          {{ item }}
+        </el-radio>
+      </el-form-item>
+      <el-form-item
+        label="标题"
+        prop="title"
+      >
+        <el-input v-model="thData.title" />
+      </el-form-item>
+      <el-form-item
+        v-if="typeof(thData.enTitle) != 'undefined'"
+        label="英文标题"
+        prop="enTitle"
+      >
+        <el-input v-model="thData.enTitle" />
+      </el-form-item>
+      <el-form-item
+        v-if="typeof(thData.text) != 'undefined'"
+        label="简介"
+        prop="text"
+      >
+        <el-input v-model="thData.text" />
+      </el-form-item>
+      <el-form-item
+        v-if="typeof(thData.store) != 'undefined'"
+        label="店铺位置"
+        prop="store"
+      >
+        <el-input v-model="thData.store" />
+      </el-form-item>
+      <el-form-item
+        v-if="typeof(thData.area) != 'undefined'"
+        label="矩形热区"
+        prop="area"
+      >
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="在图片里画矩形热区对应top,left,width,height，数据格式(0,0,0,0)"
+          placement="bottom-start"
+        >
+          <el-input v-model="thData.area" />
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item
+        v-if="typeof(thData.value) != 'undefined'"
+        label="内容"
+      >
+        <vue-neditor-wrap
+          v-model="thData.value"
+          :config="myConfig"
+          :destroy="false"
+        />
+      </el-form-item>
+      <el-form-item
+        v-if="typeof(thData.value2) != 'undefined'"
+        label="地图"
+      >
+        <vue-neditor-wrap
+          v-model="thData.value2"
+          :config="myConfig"
+          :destroy="true"
+        />
+      </el-form-item>
+      <el-form-item
+        v-if="typeof(thData.img) != 'undefined'"
+        label="主图"
+      >
+        <el-upload
+          class="avatar-uploader"
+          action="http://127.0.0.1:2101/api/v1/file_upload"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
+          <img
+            v-if="thData.img"
+            :src="thData.img"
+            class="avatar"
+          >
+          <i
+            v-else
+            class="el-icon-plus avatar-uploader-icon"
+          />
+          <div
+            slot="tip"
+            class="el-upload__tip"
+          >
+            对应页面单图，只能上传jpg/png文件，且不超过500kb,
+          </div>
+        </el-upload>
+      </el-form-item>
+      <el-form-item
+        v-if="typeof(thData.images) != 'undefined'"
+        label="配图"
+      >
+        <el-upload
+          class="upload-demo"
+          action="http://127.0.0.1:2101/api/v1/file_upload"
+          :on-success="imagesAvatarSuccess"
+          :on-remove="handleRemove"
+          :limit="6"
+          accept=".jpg, .jpeg, .png"
+          :before-upload="beforeAvatarUpload"
+          :file-list="fileList"
+          list-type="picture-card"
+        >
+          <el-button
+            size="small"
+            type="primary"
+          >
+            点击上传
+          </el-button>
+          <div
+            slot="tip"
+            class="el-upload__tip"
+          >
+            对应页面多图，只能上传jpg/png文件，且不超过500kb
+          </div>
+        </el-upload>
+      </el-form-item>
+      <el-form-item
+        label="是否发布"
+        prop="issue"
+      >
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="发布则数据页面可见"
+          placement="bottom"
+        >
+          <el-switch v-model="thData.issue" />
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item
+        label="是否置顶"
+        prop="top"
+      >
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="把数据顶到最先显示"
+          placement="bottom"
+        >
+          <el-switch v-model="thData.top" />
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item
+        label="数字排序"
+        prop="sort"
+      >
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="数字超高，数据越显示于前"
+          placement="bottom"
+        >
+          <el-input-number
+            v-model="thData.sort"
+            :min="1"
+            :max="100"
+            label="描述文字"
+          />
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item
+        label="发布时间"
+        prop="date"
+      >
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="时间越新，数据越显示于前"
+          placement="bottom"
+        >
+          <el-date-picker
+            v-model="thData.date"
+            type="datetime"
+            placeholder="选择日期时间"
+            value-format="yyyy-MM-dd HH:mm:ss"
+          />
+        </el-tooltip>
+      </el-form-item>
+      <el-form-item>
+        排序条件：置顶 》 数字排序（升序，0不参与排序） 》 发布时间（倒序）
+      </el-form-item>
+    </el-form>
 
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="closeCompile">取 消</el-button>
-            <el-button type="primary" @click="submitForm('thData',thData.hasOwnProperty('add'))">确 定</el-button>
-        </span>
-    </el-dialog>
+    <span
+      slot="footer"
+      class="dialog-footer"
+    >
+      <el-button @click="closeCompile">取 消</el-button>
+      <el-button
+        type="primary"
+        @click="submitForm('thData',thData.hasOwnProperty('add'))"
+      >确 定</el-button>
+    </span>
+  </el-dialog>
 </template>
 
 <script>
@@ -101,12 +265,21 @@
         components: {
             VueNeditorWrap
         },
+        filters: {
+            toNum: function (val) { // 字符串转单数字
+                return val.match(/[0-9]/g)[0]
+            }
+        },
         props: {
             show: { // 显示控制
                 type: Boolean
             },
             alData: { // 传入数据
-                type: Object
+                type: Object,
+                // 对象或数组默认值必须从一个工厂函数获取
+                default: function () {
+                  return {}
+                }
             }
         },
         data() {
@@ -157,13 +330,50 @@
                 }
             }
         },
+        watch: {
+            alData: function () { // 传值监控
+                this.thData = Object.assign(this.alData) // 浅拷贝
+
+                this.thData.issue = Boolean(this.thData.issue) // 0 1  转换boolean值
+                this.thData.top = Boolean(this.thData.top)
+                if (typeof (this.thData.class) == 'string') { // 多选按钮
+                    this.thData.class = this.thData.class.split(',')
+                }
+                if (typeof (this.thData.value) != 'undefined' && this.thData.value == null) {
+                    this.thData.value = ''
+                }
+                if (typeof (this.thData.value2) != 'undefined' && this.thData.value2 == null) {
+                    this.thData.value2 = ''
+                }
+                // 多图字符串转数组
+                this.fileList = [] // 清空多图缓存
+                if (typeof (this.thData.images) == 'string') {
+                    var images = []
+                    if (this.thData.images.length > 0) {
+                        var img = this.thData.images.split(',')
+                        img.forEach((item, n) => {
+                            images[n] = {
+                                'url': item
+                            }
+                        })
+                    }
+                    this.fileList = images // 多图组件附值
+                    this.thData.images = images
+                }
+                if (typeof (this.thData.pId) != 'undefined') { // 判断是否有楼层数据项
+                    this.$http.get('floor').then((res) => { // 楼层数据
+                        this.floor = res.data
+                    })
+                }
+                if (typeof (this.thData.class) != 'undefined') { // 判断是否有分类数据项
+                    this.$http.get('sort').then((res) => { // 分类数据
+                        this.classDa = res.data
+                    })
+                }
+            }
+        },
         created() {
 
-        },
-        filters: {
-            toNum: function (val) { // 字符串转单数字
-                return val.match(/[0-9]/g)[0]
-            }
         },
         methods: {
             handleClose(done) { // 关闭数据修改页操作
@@ -171,9 +381,6 @@
                     .then(() => {
                         this.closeCompile()
                         done()
-                    })
-                    .catch(_ => {
-                        console.log(_)
                     })
             },
             closeCompile: function () { // 关闭数据修改页
@@ -229,7 +436,7 @@
                             })
                         }
                     } else {
-                        console.log('error submit!!') // 修改异常提示
+                        //console.log('error submit!!') // 修改异常提示
                         return false
                     }
                 })
@@ -249,48 +456,6 @@
             },
             handleRemove(file, fileList) { // 多图删除回调
                 this.thData.images = fileList
-            }
-        },
-        watch: {
-            alData: function () { // 传值监控
-                this.thData = Object.assign(this.alData) // 浅拷贝
-
-                this.thData.issue = Boolean(this.thData.issue) // 0 1  转换boolean值
-                this.thData.top = Boolean(this.thData.top)
-                if (typeof (this.thData.class) == 'string') { // 多选按钮
-                    this.thData.class = this.thData.class.split(',')
-                }
-                if (typeof (this.thData.value) != 'undefined' && this.thData.value == null) {
-                    this.thData.value = ''
-                }
-                if (typeof (this.thData.value2) != 'undefined' && this.thData.value2 == null) {
-                    this.thData.value2 = ''
-                }
-                // 多图字符串转数组
-                this.fileList = [] // 清空多图缓存
-                if (typeof (this.thData.images) == 'string') {
-                    var images = []
-                    if (this.thData.images.length > 0) {
-                        var img = this.thData.images.split(',')
-                        img.forEach((item, n) => {
-                            images[n] = {
-                                'url': item
-                            }
-                        })
-                    }
-                    this.fileList = images // 多图组件附值
-                    this.thData.images = images
-                }
-                if (typeof (this.thData.pId) != 'undefined') { // 判断是否有楼层数据项
-                    this.$http.get('floor').then((res) => { // 楼层数据
-                        this.floor = res.data
-                    })
-                }
-                if (typeof (this.thData.class) != 'undefined') { // 判断是否有分类数据项
-                    this.$http.get('sort').then((res) => { // 分类数据
-                        this.classDa = res.data
-                    })
-                }
             }
         }
     }

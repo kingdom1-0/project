@@ -1,127 +1,235 @@
 <template>
   <div>
     <!-- 登录 -->
-    <div class="log_content" v-if="shOn" :style="{height:wHeight+'px'}">
-      <div class="log_bg" :style="{height:wHeight+'px'}">
-        <iframe src="canvas.html"></iframe>
+    <div
+      v-if="shOn"
+      class="log_content"
+      :style="{height:wHeight+'px'}"
+    >
+      <div
+        class="log_bg"
+        :style="{height:wHeight+'px'}"
+      >
+        <iframe src="canvas.html" />
       </div>
       <div class="log_conBlock">
-        <div class="log_logo"><img src="/images/logo.png" /></div>
-        <el-form ref="formRef" :model="form" :rules="rules">
+        <div class="log_logo">
+          <img src="/images/logo.png">
+        </div>
+        <el-form
+          ref="formRef"
+          :model="form"
+          :rules="rules"
+        >
           <!-- 用户名 -->
           <el-form-item prop="username">
-            <el-input prefix-icon="el-icon-user" v-model="form.username"></el-input>
+            <el-input
+              v-model="form.username"
+              prefix-icon="el-icon-user"
+            />
           </el-form-item>
           <!-- 密码 -->
           <el-form-item prop="password">
-            <el-input type="password" @keyup.enter.native="logIn" prefix-icon="el-icon-lock" v-model="form.password">
-            </el-input>
+            <el-input
+              v-model="form.password"
+              type="password"
+              prefix-icon="el-icon-lock"
+              @keyup.enter.native="logIn"
+            />
           </el-form-item>
 
           <!-- 按钮区域 -->
           <el-form-item class="bu_block">
-            <el-button type="primary" @click="logIn">登 录</el-button>
-            <el-button type="info" @click="reset">重 置</el-button>
+            <el-button
+              type="primary"
+              @click="logIn"
+            >
+              登 录
+            </el-button>
+            <el-button
+              type="info"
+              @click="reset"
+            >
+              重 置
+            </el-button>
           </el-form-item>
         </el-form>
       </div>
     </div>
     <!-- 登录 -->
     <!-- 修改密码 -->
-    <el-dialog title="修改密码" :visible.sync="resetPassword" center width="600px">
-      <el-form ref="setRef" :model="setForm" :rules="setRules">
+    <el-dialog
+      title="修改密码"
+      :visible.sync="resetPassword"
+      center
+      width="600px"
+    >
+      <el-form
+        ref="setRef"
+        :model="setForm"
+        :rules="setRules"
+      >
         <el-row>
           <el-col :span="4">
-            <div class="user_te">用户名：</div>
+            <div class="user_te">
+              用户名：
+            </div>
           </el-col>
           <el-col :span="20">
             <el-form-item prop="username">
-              <el-input prefix-icon="el-icon-user" v-model="setForm.username"></el-input>
+              <el-input
+                v-model="setForm.username"
+                prefix-icon="el-icon-user"
+              />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="4">
-            <div class="user_te">原密码：</div>
+            <div class="user_te">
+              原密码：
+            </div>
           </el-col>
           <el-col :span="20">
             <el-form-item prop="password">
-              <el-input type="password" prefix-icon="el-icon-lock" v-model="setForm.password"></el-input>
+              <el-input
+                v-model="setForm.password"
+                type="password"
+                prefix-icon="el-icon-lock"
+              />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="4">
-            <div class="user_te">新密码：</div>
+            <div class="user_te">
+              新密码：
+            </div>
           </el-col>
           <el-col :span="20">
             <el-form-item prop="setPassword">
-              <el-input prefix-icon="el-icon-lock" v-model="setForm.setPassword" @keyup.enter.native="resPass()">
-              </el-input>
+              <el-input
+                v-model="setForm.setPassword"
+                prefix-icon="el-icon-lock"
+                @keyup.enter.native="resPass()"
+              />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
-      <span slot="footer" class="dialog-footer">
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="resetPassword = false">取 消</el-button>
-        <el-button type="primary" @click="resPass()">确 定</el-button>
+        <el-button
+          type="primary"
+          @click="resPass()"
+        >确 定</el-button>
       </span>
     </el-dialog>
     <!-- 修改密码 -->
     <div class="man_content">
-      <div class="man_body" v-if="!shOn">
+      <div
+        v-if="!shOn"
+        class="man_body"
+      >
         <el-container>
           <el-header>
             <el-row :gutter="20">
               <el-col :span="22">
-                <el-menu class="el-menu-demo" mode="horizontal" background-color="#545c64" text-color="#fff"
-                  active-text-color="#409EFF" router :default-active="activeIndex">
-                  <img class="logo" src="/images/logo.png" />
+                <el-menu
+                  class="el-menu-demo"
+                  mode="horizontal"
+                  background-color="#545c64"
+                  text-color="#fff"
+                  active-text-color="#409EFF"
+                  router
+                  :default-active="activeIndex"
+                >
+                  <img
+                    class="logo"
+                    src="/images/logo.png"
+                  >
                   <el-submenu index="1">
-                    <template slot="title"><i class="iconfont icon-xiantiao-shouye"></i>后台首页</template>
-                    <el-menu-item index="/manage/">系统信息</el-menu-item>
-                    <el-menu-item><a href="https://uweb.umeng.com/v1/login.php?siteid=1279263413" target="_block"
-                        class="el_a">统计流量</a>
+                    <template slot="title">
+                      <i class="iconfont icon-xiantiao-shouye" />后台首页
+                    </template>
+                    <el-menu-item index="/manage/">
+                      系统信息
+                    </el-menu-item>
+                    <el-menu-item>
+                      <a
+                        href="https://uweb.umeng.com/v1/login.php?siteid=1279263413"
+                        target="_block"
+                        class="el_a"
+                      >统计流量</a>
                     </el-menu-item>
                   </el-submenu>
                   <el-menu-item index="/manage/content/banner">
-                    <i class="el-icon-document-copy"></i>内容管理
+                    <i class="el-icon-document-copy" />内容管理
                   </el-menu-item>
                   <el-menu-item index="/manage/message/">
-                    <i class="el-icon-chat-dot-square"></i>留言管理
+                    <i class="el-icon-chat-dot-square" />留言管理
                   </el-menu-item>
                   <el-submenu index="4">
-                    <template slot="title"><i class="el-icon-setting"></i>系统设置</template>
-                    <el-menu-item index="/manage/logInfo">登陆日志</el-menu-item>
-                    <el-menu-item index="/manage/opLog">操作日志</el-menu-item>
-                    <el-menu-item index="/manage/role">角色管理</el-menu-item>
-                    <el-menu-item index="">管理员管理</el-menu-item>
-                    <el-menu-item index="">SEO设置</el-menu-item>
+                    <template slot="title">
+                      <i class="el-icon-setting" />系统设置
+                    </template>
+                    <el-menu-item index="/manage/logInfo">
+                      登陆日志
+                    </el-menu-item>
+                    <el-menu-item index="/manage/opLog">
+                      操作日志
+                    </el-menu-item>
+                    <el-menu-item index="/manage/role">
+                      角色管理
+                    </el-menu-item>
+                    <el-menu-item index="">
+                      管理员管理
+                    </el-menu-item>
+                    <el-menu-item index="">
+                      SEO设置
+                    </el-menu-item>
                   </el-submenu>
                   <el-menu-item index="/manage/explain">
-                    <i class="iconfont icon-shuoming"></i>操作说明
+                    <i class="iconfont icon-shuoming" />操作说明
                   </el-menu-item>
                   <el-menu-item>
-                    <a href="https://gitee.com/kingdom10/vue_web" target="_block"><i
-                        class="iconfont icon-wailian"></i>外链</a>
+                    <a
+                      href="https://gitee.com/kingdom10/vue_web"
+                      target="_block"
+                    ><i
+                      class="iconfont icon-wailian"
+                    />外链</a>
                   </el-menu-item>
                 </el-menu>
               </el-col>
-              <el-col :span="2" style="text-align: right;">
+              <el-col
+                :span="2"
+                style="text-align: right;"
+              >
                 <el-dropdown @command="logout">
                   <span class="el-dropdown-link">
-                    <i class="el-icon-s-custom" style="margin-right: 10px;"></i>{{form.username}}
+                    <i
+                      class="el-icon-s-custom"
+                      style="margin-right: 10px;"
+                    />{{ form.username }}
                   </span>
                   <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="reset">修改密码</el-dropdown-item>
-                    <el-dropdown-item command="out">退出</el-dropdown-item>
+                    <el-dropdown-item command="reset">
+                      修改密码
+                    </el-dropdown-item>
+                    <el-dropdown-item command="out">
+                      退出
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </el-col>
             </el-row>
           </el-header>
           <el-container>
-            <router-view></router-view>
+            <router-view />
           </el-container>
         </el-container>
       </div>
@@ -223,6 +331,35 @@
         resetPassword: false // 重置密码
       }
     },
+    created() {
+      // axios.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
+      //   config.headers.Authorization = window.sessionStorage.getItem("token") //挂载token
+      //   return config //最后必需
+      // })
+    },
+    mounted: function () {
+      if (sessionStorage.token != undefined) { // 判断token值，显示后台管理系统
+        this.shOn = false
+      }
+      var _this = this
+      _this.wHeight = window.innerHeight
+      window.addEventListener('resize', function () { // 全屏自适应
+        return (() => {
+          if (_this.showOn) {
+            setTimeout(function () {
+              _this.wHeight = window.innerHeight
+            }, 300)
+          }
+        })()
+      })
+
+      // 一级导航初始选定
+      var hash = location.hash.slice(1)
+      if (hash.includes('manage/content')) {
+        hash = '/manage/content/banner'
+      }
+      this.activeIndex = hash
+    },
     methods: {
       loginfo(n) { // 记录登陆数据
         const ip = '192.168.18.186'
@@ -310,35 +447,6 @@
           message: val
         })
       }
-    },
-    created() {
-      // axios.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
-      //   config.headers.Authorization = window.sessionStorage.getItem("token") //挂载token
-      //   return config //最后必需
-      // })
-    },
-    mounted: function () {
-      if (sessionStorage.token != undefined) { // 判断token值，显示后台管理系统
-        this.shOn = false
-      }
-      var _this = this
-      _this.wHeight = window.innerHeight
-      window.addEventListener('resize', function () { // 全屏自适应
-        return (() => {
-          if (_this.showOn) {
-            setTimeout(function () {
-              _this.wHeight = window.innerHeight
-            }, 300)
-          }
-        })()
-      })
-
-      // 一级导航初始选定
-      var hash = location.hash.slice(1)
-      if (hash.includes('manage/content')) {
-        hash = '/manage/content/banner'
-      }
-      this.activeIndex = hash
     }
   }
 
@@ -497,6 +605,5 @@
 
   i.iconfont {
     margin-right: 6px;
-  }
-
+  }  
 </style>

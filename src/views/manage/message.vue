@@ -2,50 +2,120 @@
   <el-container class="man_content">
     <!-- 数据列表 -->
     <el-main v-loading="loading">
-      <el-row></el-row>
+      <el-row />
       <el-row>
-        <el-tooltip class="item" effect="dark" content="删除的数据无法找回，如不明确删除，建议待发布" placement="bottom">
-          <el-button type="danger" @click="openDelete()"><span class="iconfont icon-shanchu"></span>批量删除</el-button>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="删除的数据无法找回，如不明确删除，建议待发布"
+          placement="bottom"
+        >
+          <el-button
+            type="danger"
+            @click="openDelete()"
+          >
+            <span class="iconfont icon-shanchu" />批量删除
+          </el-button>
         </el-tooltip>
-        <el-tooltip class="item" effect="dark" content="导出Excel表格" placement="bottom">
-          <el-button type="primary" @click="exportExcel"><span class="iconfont icon-fabu"></span>导出</el-button>
+        <el-tooltip
+          class="item"
+          effect="dark"
+          content="导出Excel表格"
+          placement="bottom"
+        >
+          <el-button
+            type="primary"
+            @click="exportExcel"
+          >
+            <span class="iconfont icon-fabu" />导出
+          </el-button>
         </el-tooltip>
       </el-row>
-      <el-row></el-row>
-      <el-row></el-row>
+      <el-row />
+      <el-row />
       <el-row>
-        <el-table ref="multipleTable" :data="thisTable[thisPa-1]" tooltip-effect="dark" :border="true" id="out-table"
-          :highlight-current-row="true" style="width: 100%" @selection-change="handleSelectionChange"
-          @row-dblclick="redact">
-          <el-table-column type="selection" width="100" align="center">
-          </el-table-column>
-          <el-table-column prop="name" label="姓名" show-overflow-tooltip align="left" sortable>
-          </el-table-column>
-          <el-table-column prop="phone" label="手机号" align="center" sortable>
-          </el-table-column>
-          <el-table-column prop="Email" label="邮箱" align="center" sortable>
-          </el-table-column>
-          <el-table-column prop="text" label="内容" align="center" sortable>
-          </el-table-column>
-          <el-table-column prop="state" label="状态" align="center" sortable
+        <el-table
+          id="out-table"
+          ref="multipleTable"
+          :data="thisTable[thisPa-1]"
+          tooltip-effect="dark"
+          :border="true"
+          :highlight-current-row="true"
+          style="width: 100%"
+          @selection-change="handleSelectionChange"
+          @row-dblclick="redact"
+        >
+          <el-table-column
+            type="selection"
+            width="100"
+            align="center"
+          />
+          <el-table-column
+            prop="name"
+            label="姓名"
+            show-overflow-tooltip
+            align="left"
+            sortable
+          />
+          <el-table-column
+            prop="phone"
+            label="手机号"
+            align="center"
+            sortable
+          />
+          <el-table-column
+            prop="Email"
+            label="邮箱"
+            align="center"
+            sortable
+          />
+          <el-table-column
+            prop="text"
+            label="内容"
+            align="center"
+            sortable
+          />
+          <el-table-column
+            prop="state"
+            label="状态"
+            align="center"
+            sortable
             :filters="[{text: '未阅', value: '未阅'}, {text: '已阅，通过', value: '已阅，通过'}, {text: '已阅，未通过', value: '已阅，未通过'}]"
-            :filter-method="issueFilter">
-          </el-table-column>
-          <el-table-column prop="date" label="提交时间" align="center" sortable>
-            <template slot-scope="scope">{{ scope.row.date }}</template>
+            :filter-method="issueFilter"
+          />
+          <el-table-column
+            prop="date"
+            label="提交时间"
+            align="center"
+            sortable
+          >
+            <template slot-scope="scope">
+              {{ scope.row.date }}
+            </template>
           </el-table-column>
         </el-table>
-        <el-row></el-row>
-        <el-row></el-row>
+        <el-row />
+        <el-row />
         <el-row>
           <!-- 分页 -->
-          <el-pagination background layout="prev, pager, next" v-if="tableData.length > 10" :total="tableData.length"
-            align="center" @current-change="pageFilter" :current-page="thisPa"></el-pagination>
+          <el-pagination
+            v-if="tableData.length > 10"
+            background
+            layout="prev, pager, next"
+            :total="tableData.length"
+            align="center"
+            :current-page="thisPa"
+            @current-change="pageFilter"
+          />
         </el-row>
       </el-row>
     </el-main>
-    <ma-message :show="dialogVisible" :al-data="alData" @close-compile="closeCompile" @refresh="refreshData">
-    </ma-message>
+    <ma-message
+      :show="dialogVisible"
+      :al-data="alData"
+      @close-compile="closeCompile"
+      @refresh="refreshData"
+    />
   </el-container>
 </template>
 <script>
@@ -58,7 +128,6 @@
     components: {
       maMessage
     },
-    props: ['id', 'arg'], // router props传参(取参)
     data() {
       return {
         axiosTable: 'message', // 操作的数据库表名
@@ -109,7 +178,6 @@
               item.state = '未阅'
             }
           })
-          console.log(_this.tableData)
           _this.thisTableFun() // 列表数据分页拆分
           _this.thisPa = 1 // 返回第一分页
         })
@@ -194,7 +262,7 @@
             'sheetjs.xlsx'
           )
         } catch (e) {
-          if (typeof console !== 'undefined') console.log(e, wbout)
+          //if (typeof console !== 'undefined') console.log(e, wbout)
         }
         return wbout
       }

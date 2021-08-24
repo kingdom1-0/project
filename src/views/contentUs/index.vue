@@ -5,9 +5,9 @@
         <div class="con_content">
           <div class="con_imgBlock">
             <div class="con_tiBl">
-              <div class="con_w"></div>
+              <div class="con_w" />
               <div class="con_ti">
-                GALAXY<br />COCO City
+                GALAXY<br>COCO City
               </div>
             </div>
             <div class="con_imgBl">
@@ -15,14 +15,18 @@
             </div>
           </div>
           <div class="con_textBlock">
-            <div class="con_tCh">{{da.title}}</div>
-            <div class="con_tEn">{{da.enTitle}}</div>
-            <div class="con_wi"></div>
+            <div class="con_tCh">
+              {{ da.title }}
+            </div>
+            <div class="con_tEn">
+              {{ da.enTitle }}
+            </div>
+            <div class="con_wi" />
             <div class="con_te">
-              {{da.text}}
+              {{ da.text }}
             </div>
           </div>
-          <div class="clear"></div>
+          <div class="clear" />
         </div>
       </div>
     </div>

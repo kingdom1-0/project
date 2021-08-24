@@ -44,7 +44,8 @@ const apiLo = '/api/v1/'
 
 // 数据库查询
 const dataArray = []
-const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'notice', 'banner', 'login', 'conversion', 'message', 'synopsis', 'traffic', 'attract', 'attract', 'site', 'contact', 'loginfo', 'oplog', 'joinUs'] // 做个数组封装下简单的get API(对应上面dataArray数据)
+// 做个数组封装下简单的get API(所有能调用的数据库表名)
+const apiArray = ['floor', 'sort', 'store', 'news', 'active', 'notice', 'banner', 'login', 'conversion', 'message', 'synopsis', 'traffic', 'attract', 'attract', 'site', 'contact', 'loginfo', 'oplog', 'joinUs'] 
 
 /* 配置数据库*/
 const sqlConfig = {
@@ -88,7 +89,7 @@ function getQuery(item) {
       return b.sort - a.sort
     }).sort((a, b) => {
       return b.top - a.top
-    })
+    })    
     return dataArray[apiArray.indexOf(item)] = data
   })
 }
@@ -96,8 +97,14 @@ function getQuery(item) {
 // 常规get数据接口
 apiArray.forEach(function (item, n) {
   app.get(apiLo + item, function (req, res) { // 建立数据接口
-    res.status(200),
-      res.json(dataArray[n]) // 响应头返回相应查询数据
+    res.status(200)    
+    let data = dataArray[n];
+    if(req.query.all != 1){ //通过 all=1 可以跳过发布数据筛选（后台显示数据）
+      data = data.filter(function(item){ //筛选发布数据（前台显示数据）
+        return item.issue === 1;
+      })
+    }    
+    res.json(data) // 响应头返回相应查询数据
   })
 })
 
@@ -328,7 +335,7 @@ app.put(apiLo + 'login', function (req, res) { // 建立数据接口
 let response
 app.post(apiLo + 'file_upload', multipartMiddleware, function (req, res) { // 文件上传
   console.log(req.files.file) // 上传文件信息
-  const r = new Date().getTime() // 定文件唯一路径
+  const r = new Date().getTime().toString().slice(5); // 定文件唯一路径
   const des_file = '/serves/images/' + r + req.files.file.originalFilename // 文件存放相对路径
   fs.readFile(req.files.file.path, function (err, data) {
     fs.writeFile(__dirname + des_file, data, function (err) { // _dirname （写入需绝对路径，把相对路径转换成绝对路径）

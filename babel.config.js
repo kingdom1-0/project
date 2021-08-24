@@ -5,7 +5,7 @@ if (process.env.NODE_ENV === 'proeuction') { //判断运行阶段加执行参数
 
 module.exports = {
   presets: [
-    '@vue/cli-plugin-babel/preset'
+    '@vue/cli-plugin-babel/preset',
   ],
   plugins: [
     ...prodPlugins, //写入参数

@@ -1,28 +1,45 @@
 <template>
-    <div class="com_content">
-        <div class="com_bgImg bgImg_1">
-            <img class="b9_2" src="/images/c9_2.png">
-            <img class="b9_4" src="/images/c9_4.png">
-        </div>
-        <div class="com_conBlock">
-            <div class="bus_ul">
-                <router-link :to="item.href" :class="{bus_li:true,current:active==n}" v-for="(item,n) in nav"
-                    :key="item.id">{{item.name}}
-                </router-link>
-                <div class="clear"></div>
-            </div>
-            <transition name="fad">
-                <router-view @showDa="showDa" ref="child"></router-view>
-            </transition>
-        </div>
-        {{shNum}}
-        <news-content :show="shNum"></news-content>
+  <div class="com_content">
+    <div class="com_bgImg bgImg_1">
+      <img
+        class="b9_2"
+        src="/images/c9_2.png"
+      >
+      <img
+        class="b9_4"
+        src="/images/c9_4.png"
+      >
     </div>
+    <div class="com_conBlock">
+      <div class="bus_ul">
+        <router-link
+          v-for="(item,n) in nav"
+          :key="item.id"
+          :to="item.href"
+          :class="{bus_li:true,current:active==n}"
+        >
+          {{ item.name }}
+        </router-link>
+        <div class="clear" />
+      </div>
+      <transition name="fad">
+        <router-view
+          ref="child"
+          @showDa="showDa"
+        />
+      </transition>
+    </div>
+    {{ shNum }}
+    <news-content :show="shNum" />
+  </div>
 </template>
 
 <script>
     import newsContent from '../components/news.vue' // 引入新闻弹出组件
     export default {
+        components: { // 调用组件
+            newsContent
+        },
         data() {
             return {
                 shNum: false,
@@ -49,6 +66,14 @@
                 }]
             }
         },
+        watch: {
+            $route() {
+                this.navActive()
+            }
+        },
+        created() {
+            this.navActive()
+        },
         methods: {
             showDa: function (val) { // 显示弹出层
                 this.shNum = val
@@ -66,17 +91,6 @@
                 } else {
                     this.active = 0
                 }
-            }
-        },
-        components: { // 调用组件
-            newsContent
-        },
-        created() {
-            this.navActive()
-        },
-        watch: {
-            $route() {
-                this.navActive()
             }
         }
     }

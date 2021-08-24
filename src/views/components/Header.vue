@@ -1,45 +1,88 @@
 <template>
-    <div class="he_body">
-        <div id="Header">
-            <a href="/" class="he_logo"><img src="/images/2.png" /></a>
-            <div class="he_ulBl">
-
-                <div :class="{he_liBl:true,active:n==active}" v-for="(nav,n) in navData" @mouseenter="showNav(n)"
-                    @mouseleave="hideNav" :key="n">
-                    <router-link :to="nav.location" class="he_a"><span>{{nav.title}}</span></router-link>
-                    <transition name="fade">
-                        <div class="heN_ul" v-show="navBo == n">
-                            <router-link :to="item.location" class="heN_li" v-for="(item,m) in nav.children" :key="m">
-                                {{item.title}}
-                            </router-link>
-                        </div>
-                    </transition>
-                </div>
-                <div class="clear"></div>
+  <div class="he_body">
+    <div id="Header">
+      <a
+        href="/"
+        class="he_logo"
+      ><img src="/images/2.png"></a>
+      <div class="he_ulBl">
+        <div
+          v-for="(nav,n) in navData"
+          :key="n"
+          :class="{he_liBl:true,active:n==active}"
+          @mouseenter="showNav(n)"
+          @mouseleave="hideNav"
+        >
+          <router-link
+            :to="nav.location"
+            class="he_a"
+          >
+            <span>{{ nav.title }}</span>
+          </router-link>
+          <transition name="fade">
+            <div
+              v-show="navBo == n"
+              class="heN_ul"
+            >
+              <router-link
+                v-for="(item,m) in nav.children"
+                :key="m"
+                :to="item.location"
+                class="heN_li"
+              >
+                {{ item.title }}
+              </router-link>
             </div>
-            <div class="he_ul">
-                <router-link to="/business/" class="he_li li_1"></router-link>
-                <router-link to="/member/" class="he_li li_2"></router-link>
-                <a href="javascript:;" class="he_li li_3">
-                    <div class="he_seek">
-                        <input type="text" v-model="seek" placeholder="请输入搜索内容" @keydown.enter="seekFun()" />
-                    </div>
-                </a>
-                <a href="javascript:;" class="he_li li_5">
-                    <div class="wx_img"><img src="/images/wx.png" /></div>
-                </a>
-                <a href="javascript:;" class="he_li li_6">
-                    <div class="he_seek">
-                        招商电话：0760-88227277
-                    </div>
-                </a>
-                <div class="clear"></div>
-            </div>
+          </transition>
         </div>
-        <transition name="fade">
-            <div class="heN_bgBlock" v-show="navBg"></div>
-        </transition>
+        <div class="clear" />
+      </div>
+      <div class="he_ul">
+        <router-link
+          to="/business/"
+          class="he_li li_1"
+        />
+        <router-link
+          to="/member/"
+          class="he_li li_2"
+        />
+        <a
+          href="javascript:;"
+          class="he_li li_3"
+        >
+          <div class="he_seek">
+            <input
+              v-model="seek"
+              type="text"
+              placeholder="请输入搜索内容"
+              @keydown.enter="seekFun()"
+            >
+          </div>
+        </a>
+        <a
+          href="javascript:;"
+          class="he_li li_5"
+        >
+          <div class="wx_img"><img src="/images/wx.png"></div>
+        </a>
+        <a
+          href="javascript:;"
+          class="he_li li_6"
+        >
+          <div class="he_seek">
+            招商电话：0760-88227277
+          </div>
+        </a>
+        <div class="clear" />
+      </div>
     </div>
+    <transition name="fade">
+      <div
+        v-show="navBg"
+        class="heN_bgBlock"
+      />
+    </transition>
+  </div>
 </template>
 <style>
     .fade-enter-active,
@@ -141,6 +184,11 @@
                 }]
             }
         },
+        watch: {
+            $route() {
+                this.navActive()
+            }
+        },
         created: function () {
 
         },
@@ -173,11 +221,6 @@
                 if (this.seek.length > 0) {
                     this.$router.push(encodeURI('/activity/?t=' + this.seek))
                 }
-            }
-        },
-        watch: {
-            $route() {
-                this.navActive()
             }
         }
     }

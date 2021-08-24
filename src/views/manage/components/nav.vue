@@ -1,24 +1,62 @@
 <!-- 导航 -->
 <template>
-    <!-- unfold参数 控制导航收放 -->
-    <el-aside class="nav_bl" :width="unfold?(64+'px'):(200+'px')">
-        <el-menu unique-opened class="el-menu-vertical-demo" background-color="#545c64" text-color="#fff"
-            active-text-color="rgb(64, 158, 255)" :collapse="unfold" :default-active="activeIndex"
-            :collapse-transition="true" router>
-            <div class="bu_unfold" @click="unfold = !unfold"><i class="el-icon-s-unfold"></i></div>
-            <!-- 二级导航 -->
-            <div v-for="item in menulist" :key="item.id">
-                <el-submenu :index="item.id + ''" v-if="item.hasOwnProperty('children')">
-                    <template slot="title"><i :class="icoList[item.id]"></i><span class="title"
-                            v-show="!unfold">{{item.authName}}</span></template>
-                    <el-menu-item v-for="it in item.children" :index="it.path" :key="it.id">{{it.authName}}
-                    </el-menu-item>
-                </el-submenu>
-                <el-menu-item :index="item.path" v-else><i :class="icoList[item.id]"></i><span class="title"
-                        v-show="!unfold">{{item.authName}}</span></el-menu-item>
-            </div>
-        </el-menu>
-    </el-aside>
+  <!-- unfold参数 控制导航收放 -->
+  <el-aside
+    class="nav_bl"
+    :width="unfold?(64+'px'):(200+'px')"
+  >
+    <el-menu
+      unique-opened
+      class="el-menu-vertical-demo"
+      background-color="#545c64"
+      text-color="#fff"
+      active-text-color="rgb(64, 158, 255)"
+      :collapse="unfold"
+      :default-active="activeIndex"
+      :collapse-transition="true"
+      router
+    >
+      <div
+        class="bu_unfold"
+        @click="unfold = !unfold"
+      >
+        <i class="el-icon-s-unfold" />
+      </div>
+      <!-- 二级导航 -->
+      <div
+        v-for="item in menulist"
+        :key="item.id"
+      >
+        <el-submenu
+          v-if="item.hasOwnProperty('children')"
+          :index="item.id + ''"
+        >
+          <template slot="title">
+            <i :class="icoList[item.id]" /><span
+              v-show="!unfold"
+              class="title"
+            >{{ item.authName }}</span>
+          </template>
+          <el-menu-item
+            v-for="it in item.children"
+            :key="it.id"
+            :index="it.path"
+          >
+            {{ it.authName }}
+          </el-menu-item>
+        </el-submenu>
+        <el-menu-item
+          v-else
+          :index="item.path"
+        >
+          <i :class="icoList[item.id]" /><span
+            v-show="!unfold"
+            class="title"
+          >{{ item.authName }}</span>
+        </el-menu-item>
+      </div>
+    </el-menu>
+  </el-aside>
 </template>
 
 <!-- 导航 -->

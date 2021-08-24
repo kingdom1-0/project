@@ -1,29 +1,46 @@
 <template>
-    <div class="com_content">
-        <div class="com_bgImg bgImg_1">
-            <img class="b6_1" src="/images/6_1.png" />
-            <img class="b6_2" src="/images/6_2.png" />
-            <img class="b6_3" src="/images/6_3.png" />
-        </div>
-        <div class="com_conBlock">
-            <div class="bus_ul">
-                <router-link :to="item.href" :class="{bus_li:true,'current':n==active}" v-for="(item,n) in nav"
-                    :key="item.id">{{item.name}}
-                </router-link>
-                <div class="clear"></div>
-            </div>
-            <transition name="fad">
-                <router-view @showDa="showDa"></router-view>
-            </transition>
-        </div>
-        {{shNum}}
-        <alert-content :show="shNum"></alert-content>
+  <div class="com_content">
+    <div class="com_bgImg bgImg_1">
+      <img
+        class="b6_1"
+        src="/images/6_1.png"
+      >
+      <img
+        class="b6_2"
+        src="/images/6_2.png"
+      >
+      <img
+        class="b6_3"
+        src="/images/6_3.png"
+      >
     </div>
+    <div class="com_conBlock">
+      <div class="bus_ul">
+        <router-link
+          v-for="(item,n) in nav"
+          :key="item.id"
+          :to="item.href"
+          :class="{bus_li:true,'current':n==active}"
+        >
+          {{ item.name }}
+        </router-link>
+        <div class="clear" />
+      </div>
+      <transition name="fad">
+        <router-view @showDa="showDa" />
+      </transition>
+    </div>
+    {{ shNum }}
+    <alert-content :show="shNum" />
+  </div>
 </template>
 
 <script>
     import alertContent from '../components/alert.vue'
     export default {
+        components: {
+            alertContent
+        },
         data() {
             return {
                 shNum: false,
@@ -42,6 +59,14 @@
                     href: '/business/merchant'
                 }]
             }
+        },
+        watch: {
+            $route() {
+                this.navActive()
+            }
+        },
+        created() {
+            this.navActive()
         },
         methods: {
             toBrand: function () {
@@ -65,17 +90,6 @@
                 } else {
                     this.active = 0
                 }
-            }
-        },
-        created() {
-            this.navActive()
-        },
-        components: {
-            alertContent
-        },
-        watch: {
-            $route() {
-                this.navActive()
             }
         }
     }

@@ -1,14 +1,19 @@
 <template>
   <div class="bus_content">
     <div class="co_content">
-      <div class="co_img"><img :src="da.img" /></div>
-      <div class="co_teBlock">
-        <div class="co_ti">{{da.title}}</div>
-        <div class="co_ul" v-html="da.value">
-
-        </div>
+      <div class="co_img">
+        <img :src="da.img">
       </div>
-      <div class="clear"></div>
+      <div class="co_teBlock">
+        <div class="co_ti">
+          {{ da.title }}
+        </div>
+        <div
+          class="co_ul"
+          v-html="da.value"
+        />
+      </div>
+      <div class="clear" />
     </div>
   </div>
 </template>

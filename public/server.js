@@ -8,5 +8,5 @@ app.use(compression())
 app.use(express.static('./dist'))
 // 启动 web 服务器
 app.listen(2001, () => { // 线上设置80端口
-    console.log('web server running at http://127.0.0.1')
+    console.log('server: 127.0.0.1:2001')
 })

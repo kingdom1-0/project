@@ -1,28 +1,41 @@
 <template>
   <div class="bus_content">
     <div class="bus_conBlock">
-      <swiper class="swiper" :options="swiperOption">
-        <swiper-slide v-for="(li,i) in newList" :key="li.id">
-          <a href="javascript:;" class="act_block Inn_button" @click.stop="showBlock(i)">
+      <swiper
+        class="swiper"
+        :options="swiperOption"
+      >
+        <swiper-slide
+          v-for="(li,i) in newList"
+          :key="li.id"
+        >
+          <a
+            href="javascript:;"
+            class="act_block Inn_button"
+            @click.stop="showBlock(i)"
+          >
             <div class="act_img"> <img :src="li.img"> </div>
             <div class="act_teBlock">
               <div class="act_date">
-                <div class="act_year">{{li.date.slice(0,4)}}</div>
-                <div class="act_day">{{li.date.slice(5,10)}}</div>
+                <div class="act_year">{{ li.date.slice(0,4) }}</div>
+                <div class="act_day">{{ li.date.slice(5,10) }}</div>
               </div>
               <div class="act_teBl">
-                <div class="act_ti">{{li.title}}</div>
-                <div class="act_bu"></div>
-                <div class="act_te" v-html="li.text"></div>
+                <div class="act_ti">{{ li.title }}</div>
+                <div class="act_bu" />
+                <div
+                  class="act_te"
+                  v-html="li.text"
+                />
               </div>
-              <div class="clear"></div>
+              <div class="clear" />
             </div>
           </a>
         </swiper-slide>
       </swiper>
       <div class="sw_button">
-        <div class="sw_leBu"></div>
-        <div class="sw_riBu"></div>
+        <div class="sw_leBu" />
+        <div class="sw_riBu" />
       </div>
     </div>
   </div>
@@ -41,6 +54,14 @@
         info: null,
         newList: []
       }
+    },
+    watch: {
+      $route() {
+        this.initDate()
+      }
+    },
+    mounted() {
+      this.initDate()
     },
     methods: {
       showBlock(i) {
@@ -74,14 +95,6 @@
             _this.showBlock(n)
           }
         })
-      }
-    },
-    mounted() {
-      this.initDate()
-    },
-    watch: {
-      $route() {
-        this.initDate()
       }
     }
   }
