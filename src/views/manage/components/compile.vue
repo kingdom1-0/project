@@ -16,7 +16,7 @@
       class="demo-thData"
     >
       <el-form-item
-        v-if="typeof(thData.pId) != 'undefined'"
+        v-if="!(thData.pId === void 0)"
         label="所属楼层"
         prop="pId"
       >
@@ -30,7 +30,7 @@
         </el-radio>
       </el-form-item>
       <el-form-item
-        v-if="typeof(thData.class) != 'undefined'"
+        v-if="!(thData.class === void 0)"
         label="所属类别"
         prop="class"
       >
@@ -45,7 +45,7 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item
-        v-if="typeof(thData.en) != 'undefined'"
+        v-if="!(thData.en === void 0)"
         label="字母索引"
         prop="en"
       >
@@ -65,28 +65,28 @@
         <el-input v-model="thData.title" />
       </el-form-item>
       <el-form-item
-        v-if="typeof(thData.enTitle) != 'undefined'"
+        v-if="!(thData.enTitle === void 0)"
         label="英文标题"
         prop="enTitle"
       >
         <el-input v-model="thData.enTitle" />
       </el-form-item>
       <el-form-item
-        v-if="typeof(thData.text) != 'undefined'"
+        v-if="!(thData.text === void 0)"
         label="简介"
         prop="text"
       >
         <el-input v-model="thData.text" />
       </el-form-item>
       <el-form-item
-        v-if="typeof(thData.store) != 'undefined'"
+        v-if="!(thData.store === void 0)"
         label="店铺位置"
         prop="store"
       >
         <el-input v-model="thData.store" />
       </el-form-item>
       <el-form-item
-        v-if="typeof(thData.area) != 'undefined'"
+        v-if="!(thData.area === void 0)"
         label="矩形热区"
         prop="area"
       >
@@ -100,7 +100,7 @@
         </el-tooltip>
       </el-form-item>
       <el-form-item
-        v-if="typeof(thData.value) != 'undefined'"
+        v-if="!(thData.value === void 0)"
         label="内容"
       >
         <vue-neditor-wrap
@@ -110,7 +110,7 @@
         />
       </el-form-item>
       <el-form-item
-        v-if="typeof(thData.value2) != 'undefined'"
+        v-if="!(thData.value2 === void 0)"
         label="地图"
       >
         <vue-neditor-wrap
@@ -120,7 +120,7 @@
         />
       </el-form-item>
       <el-form-item
-        v-if="typeof(thData.img) != 'undefined'"
+        v-if="!(thData.img === void 0)"
         label="主图"
       >
         <el-upload
@@ -148,7 +148,7 @@
         </el-upload>
       </el-form-item>
       <el-form-item
-        v-if="typeof(thData.images) != 'undefined'"
+        v-if="!(thData.image === void 0)"
         label="配图"
       >
         <el-upload
@@ -302,9 +302,9 @@
                 },
                 dialogVisible: false, // 弹出框
                 rules: { // 表单数据预验证
-                    name: [{
+                    title: [{
                             required: true,
-                            message: '请输入活动名称',
+                            message: '请输入标题',
                             trigger: 'blur'
                         },
                         {
@@ -339,10 +339,10 @@
                 if (typeof (this.thData.class) == 'string') { // 多选按钮
                     this.thData.class = this.thData.class.split(',')
                 }
-                if (typeof (this.thData.value) != 'undefined' && this.thData.value == null) {
+                if (!(this.thData.value === void 0) && this.thData.value == null) {
                     this.thData.value = ''
                 }
-                if (typeof (this.thData.value2) != 'undefined' && this.thData.value2 == null) {
+                if (!(this.thData.value2 === void 0) && this.thData.value2 == null) {
                     this.thData.value2 = ''
                 }
                 // 多图字符串转数组
@@ -360,12 +360,12 @@
                     this.fileList = images // 多图组件附值
                     this.thData.images = images
                 }
-                if (typeof (this.thData.pId) != 'undefined') { // 判断是否有楼层数据项
+                if (!(this.thData.pId === void 0)) { // 判断是否有楼层数据项
                     this.$http.get('floor').then((res) => { // 楼层数据
                         this.floor = res.data
                     })
                 }
-                if (typeof (this.thData.class) != 'undefined') { // 判断是否有分类数据项
+                if (!(this.thData.class === void 0)) { // 判断是否有分类数据项
                     this.$http.get('sort').then((res) => { // 分类数据
                         this.classDa = res.data
                     })
@@ -406,7 +406,7 @@
                             images = images.slice(1)
                             this.thData.images = images
                         }
-                        if (typeof (this.thData.area) != 'undefined' && this.thData.area == null) {
+                        if (!(this.thData.area === void 0) && this.thData.area == null) {
                             this.thData.area = '0,0,0,0' // 矩形热区默认给值
                         }
 
@@ -499,6 +499,9 @@
 
     .el-table .caret-wrapper {
         top: 10px;
+    }
+    .el-icon-plus {
+      border: 1px solid #eee;
     }
 
 </style>

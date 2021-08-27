@@ -1,8 +1,11 @@
 <template>
-  <el-container class="man_content">
+  <el-container
+    v-loading.fullscreen.lock="fullscreenLoading"
+    class="man_content"
+  >
     <ma-nav />
     <!-- 数据列表 -->
-    <el-main v-loading="loading">
+    <el-main>
       <el-row />
       <el-row>
         <div class="button_ul">
@@ -56,7 +59,7 @@
           <el-tooltip
             class="item"
             effect="dark"
-            content="只有发布的数据，在会显示在网站"
+            content="只有发布的数据，才会显示在网站"
             placement="bottom"
           >
             <el-button
@@ -203,13 +206,13 @@
       :show="dialogVisible"
       :al-data="alData"
       @close-compile="closeCompile"
-      @refresh="refreshData"
+      @refresh="refreshData()"
     />
   </el-container>
 </template>
 <script>
-  import maNav from './components/nav.vue'
-  import maCompile from './components/compile.vue'
+  import maNav from './components/Nav.vue'
+  import maCompile from './components/Compile.vue'
   import {
     thisDate, // 返回当前时间
     oplogInfo
@@ -230,14 +233,15 @@
       return {
         seek: '',
         thisPa: 1, // 当前页
-        loading: false, // 加载中
         input: '', // 标题搜索
         tableData: [{}], // 列表的数据
         thisTable: [], // 分页列表的数据
         valTable: [], // 当前显示列表的数据
         selectData: [], // 多选选中的数据
         dialogVisible: false, // 编辑页开关
-        alData: {} // 传入编辑页数据
+        alData: {}, // 传入编辑页数据
+        fullscreenLoading:false, //加载开关
+        time:0 //用于时间差
       }
     },
     watch: {
@@ -255,6 +259,7 @@
         if (this.selectData.length < 1) {
           this.$message({
             message: '请勾选数据！',
+            duration:1000,
             type: 'error'
           })
           return false
@@ -286,26 +291,37 @@
       },
       thisTableFun() { // 列表数据分页拆分
         this.thisTable = []
-        for (var i = 0; i < Math.ceil(this.tableData.length / 10); i++) {
+        for (let i = 0; i < Math.ceil(this.tableData.length / 10); i++) {
           this.thisTable.push(this.tableData.slice(10 * i, 10 * i + 10))
         }
         // console.log(this.thisTable)
       },
+      openFullScreen() { //1秒加载中提示
+        this.fullscreenLoading = true;
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        },500);
+      },
       refreshData: function (seekInto) { // 刷新列表数据
-        var _this = this
-        this.$http.get(this.id+"?all=1").then(function (res) { // 字符串转换布尔值
-          _this.tableData = res.data
-          _this.tableData.forEach((item) => {
-            item.issue = Boolean(parseInt(item.issue))
-            item.top = Boolean(parseInt(item.top))
-          })
-          if (seekInto) { // 搜索刷新
-            seekInto()
-          }
-          _this.tableData.sort() // 响应式数据
-          _this.thisTableFun() // 列表数据分页拆分
-          _this.thisPa = 1 // 返回第一分页
-        })
+        let _this = this;   
+        if(new Date().getTime()){
+          setTimeout(function(){
+            _this.$http.get(_this.id+"?all=1").then(function (res) { // 字符串转换布尔值
+              _this.tableData = res.data
+              _this.tableData.forEach((item) => {
+                item.issue = Boolean(parseInt(item.issue))
+                item.top = Boolean(parseInt(item.top))
+              })
+              if (seekInto) { // 搜索刷新
+                seekInto()
+              }
+              _this.tableData.sort() // 响应式数据
+              _this.thisTableFun() // 列表数据分页拆分
+              _this.thisPa = 1 // 返回第一分页
+            })          
+          },500)    
+        }
+            
       },
       closeCompile: function (bo) { // 关闭编辑
         this.dialogVisible = bo
@@ -348,6 +364,7 @@
           if (da.length > 1) {
             this.$message({
               message: '一次只能编辑一条数据！',
+              duration:1000,
               type: 'error'
             })
           } else {
@@ -368,18 +385,24 @@
         } else if (op == 'issue' && !val) {
           text = '待发布：'
         }
+        var thDate = {}
         if (this.selectHint()) {
           this.selectData.forEach((item) => {
-            tiAr.push(item.title)
-            var thDate = this.tableData.find((age) => {
+            tiAr.push(item.title)            
+            thDate = this.tableData.find((age) => {//根据ID返回改动对应数据
               return age.id == item.id
             })
-            thDate[op] = val
-            this.loading = true
+            thDate[op] = val //操作参数（置顶、取消置顶、发布、待发布）
+      
+          
             this.$http.put(this.$route.params.id, thDate).then((res) => {
               if (res.status == '200') {
-                oplogInfo(tiAr, text)
-                this.loading = false
+                oplogInfo(tiAr, text)  
+                this.$message({
+                  type: 'success',
+                  duration:1000,
+                  message: text + '成功!'
+                })
               }
             })
           })
@@ -394,12 +417,14 @@
           }).then(() => {
             this.$message({
               type: 'success',
+              duration:1000,
               message: '删除成功!'
             })
             this.deleteDa()
           }).catch(() => {
             this.$message({
               type: 'info',
+              duration:1000,
               message: '已取消删除'
             })
           })

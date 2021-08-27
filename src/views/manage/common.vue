@@ -185,12 +185,12 @@
                     <el-menu-item index="/manage/role">
                       角色管理
                     </el-menu-item>
-                    <el-menu-item index="">
+                    <!-- <el-menu-item index="">
                       管理员管理
                     </el-menu-item>
                     <el-menu-item index="">
                       SEO设置
-                    </el-menu-item>
+                    </el-menu-item> -->
                   </el-submenu>
                   <el-menu-item index="/manage/explain">
                     <i class="iconfont icon-shuoming" />操作说明
@@ -229,7 +229,9 @@
             </el-row>
           </el-header>
           <el-container>
-            <router-view />
+            <transition name="fad">
+              <router-view />
+            </transition>            
           </el-container>
         </el-container>
       </div>
@@ -332,7 +334,7 @@
       }
     },
     created() {
-      // axios.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
+      // this.$http.interceptors.request.use(config => { //axios栏载器（发送请求前运行，用于配置请求头）
       //   config.headers.Authorization = window.sessionStorage.getItem("token") //挂载token
       //   return config //最后必需
       // })
@@ -385,6 +387,7 @@
           const {
             data: res
           } = await this.$http.post('login', this.form)
+          console.log(res)
           if (res.meta.status != 200) { // 响应状态
             this.open4(res.meta.message)
             _this.loginfo(0)
@@ -606,4 +609,5 @@
   i.iconfont {
     margin-right: 6px;
   }  
+  
 </style>

@@ -105,7 +105,7 @@
                             {
                                 id: '3_2',
                                 authName: '加入会员',
-                                path: 'join'
+                                path: 'joinUs'
                             },
                             {
                                 id: '3_3',

@@ -119,7 +119,7 @@
   </el-container>
 </template>
 <script>
-  import maMessage from './components/message.vue'
+  import maMessage from './components/Message.vue'
   // 引入导出Excel表格依赖
   import FileSaver from 'file-saver'
   import XLSX from 'xlsx'
@@ -171,16 +171,18 @@
       },
       refreshData: function () { // 刷新列表数据
         var _this = this
-        this.$http.get(this.axiosTable).then(function (res) { // 字符串转换布尔值
-          _this.tableData = res.data
-          _this.tableData.forEach((item) => {
-            if (item.state == null) {
-              item.state = '未阅'
-            }
+        setTimeout(function(){
+          _this.$http.get(_this.axiosTable).then(function (res) { // 字符串转换布尔值
+            _this.tableData = res.data
+            _this.tableData.forEach((item) => {
+              if (item.state == null) {
+                item.state = '未阅'
+              }
+            })
+            _this.thisTableFun() // 列表数据分页拆分
+            _this.thisPa = 1 // 返回第一分页
           })
-          _this.thisTableFun() // 列表数据分页拆分
-          _this.thisPa = 1 // 返回第一分页
-        })
+        },500)        
       },
       closeCompile: function (bo) { // 关闭编辑
         this.dialogVisible = bo

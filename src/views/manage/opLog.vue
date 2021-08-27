@@ -161,7 +161,8 @@
             },
             refreshData: function (seekInto) { // 刷新列表数据
                 var _this = this
-                this.$http.get(_this.axiosTable).then(function (res) { // 字符串转换布尔值
+                setTimeout(function(){
+                  _this.$http.get(_this.axiosTable).then(function (res) { // 字符串转换布尔值
                     _this.tableData = res.data
                     if (seekInto) { // 搜索刷新
                         seekInto()
@@ -169,7 +170,8 @@
                     _this.tableData.sort() // 响应式数据
                     _this.thisTableFun() // 列表数据分页拆分
                     _this.thisPa = 1 // 返回第一分页
-                })
+                  })
+                },500)                
             },
             openDelete() { // 提示删除
                 if (this.selectHint()) {

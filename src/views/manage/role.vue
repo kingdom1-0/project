@@ -68,24 +68,27 @@
             prop="username"
             label="角色名"
             show-overflow-tooltip
+            align="center"
+            width="200px"
+            sortable
+          />
+          <el-table-column
+            prop="password"
+            label="密码"
+            align="left"
+            width="200px"
+            sortable
+          /> 
+          <el-table-column
+            prop="text"
+            label="权限描述"
             align="left"
             sortable
-          />
-          <el-table-column
-            prop="sort"
-            label="菜单权限"
-            align="center"
-            sortable
-          />
-          <el-table-column
-            prop="sort"
-            label="内容管理权限"
-            align="center"
-            sortable
-          />
+          />         
           <el-table-column
             prop="date"
             label="创建时间"
+            width="200px"
             align="center"
             sortable
           >
@@ -110,29 +113,28 @@
         </el-row>
       </el-row>
     </el-main>
-    <ma-compile
+    <ma-Power
       :show="dialogVisible"
       :al-data="alData"
       @close-compile="closeCompile"
-      @refresh="refreshData"
+      @refresh="refreshData()"
     />
   </el-container>
 </template>
 <script>
-  import maCompile from './components/compile.vue'
+  import maPower from './components/Power.vue'
   import {
-    thisDate, // 返回当前时间
     oplogInfo
   } from './js/common.js' // 公共JS
 
   export default {
     components: {
-      maCompile
+      maPower
     },
     data() {
       return {
         seek: '',
-        table: 'login', // 数据库表名
+        tableName: 'roles', // 数据库表名
         thisPa: 1, // 当前页
         loading: false, // 加载中
         input: '', // 标题搜索
@@ -176,21 +178,19 @@
         }
         // console.log(this.thisTable)
       },
-      refreshData: function (seekInto) { // 刷新列表数据
+      refreshData: function (seekInto) { // 刷新列表数据      
         var _this = this
-        this.$http.get(this.table).then(function (res) { // 字符串转换布尔值
-          _this.tableData = res.data
-          _this.tableData.forEach((item) => {
-            item.issue = Boolean(parseInt(item.issue))
-            item.top = Boolean(parseInt(item.top))
+        setTimeout(function(){
+          _this.$http.get(_this.tableName).then(function (res) { // 字符串转换布尔值
+            _this.tableData = res.data   
+            if (seekInto) { // 搜索刷新
+              seekInto()
+            }
+            _this.tableData.sort() // 响应式数据
+            _this.thisTableFun() // 列表数据分页拆分
+            _this.thisPa = 1 // 返回第一分页
           })
-          if (seekInto) { // 搜索刷新
-            seekInto()
-          }
-          _this.tableData.sort() // 响应式数据
-          _this.thisTableFun() // 列表数据分页拆分
-          _this.thisPa = 1 // 返回第一分页
-        })
+        },500)        
       },
       closeCompile: function (bo) { // 关闭编辑
         this.dialogVisible = bo
@@ -198,32 +198,15 @@
       handleSelectionChange(val) { // 表单change事件
         this.selectData = val
       },
-      addDate() { // 添加数据
-        this.$http.get(this.table + 'Head').then((res) => { // 读取列名显示对应的数据项
+      addDate() { // 添加数据         
           var da = {
             add: true
           }
-          res.data.forEach(function (item) {
-            let key = item.COLUMN_NAME
-            if (key == 'value') { // 编辑器的值不能为空
-              da[key] = ''
-            } else if (key == 'class' || key == 'images') {
-              da[key] = []
-            } else if (key == 'issue') { // 默认发布
-              da[key] = 1
-            } else if (key == 'date') { // 默认当前时间
-              da[key] = thisDate()
-            } else {
-              da[key] = null
-            }
-          })
-          // console.log(da)
           this.alData = da
-          this.dialogVisible = true
-        })
+          this.dialogVisible = true       
       },
       redact(da) { // 编辑
-        this.refreshData() // 刷新数据列表
+        //this.refreshData() // 刷新数据列表
         var te = da.constructor.toString()
         if (te.indexOf('Object') > 0) {
           this.alData = da
@@ -265,16 +248,23 @@
         const tiAr = []
         this.selectData.forEach((item) => {
           tiAr.push(item.username)
-          this.$http.delete(this.table, {
-            params: {
-              id: item.id // 对应ID删除
-            }
-          }).then((res) => {
-            if (res.status == '200') {
-              oplogInfo(tiAr, '删除内容：')
-              this.refreshData() // 刷新数据列表
-            }
-          })
+          if(item.username === 'admin'){
+            this.$message({
+              type: 'info',
+              message: '管理员账号不可删'
+            })
+          }else{
+            this.$http.delete(this.tableName, {
+              params: {
+                id: item.id // 对应ID删除
+              }
+            }).then((res) => {
+              if (res.status == '200') {
+                oplogInfo(tiAr, '删除内容：')
+                this.refreshData() // 刷新数据列表
+              }
+            })
+          }          
         })
       }
     }
