@@ -91,7 +91,7 @@
                   会员活动
                 </router-link>
                 <router-link
-                  to="/member/join"
+                  to="/member/joinUs"
                   class="fo_li"
                 >
                   加入会员

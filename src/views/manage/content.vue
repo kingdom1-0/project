@@ -392,9 +392,8 @@
             thDate = this.tableData.find((age) => {//根据ID返回改动对应数据
               return age.id == item.id
             })
-            thDate[op] = val //操作参数（置顶、取消置顶、发布、待发布）
-      
-          
+            thDate[op] = val //操作参数（置顶、取消置顶、发布、待发布）      
+
             this.$http.put(this.$route.params.id, thDate).then((res) => {
               if (res.status == '200') {
                 oplogInfo(tiAr, text)  
@@ -403,6 +402,8 @@
                   duration:1000,
                   message: text + '成功!'
                 })
+                this.selectData = [];
+                this.refreshData()
               }
             })
           })

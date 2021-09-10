@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ind_conBlock:true,shFooter:foBo}">
+  <div :class="{ ind_conBlock: true, shFooter: foBo }">
     <swiper
       class="swiper"
       :options="swiperOptionh"
@@ -16,7 +16,7 @@
             <div class="ind_banner">
               <div
                 class="ind_baImg"
-                :style="{backgroundImage:'url('+img.img+')'}"
+                :style="{ backgroundImage: 'url(' + img.img + ')' }"
               />
             </div>
           </swiper-slide>
@@ -37,7 +37,7 @@
               >
                 <div
                   class="indB_bgImg"
-                  :style="{backgroundImage:'url('+b.bgImg+')'}"
+                  :style="{ backgroundImage: 'url(' + b.bgImg + ')' }"
                 >
                   <div class="after" />
                 </div>
@@ -190,13 +190,13 @@
               <div class="indC1_ulBl">
                 <div class="indC1_InBl">
                   <div
-                    v-for="(st,n) in store"
+                    v-for="(st, n) in store"
                     :key="st.id"
                     class="indC_liBl"
                   >
                     <div
                       class="indC_InBlock"
-                      :style="{top:oddBack(n)+'px'}"
+                      :style="{ top: oddBack(n) + 'px' }"
                     >
                       <a
                         v-for="s in st"
@@ -206,13 +206,13 @@
                       >
                         <div
                           class="indC_bg"
-                          :style="{backgroundImage:'url('+s.images+')'}"
+                          :style="{ backgroundImage: 'url(' + s.images + ')' }"
                         />
                         <div class="indC_InBl">
                           <div class="indC_logo"><img :src="s.img"></div>
                           <div class="indC1_teBl">
                             <div class="indC1_name">{{ s.title }}</div>
-                            <div class="indC1_num">店铺号：{{ s.store }} </div>
+                            <div class="indC1_num">店铺号：{{ s.store }}</div>
                           </div>
                           <div class="clear" />
                         </div>
@@ -240,7 +240,7 @@
           >
             <div
               class="indD_conBlock"
-              :style="{marginTop:-marginTop+'px'}"
+              :style="{ marginTop: -marginTop + 'px' }"
             >
               <div class="indD_tiBl">
                 <div class="indD_tCh">
@@ -296,208 +296,218 @@
 </template>
 
 <script>
-    import imagesLoaded from 'vue-images-loaded' // 调用vue-images-loaded
-    import $ from 'jquery'
+import imagesLoaded from 'vue-images-loaded' // 调用vue-images-loaded
+import $ from 'jquery'
 
-    export default {
-        directives: {
-            imagesLoaded
+export default {
+  directives: {
+    imagesLoaded,
+  },
+  props: {
+    clDa: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  data() {
+    return {
+      banner: [], // banner图
+      brand: [
+        {
+          // 品牌索引
+          bgImg: '/images/2_1.png',
+          ti: '零售',
+          eTi: 'retail',
+          more: '更多购物',
+          moHref: '/business',
+          ul: [],
         },
-        props: {
-            clDa: {
-                type: Boolean,
-                default: true
-            }
+        {
+          bgImg: '/images/2_2.jpg',
+          ti: '餐饮',
+          eTi: 'Restaurant',
+          more: '更多美食',
+          moHref: '/business',
         },
-        data() {
-            return {
-                banner: [], // banner图
-                brand: [{ // 品牌索引
-                        bgImg: '/images/2_1.png',
-                        ti: '零售',
-                        eTi: 'retail',
-                        more: '更多购物',
-                        moHref: '/business',
-                        ul: []
-                    },
-                    {
-                        bgImg: '/images/2_2.jpg',
-                        ti: '餐饮',
-                        eTi: 'Restaurant',
-                        more: '更多美食',
-                        moHref: '/business'
-                    },
-                    {
-                        bgImg: '/images/2_3.jpg',
-                        ti: '娱乐',
-                        eTi: 'entertainment',
-                        more: '更多娱乐',
-                        moHref: '/business'
-                    }
-                ],
-                store: [],
-                news: [], // 最新资讯
-                swiperOptionh: {}, // banner
-                swiperOptionv: {
-                    effect: 'slide',
-                    speed: 800,
-                    autoplay: {
-                        delay: 3000
-                    },
-                    pagination: {
-                        el: '.pa02',
-                        clickable: true
-                    }
-                },
-                marginTop: 250,
-                da: 0,
-                foBo: false,
-                moNum: 0 // 上下移动的值
-            }
+        {
+          bgImg: '/images/2_3.jpg',
+          ti: '娱乐',
+          eTi: 'entertainment',
+          more: '更多娱乐',
+          moHref: '/business',
         },
-        watch: {
-            clDa: function () { // 关闭页尾
-                this.foBo = this.clDa
-            }
+      ],
+      store: [],
+      news: [], // 最新资讯
+      swiperOptionh: {}, // banner
+      swiperOptionv: {
+        effect: 'slide',
+        speed: 800,
+        autoplay: {
+          delay: 3000,
         },
-        created() {
-            const _this = this
-
-            this.$http.get('banner').then(function (res) { // banner
-                _this.banner = res.data
-            }).catch(function (error) {
-                console.log(error)
-            })
-
-            this.$http.get('store').then((res) => { // 品牌索引
-                _this.brand.forEach((value) => {
-                    value.ul = res.data.filter((item) => {
-                        item.moHref = '/business/brand?id=' + item.id
-                        return item.class.indexOf(value.ti) >= 0
-                    })
-                    value.ul = value.ul.slice(0, 3)
-                })
-
-                var da = res.data.filter((item) => {
-                    return item.class.indexOf('主力店') >= 0
-                })
-                da.forEach((item, n) => {
-                    var i = 0
-                    if (n < 4) {
-                        i = 0
-                    } else if (n >= 4 && n < 6) {
-                        i = 1
-                    } else if (n >= 6 && n < 10) {
-                        i = 2
-                    } else if (n >= 10 ** n < 12) {
-                        i = 3
-                    } else {
- (
-                        i = 4
-                    )
-}
-                    item.href = '/#/business/brand?id=' + item.id
-                    _this.store.push([])
-                    _this.store[i].push(item)
-                })
-                console.log(_this.store)
-            })
-
-            this.$http.get('news').then((res) => { // 最新资讯
-                _this.news = res.data.slice(0, 3)
-                _this.news.forEach(function (item) {
-                    item.href = '/#/activity/?id=' + item.id
-                })
-            })
-
-            this.swiperOptionh = { // 放created中,解决this冲突
-                direction: 'vertical',
-                mousewheel: true,
-                pagination: {
-                    el: '.pa01',
-                    clickable: true
-                },
-                on: {
-                    transitionStart: function () {
-                        let m = this.activeIndex // 返回swiper索引
-                        if (m !== 3) {
-                            _this.foBo = false
-                        }
-                    }
-                }
-            }
+        pagination: {
+          el: '.pa02',
+          clickable: true,
         },
-        mounted() {
-            const _this = this
-            window.onresize = function () { // 窗口自适应
-                _this.newsCenter()
-            }
-            $('body').on('click', function () {
-                // alert(0)
-            })
-        },
-        methods: {
-            newsCenter: function () { // 新闻居中
-                this.marginTop = document.getElementsByClassName('indD_conBlock')[0].clientHeight / 2
-            },
-            imageProgress(instance, image) { // 判断images加载完成
-                image.isLoaded ? 'loaded' : 'broken'
-                this.newsCenter()
-            },
-            showFooter: function (e) {
-                if (new Date().getTime() - this.da > 500) { // 滚轮操作判断
-                    this.da = new Date().getTime()
-                    var delta = -e.wheelDelta || e.detail // firefox使用detail:下3上-3,其他浏览器使用wheelDelta:下-120上120//下滚
-                    if (delta > 0) {
-                        this.foBo = true
-                    } else {
-                        this.foBo = false
-                    }
-                    this.$emit('footerDa', this.foBo) // 页尾显示参数
-                }
-            },
-            touMove: function (e) {
-                this.moNum = -e.clientY * 1.1
-            },
-            oddBack: function (n) {
-                if (n % 2 === 0) {
-                    return this.moNum
-                }
-            }
-        }
+      },
+      marginTop: 250,
+      da: 0,
+      foBo: false,
+      moNum: 0, // 上下移动的值
     }
+  },
+  watch: {
+    clDa: function() {
+      // 关闭页尾
+      this.foBo = this.clDa
+    },
+  },
+  created() {
+    const _this = this
+    
+    this.$http.get('banner').then(function(res) {
+        // banner
+        _this.banner = res.data
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
 
+    this.$http.get('store').then((res) => {
+      // 品牌索引
+      _this.brand.forEach((value) => {
+        value.ul = res.data.filter((item) => {
+          item.moHref = '/business/brand?id=' + item.id
+          return item.class.indexOf(value.ti) >= 0
+        })
+        value.ul = value.ul.slice(0, 3)
+      })
+
+      var da = res.data.filter((item) => {
+        return item.class.indexOf('主力店') >= 0
+      })
+      da.forEach((item, n) => {
+        var i = 0
+        if (n < 4) {
+          i = 0
+        } else if (n >= 4 && n < 6) {
+          i = 1
+        } else if (n >= 6 && n < 10) {
+          i = 2
+        } else if (n >= 10 ** n < 12) {
+          i = 3
+        } else {
+          i = 4
+        }
+        item.href = '/#/business/brand?id=' + item.id
+        _this.store.push([])
+        _this.store[i].push(item)
+      })
+      console.log(_this.store)
+    })
+
+    this.$http.get('news').then((res) => {
+      // 最新资讯
+      _this.news = res.data.slice(0, 3)
+      _this.news.forEach(function(item) {
+        item.href = '/#/activity/?id=' + item.id
+      })
+    })
+
+    this.swiperOptionh = {
+      // 放created中,解决this冲突
+      direction: 'vertical',
+      mousewheel: true,
+      pagination: {
+        el: '.pa01',
+        clickable: true,
+      },
+      on: {
+        transitionStart: function() {
+          let m = this.activeIndex // 返回swiper索引
+          if (m !== 3) {
+            _this.foBo = false
+          }
+        },
+      },
+    }
+  },
+  mounted() {
+    const _this = this
+    window.onresize = function() {
+      // 窗口自适应
+      _this.newsCenter()
+    }
+    $('body').on('click', function() {
+      // alert(0)
+    })
+  },
+  methods: {
+    newsCenter: function() {
+      // 新闻居中
+      this.marginTop =
+        document.getElementsByClassName('indD_conBlock')[0].clientHeight / 2
+    },
+    imageProgress(instance, image) {
+      // 判断images加载完成
+      image.isLoaded ? 'loaded' : 'broken'
+      this.newsCenter()
+    },
+    showFooter: function(e) {
+      if (new Date().getTime() - this.da > 500) {
+        // 滚轮操作判断
+        this.da = new Date().getTime()
+        var delta = -e.wheelDelta || e.detail // firefox使用detail:下3上-3,其他浏览器使用wheelDelta:下-120上120//下滚
+        if (delta > 0) {
+          this.foBo = true
+        } else {
+          this.foBo = false
+        }
+        this.$emit('footerDa', this.foBo) // 页尾显示参数
+      }
+    },
+    touMove: function(e) {
+      this.moNum = -e.clientY * 1.1
+    },
+    oddBack: function(n) {
+      if (n % 2 === 0) {
+        return this.moNum
+      }
+    },
+  },
+}
 </script>
 <style>
-    .swiper-container {
-        width: 100%;
-        height: 100%;
-    }
+.swiper-container {
+  width: 100%;
+  height: 100%;
+}
 
-    .swiper-container-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet {
-        margin: 0px 12px;
-        outline: none;
-    }
+.swiper-container-horizontal
+  > .swiper-pagination-bullets
+  .swiper-pagination-bullet {
+  margin: 0px 12px;
+  outline: none;
+}
 
-    .swiper-pagination-fraction,
-    .swiper-pagination-custom,
-    .swiper-container-horizontal>.swiper-pagination-bullets {
-        bottom: 30px;
-    }
+.swiper-pagination-fraction,
+.swiper-pagination-custom,
+.swiper-container-horizontal > .swiper-pagination-bullets {
+  bottom: 30px;
+}
 
-    .ind_body {
-        position: relative;
-        height: 100%;
-        overflow: hidden;
-    }
+.ind_body {
+  position: relative;
+  height: 100%;
+}
 
-    .ind_body #Footer {
-        top: 0px;
-    }
+.ind_body #Footer {
+  top: 0px;
+}
 
-    .ind_body .ind_conBlock.shFooter,
-    .ind_body div#Footer.shFooter {
-        top: -310px;
-    }
-
+.ind_body .ind_conBlock.shFooter,
+.ind_body div#Footer.shFooter {
+  top: -310px;
+}
 </style>

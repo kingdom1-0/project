@@ -97,44 +97,65 @@ const routes = [{
     ]
   },
   {
-    path: '/manage',
-    component: () => import("../views/manage/common.vue"), //后台管理    
+    path: '/manage/',
+    component:()=> import('../views/manage/home.vue'),       
     children: [{
         path: '/',
-        component: () => import('../views/manage/index.vue'),
-        //redirect: 'user', //路由重定向
+        redirect: 'common', //路由重定向
       },
       {
-        path: 'content/:id',
-        component: () => import('../views/manage/content.vue'),
-        props: router => ({ //props传参
-          id: router.params.id //动态参数
-        })
+        path: 'login',
+        component: () => import('../views/manage/login.vue'),
       },
       {
-        path: 'message',
-        component: () => import('../views/manage/message.vue'),
-      },
-      {
-        path: 'logInfo',
-        component: () => import('../views/manage/logInfo.vue'),
-      },
-      {
-        path: 'opLog',
-        component: () => import('../views/manage/opLog.vue'),
-      },
-      {
-        path: 'explain',
-        component: () => import('../views/manage/explain.vue'),
-      },
-      {
-        path: 'role',
-        component: () => import('../views/manage/role.vue'),
-      }
-      
+        path: 'common',
+        component: () => import('../views/manage/common.vue'),
+        children:[
+          {
+            path:'/',
+            redirect: 'index'
+          },
+          {
+            path: 'index',
+            component: () => import('../views/manage/index.vue'),
+          },
+          {
+            path: 'content/:id',
+            component: () => import('../views/manage/content.vue'),
+            props: router => ({ //props传参
+              id: router.params.id //动态参数
+            })
+          },
+          {
+            path: 'message',
+            component: () => import('../views/manage/message.vue'),
+          },
+          {
+            path: 'logInfo',
+            component: () => import('../views/manage/logInfo.vue'),
+          },
+          {
+            path: 'opLog',
+            component: () => import('../views/manage/opLog.vue'),
+          },
+          {
+            path: 'explain',
+            component: () => import('../views/manage/explain.vue'),
+          },
+          {
+            path: 'role',
+            component: () => import('../views/manage/role.vue'),
+          }  
+        ]
+      }          
     ],
     beforeEnter: (to, from, next) => {
       document.getElementsByTagName("html")[0].className = "manage";
+      if(to.path === '/manage/login'){return next()}
+      const token = sessionStorage.getItem('token');
+      if(!token){
+        return next('/manage/login');
+      }
       next()
     }
   },

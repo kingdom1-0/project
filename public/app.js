@@ -52,7 +52,8 @@ const sqlConfig = {
   host: 'localhost', // 主机地址
   user: 'king10',
   password: '@kingdom10',
-  database: 'project' // 数据库名
+  database: 'project', // 数据库名
+  port:3306
 }
 
 let conn
@@ -103,12 +104,12 @@ apiArray.forEach(function (item, n) {
     let data = dataArray[n];
     
     /* 筛选发布数据 */
-    if(data.length > 0 && !(data[0].issue === void 0) && req.query.all != 1){ //通过 all=1 可以获取全部数据（包括待发布数据）（用于后台显示数据）
-      data = data.filter(function(item){  //前台只显示发布数据
-        return item.issue === 1;
-      })
-    }
-
+    // if(data.length > 0 && !(data[0].issue === void 0) && req.query.all != 1){ //通过 all=1 可以获取全部数据（包括待发布数据）（用于后台显示数据）
+    //   data = data.filter(function(item){  //前台只显示发布数据
+    //     return item.issue === 1;
+    //   })
+    // }
+    console.log(data)
     res.json(data) // 响应头返回相应查询数据
   })
 })
@@ -411,5 +412,5 @@ app.post(apiLo + 'ueditor', multipartMiddleware, function (req, res) { // 文件
 
 // 配置服务端口
 app.listen(2101, () => {
-  console.log('serve :2101')
+  console.log('serve :localhost:2101/api/v1/')
 })

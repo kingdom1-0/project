@@ -12,6 +12,7 @@
       :model="thData"
       label-width="120px"
       class="demo-thData"
+      :rules="rules"
     >
       <el-form-item
         label="用户名"
@@ -98,7 +99,35 @@
         },
         data() {
             return {
-                thData: {}, // 表单数据     
+                thData: {}, // 表单数据   
+                rules: { //表单预验证
+                  username: [ // 预验证用户名
+                    {
+                      required: true,
+                      message: '请输入用户名',
+                      trigger: 'blur'
+                    },
+                    {
+                      min: 3,
+                      max: 15,
+                      message: '长度在 3 到 15 个字符',
+                      trigger: 'blur'
+                    }
+                  ],
+                  password: [ // 预验证密码
+                    {
+                      required: true,
+                      message: '请输入密码',
+                      trigger: 'blur'
+                    },
+                    {
+                      min: 6,
+                      max: 15,
+                      message: '长度在 6 到 15 个字符',
+                      trigger: 'blur'
+                    }
+                  ]
+                },  
                 tableName: 'roles', // 数据库表名    
                 dialogVisible: false, // 弹出框 
                 menu: [{//菜单权限设置

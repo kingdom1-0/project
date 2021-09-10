@@ -180,5 +180,6 @@
         margin-right: 6px;
         font-size: 18px;
     }
-
+    .nav_bl {background: rgb(84, 92, 100);}
+    
 </style>
